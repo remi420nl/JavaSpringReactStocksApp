@@ -1,0 +1,8 @@
+insert into user (ID,Name,City) values (1, 'Remi', 'Weert')
+
+insert into portfolio (ID,NAME,user_id) values (1, 'RemisPorto',1)
+
+insert into stock (ID, NAME,DESCRIPTION)  values (1, 'AAPL', 'Basic Stock'),  (2, 'TSLA', 'Basic Stock')
+
+insert into position(ID,Name,stock_id, portfolio_id, amount) values (1,'position1',1,1,2)
+insert into position(ID,Name,stock_id, portfolio_id, amount) values (2,'position2',2,1,5)

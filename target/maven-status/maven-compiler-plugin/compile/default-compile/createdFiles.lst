@@ -1,0 +1,5 @@
+com\stockreact\webapp\controller\UserController.class
+com\stockreact\webapp\WebappApplication.class
+com\stockreact\webapp\model\User.class
+com\stockreact\webapp\repository\UserRepository.class
+com\stockreact\webapp\model\Stock.class

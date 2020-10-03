@@ -1,0 +1,75 @@
+package com.stockreact.webapp.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.InheritanceType;
+import java.time.Instant;
+import java.util.Collection;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@SuppressWarnings("serial")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Builder()
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+    @NotBlank(message = "Username is required")
+    private String username;
+    @NotBlank(message = "Password is required")
+    private String password;
+    @Email
+    @NotEmpty(message = "Email is required")
+    private String email;
+    @NotEmpty(message = "City is required")
+    private String city;
+    private Instant created;
+    private String firstname;
+    private String lastname;
+ 
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+}
