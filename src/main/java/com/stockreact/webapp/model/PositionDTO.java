@@ -2,7 +2,26 @@ package com.stockreact.webapp.model;
 
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class PositionDTO {
+	
+	public PositionDTO (String name, String stockname, int amount, Long portfolioId ) {
+		this.name= name;
+		stock = stockname;
+		this.amount = amount;
+		this.portfolioId = portfolioId;
+	}
+	
+	
 
 	@Id
 	private Long id;
@@ -11,67 +30,17 @@ public class PositionDTO {
 	
 	private String stock;
 	
-	public PositionDTO(String name, String stock, int amount, Long portfolioId) {
-		super();
-		this.name = name;
-		this.stock = stock;
-		this.amount = amount;
-		this.portfolioId = portfolioId;
-	}
+	private String symbol;
+	
 
 	private int amount;
+
+	private String price;
 	
-	private int value;
+	private double value;
 
 	private Long portfolioId;
 	
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getStock() {
-		return stock;
-	}
-
-	public void setStock(String stock) {
-		this.stock = stock;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public Long getPortfolioId() {
-		return portfolioId;
-	}
-
-	public void setPortfolioId(Long portfolioId) {
-		this.portfolioId = portfolioId;
-	}
-	
 	
 }

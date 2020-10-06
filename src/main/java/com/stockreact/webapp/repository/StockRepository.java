@@ -10,4 +10,6 @@ public interface StockRepository extends JpaRepository<Stock,Long>{
 
 	Optional<Stock> findByName(String stock);
 
+	Optional<Stock> findBySymbol(String symbol);
+
 }

@@ -17,6 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Data
 @Table(name="portfolio")
 public class Portfolio {
 
@@ -33,43 +39,25 @@ public class Portfolio {
 	
 	private String name;
 	
-	@OneToOne
-	@JoinColumn(name="user_id")
+	
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 	
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
+	
+	
 //	@OneToMany(  
 //		    cascade = CascadeType.ALL,
 //		    orphanRemoval = true)
 
 // TRY on Position ManytoOne side:   @JoinColumn(name = "id", referencedColumnName = "id") and set  this to (fetch = lazy)
 
-	@OneToMany(mappedBy = "portfolio",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
+	@JsonBackReference
 	private List<Position> positions;
+	
+	
 	
 }

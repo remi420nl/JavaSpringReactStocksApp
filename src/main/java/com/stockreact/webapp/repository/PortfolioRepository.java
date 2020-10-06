@@ -2,6 +2,7 @@ package com.stockreact.webapp.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +26,8 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>{
 
 	@Query("select p.name,p.id FROM Portfolio p WHERE p.id = :id")
 	Collection<Portfolio> getPortfolioWithPositions2(Long id);
+
+
+	Optional<Portfolio> findByUserId(Long userId);
 }
 	

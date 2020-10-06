@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,13 @@ import javax.validation.*;
 
 
 import com.stockreact.webapp.model.Portfolio;
+import com.stockreact.webapp.model.PortfolioDTO;
+import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
 import com.stockreact.webapp.model.PostDTO;
 import com.stockreact.webapp.model.Stock;
 import com.stockreact.webapp.model.StockDTO;
+import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.repository.PortfolioRepository;
 import com.stockreact.webapp.repository.PositionRepository;
 
@@ -76,13 +80,9 @@ public class PortfolioController {
 	
 		Portfolio result = portfolioRepo.save(p);
 		
-		
-		
 		return ResponseEntity.created(new URI("/api/portfolio" + result.getId())).body(result);
-		
-		
-		
 	}
+	
 	@GetMapping("/portfoliotest/{id}")
 	public PostDTO getStocksForPortfolioById(@PathVariable Long id) {
 		
@@ -106,11 +106,27 @@ public class PortfolioController {
 		
 	}
 	
-	@GetMapping("/portfoliotest2/{id}")
-	public Collection<Portfolio> getPortfolioByIdTest2(@PathVariable Long id) {
-		Collection<Portfolio> p = portfolioRepo.getPortfolioWithPositions2(id);
+	@GetMapping("/portfolio/byuser")
+	public ResponseEntity<?> getPortfolioByIdTest2(Authentication authentication) {
+	
+			
+		User user =  (User) authentication.getPrincipal();
+			
+		Optional<Portfolio> portfolio = portfolioRepo.findByUserId(user.getId());
+		if(portfolio.isPresent()) {
+			PortfolioDTO portFolioDTO = PortfolioDTO.builder().owner(user.getFirstname() + ' ' + user.getLastname()).positions(portfolio.get().getPositions())
+			.build();
+			return ResponseEntity.ok(portFolioDTO);
+		}
+
 		
-	return p;
+		
+		
+		
+			return (ResponseEntity<?>) ResponseEntity.notFound();
+			
+		
+		
 	}
 	
 } 

@@ -44,11 +44,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
+		
+		httpSecurity.headers().frameOptions().sameOrigin();
+    
         httpSecurity.cors().and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/loginpage")
                 .permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/console/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/register")
                 .permitAll().anyRequest().authenticated().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

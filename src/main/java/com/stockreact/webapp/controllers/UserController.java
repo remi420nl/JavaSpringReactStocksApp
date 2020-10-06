@@ -64,10 +64,13 @@ public class UserController {
 	@GetMapping("/userdetails")
 	@ResponseBody
     public ResponseEntity<?> getUserDetails(Authentication authentication) {
-		System.out.println("getuser called");
 		
-        Object details =  authentication.getPrincipal();
-        System.out.println(details);
+		
+		
+        User details =  (User) authentication.getPrincipal();
+        
+        
+        
         
         return ResponseEntity.ok(details);
     }

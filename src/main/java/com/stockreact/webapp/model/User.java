@@ -1,6 +1,7 @@
 package com.stockreact.webapp.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -11,14 +12,21 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -29,6 +37,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Entity
 @Builder()
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -45,6 +54,11 @@ public class User implements UserDetails {
     private Instant created;
     private String firstname;
     private String lastname;
+    
+
+    @OneToMany(mappedBy = "user")
+	@JsonBackReference
+    private List<Portfolio> portfolio;
  
 
 	@Override
