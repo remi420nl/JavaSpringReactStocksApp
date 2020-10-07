@@ -16,6 +16,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { fetchPortfoliosByUser, fetchUserDetails} from "../../api";
+import {GetLatestPrice} from '../Stocks/GetLatestPrice'
 import PositionOptions from "../position/PositionOptions";
 
 
@@ -106,6 +107,19 @@ class StockOverview extends Component {
           }     
 }
 
+const TableCells = (symbol,amount,oldValue) => {
+
+  const currentValue = getCurrentValue(symbol,amount);
+
+  const difference =  parseFloat((currentValue - oldValue)/oldValue * 100).toFixed(2)
+
+
+  return (<>
+    <TableCell align="right">{currentValue}</TableCell>
+        <TableCell align="right" style={{ color: difference > 0 ? "green" : "red"}}>{difference} %</TableCell>
+        </>
+  )
+}
 
 const useRowStyles = makeStyles({
   root: {
@@ -115,6 +129,11 @@ const useRowStyles = makeStyles({
   },
 });
 
+const getCurrentValue  = (ticker,amount) => {
+const price = GetLatestPrice(ticker);
+
+return price * amount;
+}
 
 function Row(props) {
   const { row } = props;
@@ -132,10 +151,11 @@ function Row(props) {
         <TableCell component="th" scope="row">
           Aandeel
         </TableCell>
-        <TableCell align="right">{row.stock.name}</TableCell>
+        <TableCell  align="left" style={{fontWeight:"bolder"}}>{row.stock.name}</TableCell>
         <TableCell align="right">{row.stock.symbol}</TableCell>
         <TableCell align="right">{row.amount}</TableCell>
         <TableCell align="right">{row.value}</TableCell>
+        {TableCells(row.stock.symbol,row.amount,row.value)}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -154,7 +174,6 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                 
                 {row.history.map((row,key) =>     <TableRow key={key}>
                       <TableCell component="th" scope="row">
                       {row.date}

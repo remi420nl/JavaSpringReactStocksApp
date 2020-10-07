@@ -55,16 +55,17 @@ export const fetchTickers = async () => {
 
   const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=pk_48d2125cb14a4056b3368b8190d75028`
  const pubKey = 'pk_48d2125cb14a4056b3368b8190d75028'
- console.log(url)
+ 
     try {
     const data = await axios.get(url);
-        console.log('TICKER', data);
+     
      return data;
      } catch (error) {
        console.log('ERROR loading data', error)
       return error;
-    }
-  };
+    }}
+    
+
 
   // export const fetchPositionByPortfolioId = async (id) => {
 

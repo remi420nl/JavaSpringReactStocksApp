@@ -18,6 +18,8 @@ function App() {
   const [loginStatus, setLoginStatus] = useState();
   const [username, setUsername] = useState();
 
+ 
+
   useEffect(() => {
     //getting current username if token is present and not expired
 
@@ -41,7 +43,7 @@ function App() {
 
     }
     getUserData();
-  });
+  },[loginStatus]);
 
   function logout() {
     console.log("log out called")

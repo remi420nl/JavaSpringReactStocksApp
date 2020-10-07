@@ -72,8 +72,9 @@ a{
 }
 
 
-.headermenu{
-
+.errormessage{
+color:red;
+font-weight: bold;
 }
 
 .dropdown-list{

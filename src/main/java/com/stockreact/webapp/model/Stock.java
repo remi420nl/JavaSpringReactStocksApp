@@ -35,7 +35,7 @@ public class Stock {
 		
 	private String symbol;
 	
-	private String Description;
+	private String description;
 	
 
 	@OneToMany(mappedBy = "stock", fetch = FetchType.LAZY)

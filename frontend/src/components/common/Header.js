@@ -8,14 +8,14 @@ import {IconContext} from 'react-icons';
 const Header = (props) => {
   const activeStyle = { color: "#F15B2a" };
   const [sidebar, setSidebar] = useState(false);
-  const {logout} = props;
+  const {logout, loginStatus, username} = props;
 
   const clickHandler = () => {
     setSidebar(sidebar ? false : true);
   };
   
   const statustext = () => {
-      let text = props.loginStatus ? 'Hallo ' + props.username : 'Niet Ingelogd' 
+      let text = loginStatus ? 'Hallo ' + username : 'Niet Ingelogd' 
       return text;
   }
 
@@ -27,7 +27,7 @@ const Header = (props) => {
           <IconsFa.FaBars onClick={clickHandler} />
         </NavLink>
         <div className="navbarstatus ml-auto">{statustext()}
-       { props.loginStatus ? <NavLink  to="/" onClick={logout}>log out </NavLink> : <div></div>
+       { loginStatus ? <NavLink  to="/" onClick={logout}> Log Out </NavLink> : <div></div>
        }
         </div>
       </div>

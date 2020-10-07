@@ -8,7 +8,7 @@ import SelectBox from "../../features/select-box";
 import createFilterOptions from "react-select-fast-filter-options";
 import { StockData } from "./StocksData";
 import Dropdown from "react-bootstrap/Dropdown";
-import {Button} from '@material-ui/core'
+import {StockOptions} from './StockOptions'
 
 import { fetchTickerData, postNewPosition } from "../../api";
 
@@ -26,6 +26,7 @@ function Stocks(props) {
   const [display, setDisplay] = useState(false);
   const [options, setOptions] = useState([]);
   const [search, setSearch] = useState("");
+
  
   const {portfolioId} = props
 
@@ -63,13 +64,15 @@ function Stocks(props) {
     }
   };
 
+
+  //after a stock from the dropdowns gets clicked:
   function loadTickerData(symbol, name) {
 
-    let historicaldata = {};
+    let stockdata = {};
 
     fetchTickerData(symbol).then((x) => {
-      historicaldata = x.data["Time Series (Daily)"];
-      setData(historicaldata,symbol,name)
+      stockdata = x.data["Time Series (Daily)"];
+      setData(stockdata,symbol,name)
     });
 
  
@@ -82,11 +85,11 @@ function Stocks(props) {
 
 function setData(data,symbol,name){
   const latest = Object.keys(data)[0]
-  console.log(data[latest])
+
   const stock = {
     name: name,
     symbol: symbol,
-    price: data[latest]['4. close'],
+    price:  parseFloat(data[latest]['4. close']),
     data: data
   }
   setError("");
@@ -97,29 +100,29 @@ function setData(data,symbol,name){
 
 
 
-  function onClickHandler(){
+  function submitPosition(amount){
     //static data
-    let testamount = 10;
-
+  if(stock){
     const data = {
       stock: stock.name,
       symbol: stock.symbol,
       portfolioId: portfolioId,
-      amount: testamount ,
+      amount: amount ,
       price: stock.price,
-      value: parseFloat(testamount * stock.price)
+      value: parseFloat(amount * stock.price)
     }
-
     console.log(data)
     postNewPosition(data)
-  }
+  }else{
+    setError('Eerst een aandeel kiezen')
+  } }
 
   // function loadIntraDay() {
   //     fetchTickerIntraDay("aapl")
   // }
 
   function onChangeHandler(e) {
-    console.log(tickerData);
+    //console.log(tickerData);
     // setName(e.label);
     // loadTickerData(e.value);
   }
@@ -132,9 +135,8 @@ function setData(data,symbol,name){
     <div>
     <div  className="stocks">
     <div className="stockoptions">
-    <Button onClick={onClickHandler} variant="contained" color="primary">
-  Primary
-</Button>
+    <StockOptions submitPosition={submitPosition}/>
+   <div className="errormessage"> {error}</div>
     </div>
 <div className="stocksdropdown">
       <input className="searchfield"
@@ -175,7 +177,7 @@ function setData(data,symbol,name){
       </div>
       <div className="stockdetails">
         {stock ? (  
-        < StockInfo data={stock}  /> 
+        < StockInfo stockdata={stock}  /> 
         ) : (
           <div className="choosestock">Kies eerst een aandeel</div>
         )}

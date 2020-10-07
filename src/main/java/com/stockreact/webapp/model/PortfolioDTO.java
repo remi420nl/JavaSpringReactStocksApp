@@ -15,7 +15,7 @@ public class PortfolioDTO {
 	private String description;
 	
 
-	List<Position> positions;
+	private List<Position> positions;
 
 	
 	
