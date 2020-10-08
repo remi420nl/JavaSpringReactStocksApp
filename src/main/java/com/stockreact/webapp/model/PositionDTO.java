@@ -1,5 +1,7 @@
 package com.stockreact.webapp.model;
 
+import java.time.Instant;
+
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -31,15 +33,16 @@ public class PositionDTO {
 	private String stock;
 	
 	private String symbol;
-	
 
 	private int amount;
 
-	private String price;
+	private double price;
 	
 	private double value;
 
 	private Long portfolioId;
+
+	private String date;
 	
 
 	

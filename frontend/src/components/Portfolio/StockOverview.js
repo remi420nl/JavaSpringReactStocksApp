@@ -16,7 +16,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { fetchPortfoliosByUser, fetchUserDetails} from "../../api";
-import {GetLatestPrice} from '../Stocks/GetLatestPrice'
+import {GetCurrentValue} from '../Stocks/GetCurrentValue'
 import PositionOptions from "../position/PositionOptions";
 
 
@@ -79,7 +79,7 @@ class StockOverview extends Component {
           <TableRow>
             <TableCell />
             <TableCell>Soort</TableCell>
-            <TableCell align="right">Naam</TableCell>
+            <TableCell align="left">Naam</TableCell>
             <TableCell align="right">Symbool</TableCell>
             <TableCell align="right">Aantal</TableCell>
             <TableCell align="right">Aanschaf Waarde</TableCell>
@@ -94,8 +94,6 @@ class StockOverview extends Component {
         </TableBody>
       </Table>
     </TableContainer>
-
-
             <PositionOptions options={options} />
           </div>
         </div>
@@ -107,12 +105,13 @@ class StockOverview extends Component {
           }     
 }
 
-const TableCells = (symbol,amount,oldValue) => {
 
-  const currentValue = getCurrentValue(symbol,amount);
+//helper function to return the 2 last cells. To obtain cleaner code
+const TableCells = (stock,amount,oldValue) => {
+
+  const currentValue = GetCurrentValue(stock,amount);
 
   const difference =  parseFloat((currentValue - oldValue)/oldValue * 100).toFixed(2)
-
 
   return (<>
     <TableCell align="right">{currentValue}</TableCell>
@@ -128,12 +127,6 @@ const useRowStyles = makeStyles({
     },
   },
 });
-
-const getCurrentValue  = (ticker,amount) => {
-const price = GetLatestPrice(ticker);
-
-return price * amount;
-}
 
 function Row(props) {
   const { row } = props;
@@ -155,7 +148,7 @@ function Row(props) {
         <TableCell align="right">{row.stock.symbol}</TableCell>
         <TableCell align="right">{row.amount}</TableCell>
         <TableCell align="right">{row.value}</TableCell>
-        {TableCells(row.stock.symbol,row.amount,row.value)}
+        {TableCells(row.stock,row.amount,row.value)}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

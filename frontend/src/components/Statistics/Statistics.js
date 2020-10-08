@@ -1,13 +1,14 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import { getAllPortfolios } from "../../api/index";
+import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 
 // https://material-ui.com/components/tables/
 const useStyles = makeStyles({
@@ -16,49 +17,110 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-export default function BasicTable() {
+export default function Statistics() {
   const classes = useStyles();
+  const [portfolios, setPortfolios] = useState([]);
+  const [totals,setTotals] = useState([])
 
-  return (
+  useEffect(() => {
+    getPortfolios();
+  }, []);
+
+  useEffect(() => {
+    convertToTotal()
+  },[portfolios])
+
+
+  function calculateOldValue (positions){
+    let sum = 0;
+
+   positions.forEach(p => sum += p.value);
+
+   return sum;
+
+  }
+
+  function calculateCurrentValue(positions){
+
+    let sum = 0;
+
+    positions.forEach(p =>{
+    sum += GetCurrentValue(p.stock, p.amount)
+ 
+    })
+    console.log("end of loop", sum)
+    return sum;
+
+  }
+
+
+  function convertToTotal(){
+    console.log(portfolios);
+    let totals = [];
+    let total = {}
+
+    portfolios.forEach(p => {
+      total['name'] = p.owner,
+      total['oldvalue'] = calculateOldValue(p.positions),
+      total['newvalue'] = calculateCurrentValue(p.positions) }
+      )
+
+    console.log("total object: ", total)
+    totals.push(total);
+    setTotals(totals);
+    
+    }
+
+    const getDifference = (newValue, oldValue) => {
+    
+      const difference =  parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
+    
+      return (
+            <TableCell align="right" style={{ color: difference > 0 ? "green" : "red"}}>{difference} %</TableCell>
+      )
+    }
+    
+
+  function getPortfolios() {
+    getAllPortfolios().then((p) => {
+      setPortfolios(p.data);
+    });
+  
+   
+  }
+
+  if (portfolios.length > 0) {
+    return (
       <div className="statistics">
-    <TableContainer className={classes.table} component={Paper}>
-      <Table  aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Naam</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell >
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </div>
-  );
+        <TableContainer className={classes.table} component={Paper}>
+          <div>Aantal Portfolios: {portfolios.length}</div>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Plaats</TableCell>
+                <TableCell align="right">Naam</TableCell>
+                <TableCell align="right">Aanschaf Waarde</TableCell>
+                <TableCell align="right">Huidige Waarde</TableCell>
+                <TableCell align="right">Rendement</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {totals.map((row,i) => (
+                <TableRow key={i}>
+                  <TableCell>1</TableCell>
+                  <TableCell align="right">{row.name}</TableCell>
+                  <TableCell align="right">{row.oldvalue}</TableCell>
+                  <TableCell align="right">{row.newvalue}</TableCell>
+                 {getDifference(row.newvalue, row.oldvalue)} 
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  } else {
+    return <div>Er zijn geen portfolios in ons systeem</div>;
+  }
 }

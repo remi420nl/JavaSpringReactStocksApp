@@ -29,6 +29,7 @@ const StockInfo = (props) => {
         const open = finData["1. open"];
         const high = finData["2. high"];
         const low = finData["3. low"];
+        //this one is being parsed since we need it for further use
         const close = parseFloat(finData["4. close"]);
 
         rows.push({

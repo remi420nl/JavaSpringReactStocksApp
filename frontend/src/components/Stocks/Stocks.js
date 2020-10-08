@@ -75,10 +75,6 @@ function Stocks(props) {
       setData(stockdata,symbol,name)
     });
 
- 
-
-  
-
         //chosen ticker(stock) gets set and the data for the chart gets loaded from the api
 
   }
@@ -95,23 +91,24 @@ function setData(data,symbol,name){
   setError("");
   setDisplay(false);
   setStock(stock);
-
 }
 
 
 
   function submitPosition(amount){
-    //static data
+  
+  const now = new Date();
+  //if stock usestate is present in constructs an object for the api (json)
   if(stock){
     const data = {
       stock: stock.name,
       symbol: stock.symbol,
       portfolioId: portfolioId,
       amount: amount ,
-      price: stock.price,
-      value: parseFloat(amount * stock.price)
+      price: parseFloat(stock.price).toFixed(2),
+      value: parseFloat(amount * stock.price).toFixed(2),
+      date: "" + now.getFullYear() + now.getMonth() + now.getDate()
     }
-    console.log(data)
     postNewPosition(data)
   }else{
     setError('Eerst een aandeel kiezen')
@@ -140,12 +137,10 @@ function setData(data,symbol,name){
     </div>
 <div className="stocksdropdown">
       <input className="searchfield"
-
         onChange={(e) => setSearch(e.target.value)}
         onClick={() => setDisplay(!display)}
         value={search}
         placeholder="Zoek aandeel"
-        
       />
   
       {display && (
@@ -164,7 +159,6 @@ function setData(data,symbol,name){
                     <input type="radio" className="radio" id={i.value} />
                   <label htmlFor={o.value}>{o.label}</label>
                 </div>
-                
               );
             })}
            

@@ -1,6 +1,7 @@
 package com.stockreact.webapp.model;
 
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -37,6 +38,9 @@ public class Stock {
 	
 	private String description;
 	
+	private double latestPrice;
+	
+	private String lastUpdate;
 
 	@OneToMany(mappedBy = "stock", fetch = FetchType.LAZY)
 	@JsonBackReference

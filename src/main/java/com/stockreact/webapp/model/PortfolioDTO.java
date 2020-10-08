@@ -13,7 +13,6 @@ public class PortfolioDTO {
 	
 	private String owner;
 	private String description;
-	
 
 	private List<Position> positions;
 

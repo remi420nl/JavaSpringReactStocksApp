@@ -34,7 +34,7 @@ public class History {
 	
 	private String date;
 	
-	private String price;
+	private double price;
 	
 	private int amount;
 	

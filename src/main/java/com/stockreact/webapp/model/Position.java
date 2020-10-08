@@ -32,21 +32,15 @@ import lombok.NoArgsConstructor;
 @Table(name="position")
 public class Position {
 	
-
-
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-
 	private String name;
-	
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	 @JsonManagedReference
 	private Stock stock;
-	
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)

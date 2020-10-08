@@ -3,6 +3,7 @@ package com.stockreact.webapp.controllers
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -42,14 +43,18 @@ public class PortfolioController {
 	@Autowired
 	private PortfolioRepository portfolioRepo;
 	
-	@Autowired
-	private PositionRepository positionRepo;
 
-
-	
 	@GetMapping("/portfolio")
-	public Collection<Portfolio> portfolios(){
-		return portfolioRepo.findAll();
+	public Collection<PortfolioDTO> getAllPortfolios(){
+		
+		List<PortfolioDTO> dtos = new ArrayList<>();
+		
+		List<Portfolio> portfolios  = portfolioRepo.findAll();
+		
+		for(Portfolio p : portfolios) {
+			dtos.add(PortfolioDTO.builder().owner(p.getName()).positions(p.getPositions()).build());
+		}
+		return dtos; 
 	}
 	
 	@GetMapping("/portfolio/{id}")

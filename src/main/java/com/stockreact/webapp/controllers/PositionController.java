@@ -66,10 +66,14 @@ public class PositionController {
 
 		if (optionalstock.isPresent()) {
 			stock = optionalstock.get();
+			stock.setLastUpdate(dto.getDate());
+			stock.setLatestPrice(dto.getPrice());
 		} else {
 			stock = new Stock();
 			stock.setName(dto.getStock());
 			stock.setSymbol(dto.getSymbol());
+			stock.setLatestPrice(dto.getPrice());
+			stock.setLastUpdate(dto.getDate());
 		}
 
 		if (optionalportfolio.isPresent()) {
@@ -86,12 +90,12 @@ public class PositionController {
 		History history = buildHistory(dto);
 
 		// check for positions with stock symbol in this particular portfolio
-
 		Optional<Position> optionalposition = positionRepo.findTopByStockAndPortfolio(stock, portfolio);
 
 		if (optionalposition.isPresent()) {
 			Position position = optionalposition.get();
 
+			//getting current amount and value
 			int amount = position.getAmount();
 			double value = position.getValue();
 
@@ -122,7 +126,7 @@ public class PositionController {
 
 	private History buildHistory(PositionDTO dto) {
 
-		// settig the time format
+		// setting the time format
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
 				.withLocale(Locale.GERMANY).withZone(ZoneId.systemDefault());
 
