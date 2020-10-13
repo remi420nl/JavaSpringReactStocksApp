@@ -30,7 +30,7 @@ class StockOverview extends Component {
   };
 
   componentDidMount() {
-    if (!this.props.loginStatus) {
+    if (this.props.loginStatus) {
       this.props.history.push("/login");
     } else {
       fetchPortfoliosByUser().then((response) => {

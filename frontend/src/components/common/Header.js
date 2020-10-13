@@ -9,15 +9,14 @@ const Header = (props) => {
   const activeStyle = { color: "#F15B2a" };
   const [sidebar, setSidebar] = useState(false);
   const {logout, loginStatus, username} = props;
+ const {render} = props
+
+
 
   const clickHandler = () => {
     setSidebar(sidebar ? false : true);
   };
   
-  const statustext = () => {
-      let text = loginStatus ? 'Hallo ' + username : 'Niet Ingelogd' 
-      return text;
-  }
 
   return (
     <div className="headermenu">
@@ -26,8 +25,8 @@ const Header = (props) => {
         <NavLink to="#" className="menu-bars">
           <IconsFa.FaBars onClick={clickHandler} />
         </NavLink>
-        <div className="navbarstatus ml-auto">{statustext()}
-       { loginStatus ? <NavLink  to="/" onClick={logout}> Log Out </NavLink> : <div></div>
+        <div className="navbarstatus ml-auto">{render()}
+       { loginStatus ? <NavLink  to="/" onClick={logout}> Uitloggen </NavLink> : <div></div>
        }
         </div>
       </div>

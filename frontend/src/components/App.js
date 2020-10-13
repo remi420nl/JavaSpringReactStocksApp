@@ -8,46 +8,52 @@ import StockOverview from "./Portfolio/StockOverview";
 import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
 import Authenticate from "./authenticate/Authenticate";
-
+import {CheckLoginStatus, fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
 import axios from "axios";
 import { getJwt, clearJwt } from "../features/JwtHelper";
+
+
+
+
 import "./App.css";
 
+
 function App() {
-  const [loginStatus, setLoginStatus] = useState();
+  const [loginStatus, setLoginStatus] = useState(false);
   const [username, setUsername] = useState();
+
 
  
 
   useEffect(() => {
     //getting current username if token is present and not expired
 
+    console.log("app usestate")
+    fetchUserDetails().then(response =>{
+     if(response.status == 200){
+      setLoginStatus(true);
+      setUsername(response.data.username);
+      console.log(" no error occured")
 
-    const  getUserData = async  () => {
-
-      const token = "Bearer " + getJwt();
-
-      const config = {
-        headers: { Authorization: token },
-      };
-      const url = `http://localhost:8080/api/user`;
-
-      await axios.get(url, config).then((response) => {
-        if (response.status === 200) {
-          console.log("responsestatus", response)
-          setLoginStatus(true);
-          setUsername(response.data);
-        }
-      });
-
-    }
-    getUserData();
+      }}).catch(error =>
+        {console.log("error occured")})
+    
+    //   setLoginStatus(true);
+    //   console.log("response", response)
+    //   setUsername(response.data);
+    //  }
+     
+    //  ).catch((error) => console.log("error while getting user ", error))
+ 
   },[loginStatus]);
 
+
+  
   function logout() {
     console.log("log out called")
     setLoginStatus(false)
+    
     clearJwt();
   }
 
@@ -55,9 +61,12 @@ function App() {
     <>
       <Router>
       <Header 
-                username={username}
+                
                 loginStatus={loginStatus}
                 logout={logout}
+                render={() => (
+                  loginStatus ? `Hallo  ${username}` : 'Niet Ingelogd' 
+                 )}
               />
         <div className="showcase">
         <Switch className="container showcase-inner">
@@ -68,8 +77,11 @@ function App() {
             render={(props) => (
            <HomePage
                 {...props}
-                username={username}
+        
                 loginStatus={loginStatus}
+                render={() => (<>
+                  {username}
+                  </>)}
               />
             )}
           />
@@ -90,7 +102,9 @@ function App() {
           <Route
             path="/login"
             render={(props) => (
-              <LoginForm {...props} loginStatus={loginStatus}  setLogin={setLoginStatus}/>
+              <LoginForm {...props} loginStatus={loginStatus}  setUser={setUsername} setLogin={setLoginStatus}
+              render={({name,login}) => (setLoginStatus(login),
+              setUsername(name))}/>
             )}
           />
           <Route path="/auth" component={Authenticate} />

@@ -1,14 +1,17 @@
-import React from "react";
+import React , {useEffect} from "react";
 import {Link} from "react-router-dom";
 
 function HomePage (props) {
 
+    const {render} = props
+
+   
  
     const status = () =>{
         if(!props.loginStatus){
             return <p>Status: Uitgelogd</p>
         }    
-           return  <p>Hallo {props.username}</p>
+           return  <p>Hallo {render()}</p>
     }
 
 return (

@@ -1,6 +1,7 @@
 package com.stockreact.webapp.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtUtil {
@@ -32,6 +35,7 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
+    	 System.out.println("Validating token2..");
         return extractExpiration(token).before(new Date());
     }
 
@@ -47,8 +51,19 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token, UserDetails userDetails,HttpServletRequest  request) {
+    	   System.out.println("Validating token1..");
+    	try {
+    		final String username = extractUsername(token);
+          if  (username.equals(userDetails.getUsername()) );
+          isTokenExpired(token);
+          return true;
+    	}
+    	
+    	catch (ExpiredJwtException e){
+            System.out.println("Expired JWT token");
+            request.setAttribute("expired",e.getMessage());
+        }
+        return false;
     }
 }

@@ -70,8 +70,8 @@ function Stocks(props) {
 
     let stockdata = {};
 
-    fetchTickerData(symbol).then((x) => {
-      stockdata = x.data["Time Series (Daily)"];
+    fetchTickerData(symbol).then((response) => {
+      stockdata = response.data["Time Series (Daily)"];
       setData(stockdata,symbol,name)
     });
 
