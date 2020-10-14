@@ -1,5 +1,6 @@
 package com.stockreact.webapp.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,11 +58,16 @@ public class User implements UserDetails {
     private String lastname;
     
 
-    @OneToMany(mappedBy = "user")
-	@JsonBackReference
-    private List<Portfolio> portfolio;
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "user_id")
+    @JsonBackReference
+    private List<Portfolio> portfolios = new ArrayList<>();
  
 
+    public void addPortfolio(Portfolio portfolio) {
+    this.portfolios.add(portfolio);
+    }
+    
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub

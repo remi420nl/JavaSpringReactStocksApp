@@ -79,12 +79,11 @@ public class PositionController {
 		if (optionalportfolio.isPresent()) {
 			portfolio = optionalportfolio.get();
 		} else {
-			portfolio = new Portfolio();
-			portfolio.setName("Dummy portfolio");
+		//this can be removed or exception handling
 		}
 
 		stockRepo.save(stock);
-		portfolioRepo.save(portfolio);
+	//	portfolioRepo.save(portfolio);
 
 		// making a new history record
 		History history = buildHistory(dto);

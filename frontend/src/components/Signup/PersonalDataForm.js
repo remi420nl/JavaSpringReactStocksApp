@@ -7,12 +7,11 @@ import Button from '@material-ui/core/Button';
 const PersonalDataForm=(props)=> {
 const [data, setData] = useState([])
 const {values, change} = props;
+const [error,setError] = useState({})
 const rows = [];
 
 function nextpage (e) {
-
-    // e.preventDefault();
-    props.next()
+    setError(props.next())
 }
 
 useEffect(() => {
@@ -25,31 +24,46 @@ useEffect(() => {
  setData(rows)
 },[])
 
-function handleChange (e,v) {
-change(e,v)
-}
+function handleChange (e,field) {
+  change(e,field)
+  }
+
 
 return (
     <div className = "signupForm">
         <>
             <AppBar title="Enter Personal Details" />
-{data.map(value =>     <TextField
+{data.map(value =>   
+ <TextField
+ onBlur={(e) =>{if(e.target.value.length < 3) {
+   const oldErrors = error;
+   setError({...oldErrors,[`${value.name}`]: "Te kort, minimaal 2 karakers"} ) 
+  
+  } }}
  key={value.name}
- label={value.label}
-//  placeholder={value.firstname.placeholder}
+ label= {value.label}
+ type={value.name}
  onChange={(e) => handleChange(e, value.name)}
  defaultValue = {value.value}
+ helperText= {error[`${value.name}`]}
+ FormHelperTextProps={{
+  style:{color: 'red'}
+  
+}}
+inputProps={{ min : 3 }}
+requiered={true}
  />)}
-      
-           <Button
+      <div className="signupbuttons">
+           <Button 
               color="primary"
               variant="contained"
               onClick={nextpage}
             >Volgende</Button>
-       
+       </div>
         </>
       
-</div>)
+</div>
+)
 }
 
 export default PersonalDataForm

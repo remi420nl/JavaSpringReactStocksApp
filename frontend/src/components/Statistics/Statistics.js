@@ -32,6 +32,12 @@ export default function Statistics() {
   },[portfolios])
 
 
+  function getPortfolios() {
+    getAllPortfolios().then((p) => {
+      setPortfolios(p.data);
+    });
+  }
+
   function calculateOldValue (positions){
     let sum = 0;
 
@@ -57,44 +63,36 @@ export default function Statistics() {
 
   function convertToTotal(){
     console.log(portfolios);
-    let totals = [];
-    let total = {}
+    let summarytotals = [];
+    let summary = {}
 
     portfolios.forEach(p => {
-      total['name'] = p.owner,
-      total['oldvalue'] = calculateOldValue(p.positions),
-      total['newvalue'] = calculateCurrentValue(p.positions) }
+      summary = {},
+      summary['name'] = p.owner,
+      summary['oldvalue'] = calculateOldValue(p.positions),
+      summary['newvalue'] = calculateCurrentValue(p.positions) 
+      summary['interest'] = getDifference(summary['newvalue'],  summary['oldvalue'])
+      summarytotals.push(summary);
+    }
       )
 
-    console.log("total object: ", total)
-    totals.push(total);
-    setTotals(totals);
+  //sorting so the portfolio with highest interest (positive difference) is on top
+  summarytotals.sort((a,b) => b.interest - a.interest)
     
+    setTotals(summarytotals);
     }
 
     const getDifference = (newValue, oldValue) => {
     
-      const difference =  parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
-    
-      return (
-            <TableCell align="right" style={{ color: difference > 0 ? "green" : "red"}}>{difference} %</TableCell>
-      )
-    }
-    
-
-  function getPortfolios() {
-    getAllPortfolios().then((p) => {
-      setPortfolios(p.data);
-    });
+      return  parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
   
-   
-  }
+    }
 
   if (portfolios.length > 0) {
     return (
       <div className="statistics">
         <TableContainer className={classes.table} component={Paper}>
-          <div>Aantal Portfolios: {portfolios.length}</div>
+          <div>Aantal Deelnemers: {portfolios.length}</div>
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -108,11 +106,11 @@ export default function Statistics() {
             <TableBody>
               {totals.map((row,i) => (
                 <TableRow key={i}>
-                  <TableCell>1</TableCell>
+                  <TableCell>{i+1}</TableCell>
                   <TableCell align="right">{row.name}</TableCell>
                   <TableCell align="right">{row.oldvalue}</TableCell>
                   <TableCell align="right">{row.newvalue}</TableCell>
-                 {getDifference(row.newvalue, row.oldvalue)} 
+                  <TableCell align="right" style={{ color: row.interest > 0 ? "green" : "red"}}>{row.interest} %</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -119,16 +119,12 @@ public class PortfolioController {
 			
 		Optional<Portfolio> portfolio = portfolioRepo.findByUserId(user.getId());
 		if(portfolio.isPresent()) {
-			PortfolioDTO portFolioDTO = PortfolioDTO.builder().owner(user.getFirstname() + ' ' + user.getLastname()).positions(portfolio.get().getPositions())
+			PortfolioDTO portFolioDTO = PortfolioDTO.builder().description(portfolio.get().getName()).owner(user.getFirstname() + ' ' + user.getLastname()).positions(portfolio.get().getPositions())
 			.build();
 			return ResponseEntity.ok(portFolioDTO);
 		}
-
-		
-		
-		
-		
-			return (ResponseEntity<?>) ResponseEntity.notFound();
+	
+		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			
 		
 		

@@ -14,7 +14,6 @@ const DetailsForm = (props) => {
       if (values.hasOwnProperty(value)) {
         const fieldData = values[value];
         rows.push(fieldData);
-        console.log(data.length);
       }
     }
     setData(rows);
@@ -45,6 +44,7 @@ const DetailsForm = (props) => {
           defaultValue={value.value}
         />
       ))}
+      <div className="signupbuttons">
       <Button
         color="primary"
         variant="contained"
@@ -59,6 +59,7 @@ const DetailsForm = (props) => {
       >
         Terug
       </Button>
+      </div>
     </div>
   );
 };

@@ -8,9 +8,8 @@ import StockOverview from "./Portfolio/StockOverview";
 import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
 import Authenticate from "./authenticate/Authenticate";
-import {CheckLoginStatus, fetchUserDetails} from '../api'
+import { fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
-import axios from "axios";
 import { getJwt, clearJwt } from "../features/JwtHelper";
 
 
@@ -21,7 +20,7 @@ import "./App.css";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
-  const [username, setUsername] = useState();
+  const [name, setName] = useState();
 
 
  
@@ -33,7 +32,7 @@ function App() {
     fetchUserDetails().then(response =>{
      if(response.status == 200){
       setLoginStatus(true);
-      setUsername(response.data.username);
+      setName(response.data.firstname);
       console.log(" no error occured")
 
       }}).catch(error =>
@@ -65,7 +64,7 @@ function App() {
                 loginStatus={loginStatus}
                 logout={logout}
                 render={() => (
-                  loginStatus ? `Hallo  ${username}` : 'Niet Ingelogd' 
+                  loginStatus ? `Hallo  ${name}` : 'Niet Ingelogd' 
                  )}
               />
         <div className="showcase">
@@ -80,7 +79,7 @@ function App() {
         
                 loginStatus={loginStatus}
                 render={() => (<>
-                  {username}
+                  {name}
                   </>)}
               />
             )}
@@ -102,9 +101,9 @@ function App() {
           <Route
             path="/login"
             render={(props) => (
-              <LoginForm {...props} loginStatus={loginStatus}  setUser={setUsername} setLogin={setLoginStatus}
+              <LoginForm {...props} loginStatus={loginStatus}  setUser={setName} setLogin={setLoginStatus}
               render={({name,login}) => (setLoginStatus(login),
-              setUsername(name))}/>
+              setName(name))}/>
             )}
           />
           <Route path="/auth" component={Authenticate} />

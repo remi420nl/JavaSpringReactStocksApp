@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
@@ -30,7 +29,7 @@ class StockOverview extends Component {
   };
 
   componentDidMount() {
-    if (this.props.loginStatus) {
+    if (!this.props.loginStatus) {
       this.props.history.push("/login");
     } else {
       fetchPortfoliosByUser().then((response) => {
@@ -73,6 +72,7 @@ class StockOverview extends Component {
       <div className="portfolio">
         <div className="portfoliocontent">
       <h3>Portfolio van: {portfolio.owner}</h3>
+      <h4>{portfolio.description}</h4>
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
@@ -84,7 +84,7 @@ class StockOverview extends Component {
             <TableCell align="right">Aantal</TableCell>
             <TableCell align="right">Aanschaf Waarde</TableCell>
             <TableCell align="right">Huidige Waarde</TableCell>
-            <TableCell align="right">Verschil</TableCell>
+            <TableCell align="right">Rendement</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -107,7 +107,7 @@ class StockOverview extends Component {
 
 
 //helper function to return the 2 last cells. To obtain cleaner code
-const TableCells = (stock,amount,oldValue) => {
+const getDifference = (stock,amount,oldValue) => {
 
   const currentValue = GetCurrentValue(stock,amount);
 
@@ -130,7 +130,7 @@ const useRowStyles = makeStyles({
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
   return (
@@ -148,7 +148,7 @@ function Row(props) {
         <TableCell align="right">{row.stock.symbol}</TableCell>
         <TableCell align="right">{row.amount}</TableCell>
         <TableCell align="right">{row.value}</TableCell>
-        {TableCells(row.stock,row.amount,row.value)}
+        {getDifference(row.stock,row.amount,row.value)}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

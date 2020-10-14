@@ -1,5 +1,7 @@
 package com.stockreact.webapp.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -101,8 +103,7 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?>  register (@RequestBody UserDTO userDTO) throws StockAppException {
-		
+	public ResponseEntity<?>  register (@Valid @RequestBody UserDTO userDTO) throws StockAppException {
 		
 		
 		

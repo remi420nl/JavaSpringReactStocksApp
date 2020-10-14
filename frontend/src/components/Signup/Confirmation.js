@@ -8,9 +8,9 @@ import {Signup} from '../../api';
  const Confirmation = (props) => {
     const [data, setData] = useState([])
     const [error, setError] = useState([])
-    const {values: {firstname, lastname,email, username,city,education,info,password }} = props
+    const {values: {firstname, lastname,email, username,city,portfolio,info,password }} = props
 
-    const {values} = props;
+    const {values, prev} = props;
     const rows = []
 
 
@@ -26,16 +26,20 @@ import {Signup} from '../../api';
 
     function handleclick (e,option) {
         e.preventDefault()
+ 
         if(option === 'confirm'){
-         
       Signup(generateResponse()).then(response => {
         console.log('Response ' , response);
         if(response.status === 200){
+             
           props.success('/login');
           return;
-        }  
+        } 
       })
       setError("Er is iets fout gegaan");
+      }else{
+        console.log("option", option)
+        prev();
       }}
 
     function errormessage(){
@@ -49,7 +53,8 @@ function generateResponse(){
     "lastname" : lastname.value,
     "password" : password.value,
     "email" : email.value,
-    "city" : city.value
+    "city" : city.value,
+    "portfolio" : portfolio.value,
   }
 }
 
@@ -79,13 +84,14 @@ function generateResponse(){
     )}
  </List>
  {errormessage()}
- <div className="buttons">
+ <div  className="signupbuttons">
            <Button
               color="primary"
               variant="contained"
               onClick={(e) => handleclick(e,'confirm')}
             >Bevestigen</Button>
             <Button
+        
               color="secondary"
               variant="contained"
               onClick={(e) => handleclick(e,'prev')}

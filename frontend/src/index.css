@@ -120,7 +120,15 @@ font-weight: bold;
     flex-direction: column;
 }
 
-.buttons {
+
+.signupbuttons Button{
+   width: 80px;
+   font-size: 12px;
+
+}
+.signupbuttons{
+    width: 200px;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
