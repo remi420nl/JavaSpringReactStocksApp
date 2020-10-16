@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
-import com.stockreact.webapp.model.PostDTO;
 import com.stockreact.webapp.model.StockDTO;
 
 

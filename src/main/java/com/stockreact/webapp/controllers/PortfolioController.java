@@ -28,46 +28,40 @@ import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.PortfolioDTO;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
-import com.stockreact.webapp.model.PostDTO;
+
 import com.stockreact.webapp.model.Stock;
 import com.stockreact.webapp.model.StockDTO;
 import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.repository.PortfolioRepository;
 import com.stockreact.webapp.repository.PositionRepository;
+import com.stockreact.webapp.service.PortfolioService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class PortfolioController {
 	
-	@Autowired
-	private PortfolioRepository portfolioRepo;
-	
+
+	@Autowired 
+	private PortfolioService portfolioService;
 
 	@GetMapping("/portfolio")
 	public Collection<PortfolioDTO> getAllPortfolios(){
 		
-		List<PortfolioDTO> dtos = new ArrayList<>();
-		
-		List<Portfolio> portfolios  = portfolioRepo.findAll();
-		
-		for(Portfolio p : portfolios) {
-			dtos.add(PortfolioDTO.builder().owner(p.getName()).positions(p.getPositions()).build());
-		}
-		return dtos; 
+		return portfolioService.getAll();
 	}
 	
 	@GetMapping("/portfolio/{id}")
 	public ResponseEntity<Portfolio> getPortfolioById(@PathVariable Long id) {
-		Optional<Portfolio> p = portfolioRepo.findById(id);
+		Optional<Portfolio> portfolio = portfolioService.getById(id);
 		
-		return p.map(res -> ResponseEntity.ok().body(res)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return portfolio.map(res -> ResponseEntity.ok().body(res)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 	
 	@PutMapping("/portfolio/{id}")
 	public ResponseEntity<Portfolio> updatePortfolio (@Valid @RequestBody Portfolio p) {
 		
-		Portfolio result = portfolioRepo.save(p);
+		Portfolio result = portfolioService.save(p);
 		return ResponseEntity.ok().body(result);
 		
 	}
@@ -75,7 +69,7 @@ public class PortfolioController {
 	@DeleteMapping("/portfolio/{id}") 
 	public ResponseEntity<?> deletePortfolio (@PathVariable Long id){
 		
-		portfolioRepo.deleteById(id);
+		portfolioService.delete(id);
 		
 		return ResponseEntity.ok().build();
 	}
@@ -83,47 +77,31 @@ public class PortfolioController {
 	@PostMapping("/portfolio")
 	public ResponseEntity<Portfolio>createPortfolio(@Valid @RequestBody Portfolio p) throws URISyntaxException{
 	
-		Portfolio result = portfolioRepo.save(p);
+		Portfolio result = portfolioService.save(p);
 		
 		return ResponseEntity.created(new URI("/api/portfolio" + result.getId())).body(result);
 	}
 	
 	@GetMapping("/portfoliotest/{id}")
-	public PostDTO getStocksForPortfolioById(@PathVariable Long id) {
+	public PortfolioDTO getStocksForPortfolioById(@PathVariable Long id) {
+		System.out.println("getstocksforportfoliobyID called..");
+	
 		
-		Optional<Portfolio> optional = portfolioRepo.findById(id);
-		Portfolio portfolio = null;
-		
-		if(optional.isPresent()) {
-			 portfolio = optional.get();
-		}else {
-			return new PostDTO();
-		}
-		
-		List<PositionDTO> positions = portfolioRepo.getPortfolioWithPositions(id);
-		
-		PostDTO postDTO = new PostDTO();
-		postDTO.setId(id);
-		postDTO.setName(portfolio.getName());
-		postDTO.setPositions(positions);
-		
-		return postDTO;
+		return portfolioService.getAllStocksByPortfolioId(id);
 		
 	}
 	
 	@GetMapping("/portfolio/byuser")
 	public ResponseEntity<?> getPortfolioByIdTest2(Authentication authentication) {
 	
-			
-		User user =  (User) authentication.getPrincipal();
-			
-		Optional<Portfolio> portfolio = portfolioRepo.findByUserId(user.getId());
-		if(portfolio.isPresent()) {
-			PortfolioDTO portFolioDTO = PortfolioDTO.builder().description(portfolio.get().getName()).owner(user.getFirstname() + ' ' + user.getLastname()).positions(portfolio.get().getPositions())
-			.build();
+		System.out.println("getstocksforportfoliobyID By user called..");
+		
+		
+		PortfolioDTO portFolioDTO = portfolioService.getByUserIncludingPositions(authentication); 
+
+		if(portFolioDTO != null) {
 			return ResponseEntity.ok(portFolioDTO);
 		}
-	
 		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			
 		

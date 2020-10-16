@@ -2,6 +2,7 @@ package com.stockreact.webapp.service;
 
 import java.util.ArrayList;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.stockreact.webapp.model.Portfolio;
@@ -17,6 +18,8 @@ import lombok.AllArgsConstructor;
 public class UserService {
 	
 	private UserRepository userRepo;
+	
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
 	public User registerUser(UserDTO userDto) {
@@ -38,10 +41,11 @@ public class UserService {
 	
 	private User mapToUser(UserDTO userDto) {
 		
-		
+		String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
+				
 		return 
 		User.builder().username(userDto.getUsername()).firstname(userDto.getFirstname()).lastname(userDto.getLastname())
-		.email(userDto.getEmail()).city(userDto.getCity()).password(userDto.getPassword()).portfolios(new ArrayList<Portfolio>()).build();
+		.email(userDto.getEmail()).city(userDto.getCity()).password(encodedPassword).portfolios(new ArrayList<Portfolio>()).build();
 		
 	}
 	

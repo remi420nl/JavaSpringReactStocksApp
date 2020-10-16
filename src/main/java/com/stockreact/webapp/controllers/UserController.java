@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,8 @@ public class UserController {
 	private UserDetailsService userDetailsService;
 
 	private JwtUtil jwtUtil;
+	
+
 	
 	private UserService userService;
 	
@@ -97,17 +100,15 @@ public class UserController {
 		
 		final String jwt = jwtUtil.generateToken(userDetails);
 		
+		//creates a response using the jwt token for the json return body
 		AuthenticationResponse response = new AuthenticationResponse(jwt);
-		System.out.println(response.toString());
+	
 		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/register")
 	public ResponseEntity<?>  register (@Valid @RequestBody UserDTO userDTO) throws StockAppException {
 		
-		
-		
-		System.out.println("register post method: "+ userDTO);
 		User user = userService.registerUser(userDTO);
 		
 		

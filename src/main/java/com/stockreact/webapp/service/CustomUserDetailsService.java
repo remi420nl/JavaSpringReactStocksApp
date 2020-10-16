@@ -29,11 +29,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return (UserDetails) user;
 	}
 	
-	@SuppressWarnings("deprecation")
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
-	}
+//	@SuppressWarnings("deprecation")
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return NoOpPasswordEncoder.getInstance();
+//	}
 
 	
 	

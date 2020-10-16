@@ -4,6 +4,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.validation.constraints.Email;
@@ -42,7 +43,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = "Username is required")
     private String username;

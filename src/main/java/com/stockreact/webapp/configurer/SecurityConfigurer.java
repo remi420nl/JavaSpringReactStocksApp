@@ -1,5 +1,6 @@
 package com.stockreact.webapp.configurer;
 
+import javax.sql.DataSource;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.stockreact.webapp.filter.JWTRequestFilter;
@@ -30,6 +33,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	private CustomUserDetailsService userDetailsService;
 	private JWTRequestFilter jwtRequestFilter;
 
+	private DataSource datasource;
+
+	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(passwordEncoder( ));
+	}
+
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
