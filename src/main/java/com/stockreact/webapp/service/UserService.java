@@ -2,6 +2,7 @@ package com.stockreact.webapp.service;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,25 +13,33 @@ import com.stockreact.webapp.repository.PortfolioRepository;
 import com.stockreact.webapp.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@Service
+
 @AllArgsConstructor
+@NoArgsConstructor
+@Service
 public class UserService {
 	
+	@Autowired
 	private UserRepository userRepo;
 	
+	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
-	public User registerUser(UserDTO userDto) {
-		
-		User user = mapToUser(userDto);
-		
-		
-		System.out.println("PORTFOLIO SIZE "+ user.getPortfolios().size());
+	public String testmethod() {
+		return "crap";
+	}
 	
+	public User registerUser(UserDTO userDto) {
+		System.out.println("Registeruser called in service: "+ userDto.getCity());
+		User user = mapToUser(userDto);
+		System.out.println("user: "+ user.getFirstname());
+		
 		Portfolio portfolio = new Portfolio();
 		portfolio.setName(userDto.getPortfolio());
+		System.out.println("portfolio: "+ portfolio.getName());
 		
 		user.addPortfolio(portfolio);
 		

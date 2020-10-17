@@ -10,7 +10,7 @@ import {Signup} from '../../api';
     const [error, setError] = useState([])
     const {values: {firstname, lastname,email, username,city,portfolio,info,password }} = props
 
-    const {values, prev} = props;
+    const {values, prev, next} = props;
     const rows = []
 
 
@@ -31,9 +31,7 @@ import {Signup} from '../../api';
       Signup(generateResponse()).then(response => {
         console.log('Response ' , response);
         if(response.status === 200){
-             
-          props.success('/login');
-          return;
+             next()
         } 
       })
       setError("Er is iets fout gegaan");

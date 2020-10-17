@@ -11,7 +11,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,21 +31,23 @@ import com.stockreact.webapp.model.PortfolioDTO;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
 
-import com.stockreact.webapp.model.Stock;
-import com.stockreact.webapp.model.StockDTO;
-import com.stockreact.webapp.model.User;
-import com.stockreact.webapp.repository.PortfolioRepository;
-import com.stockreact.webapp.repository.PositionRepository;
+
 import com.stockreact.webapp.service.PortfolioService;
+import com.stockreact.webapp.service.UserService;
+import com.stockreact.webapp.util.JwtUtil;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class PortfolioController {
 	
 
-	@Autowired 
-	private PortfolioService portfolioService;
+	private final PortfolioService portfolioService;
 
 	@GetMapping("/portfolio")
 	public Collection<PortfolioDTO> getAllPortfolios(){

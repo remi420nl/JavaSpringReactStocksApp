@@ -84,12 +84,23 @@ font-weight: bold;
 
 }
 
+
+.unselectedPosition{
+
+}
+
+.selectedPosition{
+
+    background-color: green;
+}
+
 .position-item{
  
     padding: 20px;
     color:red;
 
 }
+
 
 .position-item:hover {
     filter: brightness(1.2);

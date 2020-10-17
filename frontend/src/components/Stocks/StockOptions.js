@@ -68,7 +68,9 @@ return(
       <InputLabel htmlFor="demo-customized-textbox">Aantal</InputLabel>
       <BootstrapInput onChange={(e) => setAmount(e.target.value)} value={amount} id="demo-customized-textbox" />
     </FormControl>
-    <Button onClick={() => submitPosition(amount)}>Toevoegen</Button>
+    <Button
+    disabled={!amount>0} 
+    onClick={() => submitPosition(amount)}>Toevoegen</Button>
   </div>
 )
 }

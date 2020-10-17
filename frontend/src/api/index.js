@@ -178,3 +178,22 @@ export const postNewPosition = async (data) => {
     //   return error;
   }
 };
+
+export const deletePosition = async (id) => {
+  const token = "Bearer " + getJwt();
+
+  const config = {
+    headers: { Authorization: token, "Content-Type": "application/json" },
+  };
+
+  const url = `http://localhost:8080/api/deleteposition/${id}`;
+
+  try {
+    const response = await axios.delete(url, config);
+
+    return response;
+  } catch (error) {
+    console.log("error occured ", error);
+    //   return error;
+  }
+}

@@ -2,16 +2,16 @@ package com.stockreact.webapp.controllers;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import com.stockreact.webapp.exception.StockAppException;
 import com.stockreact.webapp.model.AuthenticationRequest;
@@ -27,28 +27,28 @@ import com.stockreact.webapp.model.AuthenticationResponse;
 
 import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.model.UserDTO;
-import com.stockreact.webapp.service.CustomUserDetailsService;
+
 import com.stockreact.webapp.service.UserService;
 import com.stockreact.webapp.util.JwtUtil;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@AllArgsConstructor
+@RequiredArgsConstructor 
 @RequestMapping("/api")
 public class UserController {
 
 	
-	private AuthenticationManager authManager;
+	private final AuthenticationManager authManager;
 	
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
-	private JwtUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 	
-
-	
-	private UserService userService;
+	private final UserService userService;
 	
 	@GetMapping({"/test"})
 	public String  Login() {
@@ -68,15 +68,10 @@ public class UserController {
 	
 	@GetMapping("/userdetails")
 	@ResponseBody
-    public ResponseEntity<?> getUserDetails(Authentication authentication) {
-		
-		
+    public ResponseEntity<?> getUserDetails(Authentication authentication){
 		
         User details =  (User) authentication.getPrincipal();
-        
-        
-        
-        
+       
         return ResponseEntity.ok(details);
     }
 	
@@ -108,7 +103,8 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?>  register (@Valid @RequestBody UserDTO userDTO) throws StockAppException {
-		
+		System.out.println("Registeruser called: "+ userService.testmethod());
+
 		User user = userService.registerUser(userDTO);
 		
 		

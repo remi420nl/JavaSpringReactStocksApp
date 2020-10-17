@@ -83,8 +83,11 @@ export default function Statistics() {
     }
 
     const getDifference = (newValue, oldValue) => {
-    
+     
+      const difference = parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
+      if(!isNaN(difference)){
       return  parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
+      }else return 0
   
     }
 

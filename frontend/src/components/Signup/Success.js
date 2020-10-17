@@ -3,7 +3,7 @@ import { AppBar, MuiThemeProvider } from "@material-ui/core";
 
 
 const Success = (props) => {
-const {name} = props;
+const {name, success} = props;
 
 
 useEffect(() => {
@@ -13,7 +13,7 @@ useEffect(() => {
     <div className="signupForm">
       <AppBar title="Success" />
     <h1> {name}, bedankt voor het registreren</h1>
-    <p>Tekst nog in te vullen..</p>
+    <button onClick={() => success('/login')}>Klik hier om in te loggen</button>
     </div>
   );
 };

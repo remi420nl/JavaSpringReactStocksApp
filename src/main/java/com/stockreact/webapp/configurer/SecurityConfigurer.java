@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 
-	private CustomUserDetailsService userDetailsService;
-	private JWTRequestFilter jwtRequestFilter;
+	private final CustomUserDetailsService userDetailsService;
+	private final JWTRequestFilter jwtRequestFilter;
 
-	private DataSource datasource;
+	private final DataSource datasource;
 
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(passwordEncoder( ));

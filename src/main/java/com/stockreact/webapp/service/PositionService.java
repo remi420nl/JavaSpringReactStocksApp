@@ -118,4 +118,10 @@ public class PositionService {
 
 		return history;
 	}
+
+	
+	public void deleteById(Long id) {
+
+		positionRepo.deleteById(id);
+	}
 }

@@ -14,36 +14,37 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stockreact.webapp.model.History;
-import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
-import com.stockreact.webapp.model.Stock;
+
 import com.stockreact.webapp.model.User;
-import com.stockreact.webapp.repository.HistoryRepository;
-import com.stockreact.webapp.repository.PortfolioRepository;
-import com.stockreact.webapp.repository.PositionRepository;
-import com.stockreact.webapp.repository.StockRepository;
+import com.stockreact.webapp.service.PortfolioService;
 import com.stockreact.webapp.service.PositionService;
+import com.stockreact.webapp.service.UserService;
+import com.stockreact.webapp.util.JwtUtil;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class PositionController {
 
-
-	
-	@Autowired
-	PositionService positionService;
+	private final PositionService positionService;
 
 	@PostMapping("/newposition")
 	public ResponseEntity<Position> createPosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
@@ -54,9 +55,15 @@ public class PositionController {
 		Position result = positionService.addPosition(user, dto);
 	
 		return ResponseEntity.created(new URI("/api/position" + result.getId())).body(result);
-
 	}
 
+	
+	@DeleteMapping("/deleteposition/{id}")
+	public void deletePosition(@PathVariable Long id) {
+		positionService.deleteById(id);
+		
+		
+	}
 
 
 }

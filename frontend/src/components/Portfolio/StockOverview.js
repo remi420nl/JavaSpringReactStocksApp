@@ -26,26 +26,48 @@ class StockOverview extends Component {
   state = {
     portfolio: null,
     userdetails: null,
+    selectedPositions: [],
+    positionsUpdated: false
+
   };
+
 
   componentDidMount() {
     if (!this.props.loginStatus) {
       this.props.history.push("/login");
     } else {
-      fetchPortfoliosByUser().then((response) => {
-        this.setState({
-          portfolio: response.data,
-        });
-      });
+      this.updatePositions();
       fetchUserDetails().then((details) => {
       
         this.setState({
           userdetails: details.data,
+      
         });
       });
    
     }
   }
+
+  
+updatePositions = () => {
+  //if argument is passed it means this index needs to be removed from the selected array since it has been removed
+  // if(index){
+  //   const updated = [...this.state.selectedPositions]
+  //   console.log("updatedarray...... ", updated)
+  //   updated.splice(index,1);
+  //   this.setState({
+  //     selectedPositions: updated
+  //   })
+  // }
+  fetchPortfoliosByUser().then((response) => {
+    console.log("fetching portfolio")
+    this.setState({
+      portfolio: response.data,
+      selectedPositions: [],
+    });
+  });
+}
+
 
   render() {
     const { portfolio, userdetails } = this.state;
@@ -57,14 +79,28 @@ class StockOverview extends Component {
       },
       {
         id: 2,
-        name: "update",
-      },
-      {
-        id: 3,
-        name: "dummy",
+        name: "update *not working yet",
       },
     ];
 
+    const selectPosition = (id) => {
+    
+      const index = this.state.selectedPositions.indexOf(id);
+    
+     if(index == -1){
+   
+      this.setState(prevState => ({
+        selectedPositions : [...prevState.selectedPositions, id],
+      }))
+     }else{
+     const newarray = [...this.state.selectedPositions]
+     newarray.splice(index,1)
+
+      this.setState({
+      selectedPositions : newarray
+      })
+     }
+    }
 
     if (portfolio && Array.isArray(portfolio.positions) && userdetails !== null) {
 
@@ -73,6 +109,7 @@ class StockOverview extends Component {
         <div className="portfoliocontent">
       <h3>Portfolio van: {portfolio.owner}</h3>
       <h4>{portfolio.description}</h4>
+      <h4>positions: {this.state.selectedPositions}</h4>
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
@@ -89,12 +126,12 @@ class StockOverview extends Component {
         </TableHead>
         <TableBody>
           {portfolio.positions.map((row,key) => (
-            <Row key={key} row={row} />
+            <Row key={key} row={row} selectedPositions={this.state.selectedPositions} selectPosition={selectPosition} />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-            <PositionOptions options={options} />
+            <PositionOptions selectedPositions={this.state.selectedPositions} options={options} updatePositions={this.updatePositions} />
           </div>
         </div>
      
@@ -120,22 +157,28 @@ const getDifference = (stock,amount,oldValue) => {
   )
 }
 
+
+//can be deeleted...
 const useRowStyles = makeStyles({
   root: {
     '& > *': {
       borderBottom: 'unset',
     },
   },
+  selected: {
+    color: 'red'
+  }
 });
 
 function Row(props) {
-  const { row } = props;
+  const { row,selectedPositions, selectPosition } = props;
   const [open, setOpen] = useState(false);
-  const classes = useRowStyles();
+ // const classes = useRowStyles();
+  
 
   return (
     <React.Fragment>
-      <TableRow className={classes.root}>
+      <TableRow  className={selectedPositions.indexOf(row.id) !==  -1 ? "selectedPosition": "unselectedPosition"}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -144,7 +187,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           Aandeel
         </TableCell>
-        <TableCell  align="left" style={{fontWeight:"bolder"}}>{row.stock.name}</TableCell>
+        <TableCell onClick={() => selectPosition(row.id)} align="left" style={{fontWeight:"bolder"}}>{row.stock.name}</TableCell>
         <TableCell align="right">{row.stock.symbol}</TableCell>
         <TableCell align="right">{row.amount}</TableCell>
         <TableCell align="right">{row.value}</TableCell>

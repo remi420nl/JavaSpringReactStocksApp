@@ -22,9 +22,6 @@ function App() {
   const [loginStatus, setLoginStatus] = useState(false);
   const [name, setName] = useState();
 
-
- 
-
   useEffect(() => {
     //getting current username if token is present and not expired
 

@@ -22,5 +22,6 @@ List<Position> findByPortfolioId(Long id);
 
 Optional<Position> findTopByStockAndPortfolio(Stock stock, Portfolio portfolio);
 
+void deleteById(Long id);
 
 }

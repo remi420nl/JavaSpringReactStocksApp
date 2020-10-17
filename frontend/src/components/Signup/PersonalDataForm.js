@@ -32,7 +32,7 @@ function handleChange (e,field) {
 return (
     <div className = "signupForm">
         <>
-            <AppBar title="Enter Personal Details" />
+            
 {data.map(value =>   
  <TextField
  onBlur={(e) =>{if(e.target.value.length < 3) {

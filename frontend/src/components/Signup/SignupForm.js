@@ -114,7 +114,7 @@ export class SignupForm extends Component {
             next={this.nextPage}
             prev={this.prevPage}
             values={totalvalues}
-            success={this.handleSuccesfulAuth}
+           
           />
         );
       case 4:
@@ -123,6 +123,7 @@ export class SignupForm extends Component {
             next={this.nextPage}
             prev={this.prevPage}
             name={firstname["value"] + " " + lastname["value"]}
+            success={this.handleSuccesfulAuth}
           />
         );
     }
