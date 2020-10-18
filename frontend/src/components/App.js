@@ -4,7 +4,7 @@ import HomePage from "./home/HomePage";
 import Statistics from "./Statistics/Statistics";
 import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
-import StockOverview from "./Portfolio/StockOverview";
+import Portfolio from "./Portfolio/Portfolio";
 import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
 import Authenticate from "./authenticate/Authenticate";
@@ -83,9 +83,9 @@ function App() {
           />
           <Route path="/statistics" component={Statistics} />
           <Route
-            path="/StockOverview"
+            path="/portfolio"
             render={(props) => (
-              <StockOverview {...props} loginStatus={loginStatus} />
+              <Portfolio {...props} loginStatus={loginStatus} />
             )}
           />
             <Route

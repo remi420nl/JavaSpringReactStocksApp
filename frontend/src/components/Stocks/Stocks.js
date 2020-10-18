@@ -3,12 +3,13 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import Select from "react-virtualized-select";
-import StockInfo from "./StockInfo";
+import { ConvertData, StockChart } from "./StockChart";
 import SelectBox from "../../features/select-box";
 import createFilterOptions from "react-select-fast-filter-options";
 import { StockData } from "./StocksData";
 import Dropdown from "react-bootstrap/Dropdown";
-import {StockOptions} from './StockOptions'
+import { StockOptions } from "./StockOptions";
+import { getData } from "./Test";
 
 import { fetchTickerData, postNewPosition } from "../../api";
 
@@ -27,8 +28,7 @@ function Stocks(props) {
   const [options, setOptions] = useState([]);
   const [search, setSearch] = useState("");
 
- 
-  const {portfolioId} = props
+  const { portfolioId } = props;
 
   useEffect(() => {
     document.addEventListener("mousedown", clickOutsideOfMenu);
@@ -38,6 +38,8 @@ function Stocks(props) {
   }, []);
 
   useEffect(() => {
+    getData().then(x => console.log(x))
+
     const dropDownItems = [];
 
     StockData.map((s) => {
@@ -48,71 +50,66 @@ function Stocks(props) {
       return dropDownItems.push(item);
     });
 
-    dropDownItems.sort((a,b) => (a.label > b.label) ? 1 : -1)
+    dropDownItems.sort((a, b) => (a.label > b.label ? 1 : -1));
     setOptions(dropDownItems);
-
-
   }, []);
 
   const clickOutsideOfMenu = (e) => {
+    const { current: refw } = ref;
 
-      const { current: refw } = ref;
- 
-    if(refw && !refw.contains(e.target)){
-        console.log("if is true")
-        setDisplay(false)
+    if (refw && !refw.contains(e.target)) {
+      console.log("if is true");
+      setDisplay(false);
     }
   };
 
-
   //after a stock from the dropdowns gets clicked:
   function loadTickerData(symbol, name) {
-
     let stockdata = {};
 
     fetchTickerData(symbol).then((response) => {
       stockdata = response.data["Time Series (Daily)"];
-      setData(stockdata,symbol,name)
+      setData(stockdata, symbol, name);
     });
 
-        //chosen ticker(stock) gets set and the data for the chart gets loaded from the api
-
+    //chosen ticker(stock) gets set and the data for the chart gets loaded from the api
   }
 
-function setData(data,symbol,name){
-  const latest = Object.keys(data)[0]
+  function setData(data, symbol, name) {
+    const latest = Object.keys(data)[0];
 
-  const stock = {
-    name: name,
-    symbol: symbol,
-    price:  parseFloat(data[latest]['4. close']),
-    data: data
+    const stock = {
+      name: name,
+      symbol: symbol,
+      price: parseFloat(data[latest]["4. close"]),
+      data: data,
+    };
+    setError("");
+    setDisplay(false);
+    const converted = ConvertData(stock);
+    stock.data = converted;
+    console.log("dit is the stock ", stock)
+    setStock(stock);
   }
-  setError("");
-  setDisplay(false);
-  setStock(stock);
-}
 
-
-
-  function submitPosition(amount){
-  
-  const now = new Date();
-  //if stock usestate is present in constructs an object for the api (json)
-  if(stock){
-    const data = {
-      stock: stock.name,
-      symbol: stock.symbol,
-      portfolioId: portfolioId,
-      amount: amount ,
-      price: parseFloat(stock.price).toFixed(2),
-      value: parseFloat(amount * stock.price).toFixed(2),
-      date: "" + now.getFullYear() + now.getMonth() + now.getDate()
+  function submitPosition(amount) {
+    const now = new Date();
+    //if stock usestate is present in constructs an object for the api (json)
+    if (stock) {
+      const data = {
+        stock: stock.name,
+        symbol: stock.symbol,
+        portfolioId: portfolioId,
+        amount: amount,
+        price: parseFloat(stock.price).toFixed(2),
+        value: parseFloat(amount * stock.price).toFixed(2),
+        date: "" + now.getFullYear() + now.getMonth() + now.getDate(),
+      };
+      postNewPosition(data);
+    } else {
+      setError("Eerst een aandeel kiezen");
     }
-    postNewPosition(data)
-  }else{
-    setError('Eerst een aandeel kiezen')
-  } }
+  }
 
   // function loadIntraDay() {
   //     fetchTickerIntraDay("aapl")
@@ -130,58 +127,52 @@ function setData(data,symbol,name){
 
   return (
     <div>
-    <div  className="stocks">
-    <div className="stockoptions">
-    <StockOptions submitPosition={submitPosition}/>
-   <div className="errormessage"> {error}</div>
-    </div>
-<div className="stocksdropdown">
-      <input className="searchfield"
-        onChange={(e) => setSearch(e.target.value)}
-        onClick={() => setDisplay(!display)}
-        value={search}
-        placeholder="Zoek aandeel"
-      />
-  
-      {display && (
-        <div  ref={ref} className="optionlist">
-          {options
-            .filter(
-              ({ label }) =>
-                label.toLowerCase().indexOf(search.toLowerCase()) > -1
-            )
-            .map((o, i) => {
-              return (
-                <div
-                  className="option"
-                  onClick={() => loadTickerData(o.value, o.label)}
-                  key={i} >
-                    <input type="radio" className="radio" id={i.value} />
-                  <label htmlFor={o.value}>{o.label}</label>
-                </div>
-              );
-            })}
-           
+      <div className="stocks">
+        <div className="stockoptions">
+          <StockOptions submitPosition={submitPosition} />
+          <div className="errormessage"> {error}</div>
         </div>
-  
-        
-      )} 
-     
-     
-      </div>
-      <div className="stockdetails">
-        {stock ? (  
-        < StockInfo stockdata={stock}  /> 
-        ) : (
-          <div className="choosestock">Kies eerst een aandeel</div>
-        )}
-      </div>
-    </div>
+        <div className="stocksdropdown">
+          <input
+            className="searchfield"
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={() => setDisplay(!display)}
+            value={search}
+            placeholder="Zoek aandeel"
+          />
 
+          {display && (
+            <div ref={ref} className="optionlist">
+              {options
+                .filter(
+                  ({ label }) =>
+                    label.toLowerCase().indexOf(search.toLowerCase()) > -1
+                )
+                .map((o, i) => {
+                  return (
+                    <div
+                      className="option"
+                      onClick={() => loadTickerData(o.value, o.label)}
+                      key={i}
+                    >
+                      <input type="radio" className="radio" id={i.value} />
+                      <label htmlFor={o.value}>{o.label}</label>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+        </div>
+        <div className="stockdetails">
+          {stock ? (
+            <StockChart stockdata={stock.data.data} />
+          ) : (
+            <div className="choosestock">Kies eerst een aandeel</div>
+          )}
+        </div>
+      </div>
     </div>
   );
-
-
 }
 
 export default Stocks;

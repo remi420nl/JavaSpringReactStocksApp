@@ -101,7 +101,7 @@ const Sidebar = () => {
   
    <>
      <NavLink className="navbar-nav" to="/" activeStyle={activeStyle} exact >Home </ NavLink>
-        <NavLink className="navbar-nav" to="/StockOverview" activeStyle={activeStyle} >Stock Overview </ NavLink>
+        <NavLink className="navbar-nav" to="/portfolio" activeStyle={activeStyle} >Stock Overview </ NavLink>
         <NavLink className="navbar-nav" to="/about" activeStyle={activeStyle}  >About </ NavLink>
         <NavLink className="navbar-nav" to="/signup" activeStyle={activeStyle}  >Aanmelden </ NavLink>
         <NavLink className="navbar-nav" to="/stocks" activeStyle={activeStyle}  >Stocks </ NavLink>
@@ -127,7 +127,7 @@ const Sidebar = () => {
 },
 {
     title: 'Portfolio',
-    path: '/StockOverview',
+    path: '/portfolio',
     icon: <IconsAi.AiFillSignal/>,
     class: 'nav-text'
 },
