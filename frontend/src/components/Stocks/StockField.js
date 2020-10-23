@@ -9,9 +9,11 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
 import {Button} from '@material-ui/core/';
 
-export const StockOptions = (props) => {
+export const StockField = (props) => {
 
     const [amount, setAmount] = useState();
+    const[notification,setNotification]  = useState()
+    const { submitPosition } = props;
 
     const useStyles = makeStyles((theme) => ({
         margin: {
@@ -19,9 +21,20 @@ export const StockOptions = (props) => {
         },
       }));
 
+
+    const handleChange = ({target: {value}}) =>{
+      props.setAmount(value);
+      setAmount(value)
+    }
     const classes = useStyles();
   
-    const { submitPosition } = props;
+    const handleSubmit = () => {
+      if(submitPosition(amount)){
+        console.log("sub")
+        setNotification("Toegevoegd aan portfolio!")
+      }
+    }
+   
    
 
     const BootstrapInput = withStyles((theme) => ({
@@ -32,7 +45,7 @@ export const StockOptions = (props) => {
         },
         input: {
           borderRadius: 4,
-          width: 25,
+          width: 50,
           position: 'relative',
           backgroundColor: theme.palette.background.paper,
           border: '1px solid #ced4da',
@@ -63,14 +76,15 @@ export const StockOptions = (props) => {
 
       
 return(
-    <div className="stockoptions">
+    <div className="stockfield">
       <FormControl className={classes.margin}>
       <InputLabel htmlFor="demo-customized-textbox">Aantal</InputLabel>
-      <BootstrapInput onChange={(e) => setAmount(e.target.value)} value={amount} id="demo-customized-textbox" />
+      <BootstrapInput onChange={(e) => handleChange(e)} value={amount} id="demo-customized-textbox" />
     </FormControl>
     <Button
     disabled={!amount>0} 
-    onClick={() => submitPosition(amount)}>Toevoegen</Button>
+    onClick={() => handleSubmit()}>Toevoegen</Button>
+    <div className="errormessage">{notification}</div>
   </div>
 )
 }

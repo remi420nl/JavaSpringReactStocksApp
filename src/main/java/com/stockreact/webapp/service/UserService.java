@@ -28,19 +28,15 @@ public class UserService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
-	public String testmethod() {
-		return "crap";
-	}
-	
 	public User registerUser(UserDTO userDto) {
-		System.out.println("Registeruser called in service: "+ userDto.getCity());
+		
 		User user = mapToUser(userDto);
 		System.out.println("user: "+ user.getFirstname());
 		
 		Portfolio portfolio = new Portfolio();
 		portfolio.setName(userDto.getPortfolio());
-		System.out.println("portfolio: "+ portfolio.getName());
 		
+		System.out.println("name porto " + userDto.getPortfolio());
 		user.addPortfolio(portfolio);
 		
 		userRepo.save(user);

@@ -30,8 +30,7 @@ import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.PortfolioDTO;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
-
-
+import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.service.PortfolioService;
 import com.stockreact.webapp.service.UserService;
 import com.stockreact.webapp.util.JwtUtil;
@@ -55,12 +54,12 @@ public class PortfolioController {
 		return portfolioService.getAll();
 	}
 	
-	@GetMapping("/portfolio/{id}")
-	public ResponseEntity<Portfolio> getPortfolioById(@PathVariable Long id) {
-		Optional<Portfolio> portfolio = portfolioService.getById(id);
-		
-		return portfolio.map(res -> ResponseEntity.ok().body(res)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
+//	@GetMapping("/portfolio/{id}")
+//	public ResponseEntity<Portfolio> getPortfolioById(@PathVariable Long id) {
+//		Optional<Portfolio> portfolio = portfolioService.getById(id);
+//		
+//		return portfolio.map(res -> ResponseEntity.ok().body(res)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//	}
 	
 	@PutMapping("/portfolio/{id}")
 	public ResponseEntity<Portfolio> updatePortfolio (@Valid @RequestBody Portfolio p) {
@@ -86,22 +85,20 @@ public class PortfolioController {
 		return ResponseEntity.created(new URI("/api/portfolio" + result.getId())).body(result);
 	}
 	
-	@GetMapping("/portfoliotest/{id}")
+	@GetMapping("/portfolio/{id}")
 	public PortfolioDTO getStocksForPortfolioById(@PathVariable Long id) {
 		System.out.println("getstocksforportfoliobyID called..");
 	
-		
 		return portfolioService.getAllStocksByPortfolioId(id);
 		
 	}
 	
 	@GetMapping("/portfolio/byuser")
-	public ResponseEntity<?> getPortfolioByIdTest2(Authentication authentication) {
-	
-		System.out.println("getstocksforportfoliobyID By user called..");
+	public ResponseEntity<?> getPortfolioByUser(Authentication authentication) {
 		
+		User user =  (User) authentication.getPrincipal();
 		
-		PortfolioDTO portFolioDTO = portfolioService.getByUserIncludingPositions(authentication); 
+		PortfolioDTO portFolioDTO = portfolioService.getByUserIncludingPositions(user); 
 
 		if(portFolioDTO != null) {
 			return ResponseEntity.ok(portFolioDTO);

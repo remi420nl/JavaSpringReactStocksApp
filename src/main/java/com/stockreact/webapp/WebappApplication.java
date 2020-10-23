@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.stockreact.webapp.model.User;
 
+//annotation for auto scanning, component and bean registration
 @SpringBootApplication
 public class WebappApplication {
 

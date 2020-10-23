@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -27,6 +27,9 @@ class Portfolio extends Component {
     userdetails: null,
     selectedPositions: [],
     positionsUpdated: false,
+    currentvalue: {},
+    difference: {},
+    isLoaded: false,
   };
 
   componentDidMount() {
@@ -34,6 +37,7 @@ class Portfolio extends Component {
       this.props.history.push("/login");
     } else {
       this.updatePositions();
+
       fetchUserDetails().then((details) => {
         this.setState({
           userdetails: details.data,
@@ -102,7 +106,7 @@ class Portfolio extends Component {
           <div className="portfoliocontent">
             <h3>Portfolio van: {portfolio.owner}</h3>
             <h4>{portfolio.description}</h4>
-            <h4>positions: {this.state.selectedPositions}</h4>
+
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">
                 <TableHead>
@@ -144,131 +148,112 @@ class Portfolio extends Component {
 }
 
 //helper function to return the 2 last cells. To obtain cleaner code
-const getDifference = (stock, amount, oldValue) => {
-  const currentValue = GetCurrentValue(stock, amount);
-
-  const difference = parseFloat(
-    ((currentValue - oldValue) / oldValue) * 100
-  ).toFixed(2);
-
-  return (
-    <>
-      <TableCell align="right">{currentValue}</TableCell>
-      <TableCell
-        align="right"
-        style={{ color: difference > 0 ? "green" : "red" }}
-      >
-        {difference} %
-      </TableCell>
-    </>
-  );
-};
-
-//can be deeleted...
-const useRowStyles = makeStyles({
-  root: {
-    "& > *": {
-      borderBottom: "unset",
-    },
-  },
-  selected: {
-    color: "red",
-  },
-});
+//stock, amount, oldValue
 
 function Row(props) {
   const { row, selectedPositions, selectPosition } = props;
   const [open, setOpen] = useState(false);
+  const [isLoaded, setIsloaded] = useState(false);
+  const [currentValue, setCurrentValue] = useState();
+  const [difference, setDifference] = useState();
   // const classes = useRowStyles();
 
-  return (
-    <React.Fragment>
-      <TableRow
-        className={
-          selectedPositions.indexOf(row.id) !== -1
-            ? "selectedPosition"
-            : "unselectedPosition"
-        }
-      >
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          Aandeel
-        </TableCell>
-        <TableCell
-          onClick={() => selectPosition(row.id)}
-          align="left"
-          style={{ fontWeight: "bolder" }}
-        >
-          {row.stock.name}
-        </TableCell>
-        <TableCell align="right">{row.stock.symbol}</TableCell>
-        <TableCell align="right">{row.amount}</TableCell>
-        <TableCell align="right">{row.value}</TableCell>
-        {getDifference(row.stock, row.amount, row.value)}
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Geschiedenis
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Datum</TableCell>
-                    <TableCell>Aantal</TableCell>
-                    <TableCell align="right">Aanschafprijs</TableCell>
-                    <TableCell align="right">Totaal In Euro</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((row, key) => (
-                    <TableRow key={key}>
-                      <TableCell component="th" scope="row">
-                        {row.date}
-                      </TableCell>
-                      <TableCell>{row.amount}</TableCell>
-                      <TableCell align="right">{row.price}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(row.amount * row.price)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
+  useEffect(() => {
+    getDifference(row.stock, row.amount, row.value);
+  });
 
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     calories: PropTypes.number.isRequired,
-//     carbs: PropTypes.number.isRequired,
-//     fat: PropTypes.number.isRequired,
-//     history: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         amount: PropTypes.number.isRequired,
-//         customerId: PropTypes.string.isRequired,
-//         date: PropTypes.string.isRequired,
-//       }),
-//     ).isRequired,
-//     name: PropTypes.string.isRequired,
-//     price: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired,
-//   }).isRequired,
-// };
+  const getDifference = async (stock, amount, oldValue) => {
+    await GetCurrentValue(stock, amount, (response) => {
+      setCurrentValue(response);
+      setDifference(
+        parseFloat(((response - oldValue) / oldValue) * 100).toFixed(2)
+      );
+    }).then(() => setIsloaded(true));
+  };
+
+  if (isLoaded) {
+    return (
+      <React.Fragment>
+        <TableRow
+          onClick={() => selectPosition(row.id)}
+          className={
+            selectedPositions.indexOf(row.id) !== -1
+              ? "selectedPosition"
+              : "unselectedPosition"
+          }
+        >
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            Aandeel
+          </TableCell>
+          <TableCell align="left" style={{ fontWeight: "bolder" }}>
+            {row.stock.name}
+          </TableCell>
+          <TableCell align="right">{row.stock.symbol}</TableCell>
+          <TableCell align="right">{row.amount}</TableCell>
+          <TableCell align="right">€{row.value}</TableCell>
+          <TableCell align="right">€{currentValue}</TableCell>
+          <TableCell
+            align="right"
+            style={{ color: difference > 0 ? "green" : "red" }}
+          >
+            {difference} %
+          </TableCell>
+          {/* <TableCell
+          align="right"
+          style={{ color: this.state.difference[row.id] > 0 ? "green" : "red" }}
+        >
+          {this.state.difference[row.id].toFixed(2)} %
+        </TableCell> */}
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Transactie Geschiedenis
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Datum</TableCell>
+                      <TableCell>Aantal</TableCell>
+                      <TableCell align="right">Aanschafprijs</TableCell>
+                      <TableCell align="right">Totaal In Euro</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {row.history.map((row, key) => (
+                      <TableRow key={key}>
+                        <TableCell component="th" scope="row">
+                          {row.date}
+                        </TableCell>
+                        <TableCell>{row.amount}</TableCell>
+                        <TableCell align="right">€{row.price}</TableCell>
+                        <TableCell align="right">
+                          €{row.amount * row.price}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  } else {
+    return <>gegevens ophalen..</>;
+  }
+}
 
 export default Portfolio;

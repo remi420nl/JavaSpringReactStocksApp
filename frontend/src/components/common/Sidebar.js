@@ -106,7 +106,6 @@ const Sidebar = () => {
         <NavLink className="navbar-nav" to="/signup" activeStyle={activeStyle}  >Aanmelden </ NavLink>
         <NavLink className="navbar-nav" to="/stocks" activeStyle={activeStyle}  >Stocks </ NavLink>
         <NavLink className="navbar-nav" to="/login" activeStyle={activeStyle}  >Inloggen</ NavLink></>
-  
     )
   };
 

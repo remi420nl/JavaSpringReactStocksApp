@@ -21,14 +21,35 @@
   justify-content: flex-end;
 }
 
-/* stock container */
-.stocks{
-
+.stockscontainer{
+  border: 3px solid green;
   display: flex;
-  align-items: flex-start;
   padding: 32px;
   right: 20px;
+ 
+  width:100%;
+  flex-direction: column;
+}
+
+.stockspage{
+  border: 3px solid blue;
+  display: flex;
+  width: 75%;
+  align-self: end;
+
+  position: relative;
+  margin-left: auto;
+  overflow: hidden;
   justify-content: flex-end;
+}
+
+
+.stockoptions{
+  border: 3px solid red;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height:250px
 }
 
 
@@ -38,39 +59,69 @@
    border: 3px solid black;
   margin:0 50px;
   display: flex;
-  width: 250px;
+ 
   flex-direction: column;
 
   align-items: center;
 }
 
+.stocksearchfield{
+  display: flex;
+
+  width: 50%;
+
+  flex-direction: column;
+  }
+  
+
+
+
 /* flex item 2 */
+.stockchart{
+  border: 3px solid black;
+
+}
+.stockfield{
+  display: flex;
+  flex-direction: column;
+}
+
 .stockdetails{
-  border: 3px solid black;
-  display: flex;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: solid 3px black;
+  display : flex;
+  align-items : center;
+  justify-content: center;
   flex-direction: column;
 }
 
-/* flex item 3 */
-.stockoptions{
-  border: 3px solid black;
-  display: flex;
-  flex-direction: column;
+.stockdetails h3{
+color: rgb(85, 90, 90);
+padding: 15px;
+font-weight: 600;
 }
 
-
-
-
-.searchfield{
-  width: 100%;
+.choosestock{
+  text-align: center;
+  font-weight: bold;
   
 }
 
+
 .optionlist{
-  height: 300px;
+
  overflow-y: scroll;
   width: 100%;
 }
+
+.option{
+  padding:5px
+} 
+
+.option:hover{
+  font-weight: bolder;
+  
+} 
 
 .option:nth-child(even){
 background: #CCC
@@ -85,12 +136,7 @@ display: none;
 
 
 
-  .auto-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200px;
-  }
+
   
   /* .option {
     display: flex;

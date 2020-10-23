@@ -3,22 +3,23 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import Select from "react-virtualized-select";
-import { ConvertData, StockChart } from "./StockChart";
+import StockChart from "./StockChart";
+import {ConvertData} from "./ConvertData";
 import SelectBox from "../../features/select-box";
 import createFilterOptions from "react-select-fast-filter-options";
 import { StockData } from "./StocksData";
 import Dropdown from "react-bootstrap/Dropdown";
-import { StockOptions } from "./StockOptions";
-import { getData } from "./Test";
+import { StockField } from "./StockField";
+import {StockDetails} from "./StockDetails"
 
 import { fetchTickerData, postNewPosition } from "../../api";
 
 function Stocks(props) {
-  const [tickerData, setTickerData] = useState();
+  const [amount, setAmount] = useState(0);
 
   const [stock, setStock] = useState();
 
-  const [range, setRange] = useState();
+  //const [range, setRange] = useState();
 
   const [error, setError] = useState("");
 
@@ -38,7 +39,6 @@ function Stocks(props) {
   }, []);
 
   useEffect(() => {
-    getData().then(x => console.log(x))
 
     const dropDownItems = [];
 
@@ -76,23 +76,30 @@ function Stocks(props) {
   }
 
   function setData(data, symbol, name) {
-    const latest = Object.keys(data)[0];
+    
+    //data being coverted so its readable for the chart
+    const converted = ConvertData(data);
+    const n = converted.data.length
+    const price = converted.data[n-1]['close'].toFixed(2);
+
+    console.log("latest ", price)
+ 
 
     const stock = {
       name: name,
       symbol: symbol,
-      price: parseFloat(data[latest]["4. close"]),
-      data: data,
+      price: price,
+      data: converted,
     };
     setError("");
     setDisplay(false);
-    const converted = ConvertData(stock);
-    stock.data = converted;
-    console.log("dit is the stock ", stock)
+
     setStock(stock);
   }
 
   function submitPosition(amount) {
+   
+ 
     const now = new Date();
     //if stock usestate is present in constructs an object for the api (json)
     if (stock) {
@@ -101,19 +108,21 @@ function Stocks(props) {
         symbol: stock.symbol,
         portfolioId: portfolioId,
         amount: amount,
-        price: parseFloat(stock.price).toFixed(2),
-        value: parseFloat(amount * stock.price).toFixed(2),
+        price: stock.price,
+        value: amount * stock.price,
         date: "" + now.getFullYear() + now.getMonth() + now.getDate(),
       };
-      postNewPosition(data);
-    } else {
-      setError("Eerst een aandeel kiezen");
-    }
+      console.log("value ", data.price)
+      //Api call
+      postNewPosition(data).catch(() => {
+        return false;
+      })
+      return true
+      }
+      
+    
   }
 
-  // function loadIntraDay() {
-  //     fetchTickerIntraDay("aapl")
-  // }
 
   function onChangeHandler(e) {
     //console.log(tickerData);
@@ -121,20 +130,16 @@ function Stocks(props) {
     // loadTickerData(e.value);
   }
 
-  function handleRange(e) {
-    setRange(e);
-  }
-
   return (
-    <div>
-      <div className="stocks">
+    <div className="stockspage">
+      <div className="stockscontainer">
         <div className="stockoptions">
-          <StockOptions submitPosition={submitPosition} />
+          <StockField setAmount={setAmount} amount={amount} submitPosition={submitPosition} />
+          <StockDetails amount={amount} price={stock ? stock.price : 0} name={stock ? stock.name : ""}/>
           <div className="errormessage"> {error}</div>
-        </div>
-        <div className="stocksdropdown">
+        
+        <div className="stocksearchfield">
           <input
-            className="searchfield"
             onChange={(e) => setSearch(e.target.value)}
             onClick={() => setDisplay(!display)}
             value={search}
@@ -163,7 +168,8 @@ function Stocks(props) {
             </div>
           )}
         </div>
-        <div className="stockdetails">
+        </div>
+        <div className="stockchart">
           {stock ? (
             <StockChart stockdata={stock.data.data} />
           ) : (
@@ -171,7 +177,8 @@ function Stocks(props) {
           )}
         </div>
       </div>
-    </div>
+      </div>
+   
   );
 }
 

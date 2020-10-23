@@ -3,6 +3,7 @@ package com.stockreact.webapp.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,31 +39,23 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequiredArgsConstructor 
 @RequestMapping("/api")
 public class UserController {
 
-	
-	private final AuthenticationManager authManager;
-	
-	private final UserDetailsService userDetailsService;
-
-	private final JwtUtil jwtUtil;
-	
-	private final UserService userService;
-	
-	@GetMapping({"/test"})
-	public String  Login() {
-		System.out.println("Login method");
-		return "home";
-	}
+	@Autowired
+	private  AuthenticationManager authManager;
+	@Autowired
+	private  UserDetailsService userDetailsService;
+	@Autowired
+	private  JwtUtil jwtUtil;
+	@Autowired
+	private  UserService userService;
 	
 	
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/user")
 	@ResponseBody
     public String getUser(Authentication authentication) {
-		System.out.println("getuser called");
 		
         return authentication.getName();
     }
@@ -78,7 +72,6 @@ public class UserController {
 	
 	@PostMapping("/authenticate")
 	public ResponseEntity<?>  Authenticate(@RequestBody AuthenticationRequest request) throws StockAppException {
-		System.out.println("Authenticate method");
 		
 		UsernamePasswordAuthenticationToken token;
 		
@@ -102,8 +95,7 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?>  register (@Valid @RequestBody UserDTO userDTO) throws StockAppException {
-		System.out.println("Registeruser called: "+ userService.testmethod());
+	public ResponseEntity<User>  register (@Valid @RequestBody UserDTO userDTO) throws StockAppException {
 
 		User user = userService.registerUser(userDTO);
 		
@@ -111,4 +103,8 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	} 
 	
+	 @ExceptionHandler(RuntimeException.class)
+	    public final ResponseEntity<Exception> handleAllExceptions(RuntimeException ex) {
+	        return new ResponseEntity<Exception>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 }

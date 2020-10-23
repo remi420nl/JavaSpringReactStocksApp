@@ -65,7 +65,7 @@ function App() {
                  )}
               />
         <div className="showcase">
-        <Switch className="container showcase-inner">
+        <Switch>
         
           <Route
             exact

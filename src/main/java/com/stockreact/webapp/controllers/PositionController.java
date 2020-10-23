@@ -34,9 +34,8 @@ import com.stockreact.webapp.service.PositionService;
 import com.stockreact.webapp.service.UserService;
 import com.stockreact.webapp.util.JwtUtil;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -46,7 +45,8 @@ public class PositionController {
 
 	private final PositionService positionService;
 
-	@PostMapping("/newposition")
+	//@PostMapping("/newposition")
+	@PostMapping("/position")
 	public ResponseEntity<Position> createPosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
 			throws URISyntaxException {
 
@@ -58,7 +58,7 @@ public class PositionController {
 	}
 
 	
-	@DeleteMapping("/deleteposition/{id}")
+	@DeleteMapping("/position/{id}")
 	public void deletePosition(@PathVariable Long id) {
 		positionService.deleteById(id);
 		

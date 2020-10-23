@@ -1,46 +1,6 @@
-import React from "react";
-import { timeParse } from "d3-time-format";
-
-export function ConvertData({ data }) {
-  const returnarray = objectToArray(data);
-  console.log("returnarray! ", returnarray);
-  return returnarray;
-}
-
-const parseDate = timeParse("%Y-%m-%d");
-
-function objectToArray(data) {
-  const timeSeries = data;
-  let rows = [];
-
-  for (var key in timeSeries) {
-    if (timeSeries.hasOwnProperty(key)) {
-      const finData = timeSeries[key];
-
-      const open = finData["1. open"];
-      const high = finData["2. high"];
-      const low = finData["3. low"];
-      //this one is being parsed since we need it for further use
-      const close = parseFloat(finData["4. close"]);
-      const volume = finData["6. volume"];
-
-      rows.push({
-        date: parseDate(key),
-        open,
-        high,
-        low,
-        close,
-        volume,
-      });
-    }
-  }
-  const stockdata = {
-    data: rows,
-    latestclose: rows[0].close,
-  };
-  return stockdata;
-}
-
+/* eslint-disable no-class-assign */
+import React, {Component}from "react";
+import PropTypes from "prop-types";
 //   //key = date
 //   /*
 //     for (var key in timeSeries){
@@ -109,17 +69,10 @@ function objectToArray(data) {
 
 /////////
 
-import PropTypes from "prop-types";
-
 import { format } from "d3-format";
 
-
 import { ChartCanvas, Chart } from "react-stockcharts";
-import {
-  BarSeries,
-  CandlestickSeries,
-  LineSeries,
-} from "react-stockcharts/lib/series";
+
 import { XAxis, YAxis } from "react-stockcharts/lib/axes";
 import {
   CrossHairCursor,
@@ -130,185 +83,259 @@ import {
 } from "react-stockcharts/lib/coordinates";
 
 import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
-import { OHLCTooltip, GroupTooltip } from "react-stockcharts/lib/tooltip";
 import {
-  ema,
-  stochasticOscillator,
-  bollingerBand,
-} from "react-stockcharts/lib/indicator";
+  OHLCTooltip,
+  MovingAverageTooltip,
+  RSITooltip,
+  SingleValueTooltip,
+} from "react-stockcharts/lib/tooltip";
+import { ema, rsi, sma, atr } from "react-stockcharts/lib/indicator";
+import {
+  BarSeries,
+  AreaSeries,
+  CandlestickSeries,
+  LineSeries,
+  RSISeries,
+} from "react-stockcharts/lib/series";
 import { fitWidth } from "react-stockcharts/lib/helper";
-import { last } from "react-stockcharts/lib/utils";
+import { last, timeIntervalBarWidth } from "react-stockcharts/lib/utils";
 import { timeFormat } from "d3-time-format";
+import { render } from "react-dom";
 
-export class StockChart extends React.Component {
-  render() {
-    const height = 750;
-    const { stockdata } = this.props;
-
-	const margin = { left: 70, right: 70, top: 20, bottom: 30 };
-
-	const gridHeight = height - margin.top - margin.bottom;
-	const gridWidth = 750 - margin.left - margin.right;
-
-	const showGrid = true;
-	const yGrid = showGrid ? { innerTickSize: -1 * gridWidth, tickStrokeOpacity: 0.2 } : {};
-	const xGrid = showGrid ? { innerTickSize: -1 * gridHeight, tickStrokeOpacity: 0.2 } : {};
-
-	const ema20 = ema()
-		.id(0)
-		.options({ windowSize: 20 })
-		.merge((d, c) => {d.ema20 = c;})
-		.accessor(d => d.ema20);
-
-	const ema50 = ema()
-		.id(2)
-		.options({ windowSize: 50 })
-		.merge((d, c) => {d.ema50 = c;})
-		.accessor(d => d.ema50);
+ let StockChart = React.forwardRef (({ type, stockdata, width, ratio }, ref) =>{
+  
 
 
-	const calculatedData = ema20(ema50((stockdata)));
-	const xScaleProvider = discontinuousTimeScaleProvider
-		.inputDateAccessor(d => d.date);
-	const {
-		data,
-		xScale,
-		xAccessor,
-		displayXAccessor,
-	} = xScaleProvider(calculatedData);
+  const ema26 = ema()
+    .id(0)
+    .options({ windowSize: 26 })
+    .merge((d, c) => {
+      d.ema26 = c;
+    })
+    .accessor((d) => d.ema26);
 
-	const start = xAccessor(last(data));
-	const end = xAccessor(data[Math.max(0, data.length - 150)]);
-	const xExtents = [start, end];
+  const ema12 = ema()
+    .id(1)
+    .options({ windowSize: 12 })
+    .merge((d, c) => {
+      d.ema12 = c;
+    })
+    .accessor((d) => d.ema12);
+
+  const smaVolume50 = sma()
+    .id(3)
+    .options({ windowSize: 50, sourcePath: "volume" })
+    .merge((d, c) => {
+      d.smaVolume50 = c;
+    })
+    .accessor((d) => d.smaVolume50);
+
+  const rsiCalculator = rsi()
+    .options({ windowSize: 14 })
+    .merge((d, c) => {
+      d.rsi = c;
+    })
+    .accessor((d) => d.rsi);
+
+  const atr14 = atr()
+    .options({ windowSize: 14 })
+    .merge((d, c) => {
+      d.atr14 = c;
+    })
+    .accessor((d) => d.atr14);
+
+  const calculatedData = ema26(
+    ema12(smaVolume50(rsiCalculator(atr14(stockdata))))
+  );
+  const xScaleProvider = discontinuousTimeScaleProvider.inputDateAccessor(
+    (d) => d.date
+  );
+  const { data, xScale, xAccessor, displayXAccessor } = xScaleProvider(
+    calculatedData
+  );
+
+  const start = xAccessor(last(data));
+  const end = xAccessor(data[Math.max(0, data.length - 150)]);
+  const xExtents = [start, end];
 
 
-	return (
-		<ChartCanvas height={750}
-			width={500}
-			ratio={8}
-			margin={margin}
-		
-			seriesName="MSFT"
-			data={data}
-			xScale={xScale}
-			xAccessor={xAccessor}
-			displayXAccessor={displayXAccessor}
-			xExtents={xExtents}
-		>
+  return (
+   
+    <ChartCanvas
+    ref={ref}
+      height={600}
+      width={width}
+      ratio={ratio}
+      margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+      type={type}
+      seriesName="MSFT"
+      data={data}
+      xScale={xScale}
+      xAccessor={xAccessor}
+      displayXAccessor={displayXAccessor}
+      xExtents={xExtents}
+    >
+      <Chart
+        id={1}
+        height={300}
+        yExtents={[(d) => [d.high, d.low], ema26.accessor(), ema12.accessor()]}
+        padding={{ top: 10, bottom: 20 }}
+      >
+        <XAxis
+          axisAt="bottom"
+          orient="bottom"
+          showTicks={false}
+          outerTickSize={0}
+        />
+        <YAxis axisAt="right" orient="right" ticks={5} />
 
+        <MouseCoordinateY
+          at="right"
+          orient="right"
+          displayFormat={format(".2f")}
+        />
 
-			<Chart id={1} height={325}
-				yExtents={[d => [d.high, d.low], ema20.accessor(), ema50.accessor()]}
-				padding={{ top: 10, bottom: 20 }}
-			>
-				<YAxis axisAt="right" orient="right" ticks={5} {...yGrid} inverted={true}
-					tickStroke="#FFFFFF" />
-				<XAxis axisAt="bottom" orient="bottom" showTicks={false} outerTickSize={0}
-					stroke="#FFFFFF" opacity={0.5} />
+        <CandlestickSeries />
+        <LineSeries yAccessor={ema26.accessor()} stroke={ema26.stroke()} />
+        <LineSeries yAccessor={ema12.accessor()} stroke={ema12.stroke()} />
 
-				<MouseCoordinateY
-					at="right"
-					orient="right"
-					displayFormat={format(".2f")} />
+        <CurrentCoordinate yAccessor={ema26.accessor()} fill={ema26.stroke()} />
+        <CurrentCoordinate yAccessor={ema12.accessor()} fill={ema12.stroke()} />
 
-				<CandlestickSeries
-					stroke={d => d.close > d.open ? "#6BA583" : "#DB0000"}
-					wickStroke={d => d.close > d.open ? "#6BA583" : "#DB0000"}
-					fill={d => d.close > d.open ? "#6BA583" : "#DB0000"} />
+        <EdgeIndicator
+          itemType="last"
+          orient="right"
+          edgeAt="right"
+          yAccessor={(d) => d.close}
+          fill={(d) => (d.close > d.open ? "#6BA583" : "#FF0000")}
+        />
 
-				<LineSeries yAccessor={ema20.accessor()} stroke={ema20.stroke()}/>
-				<LineSeries yAccessor={ema50.accessor()} stroke={ema50.stroke()}/>
+        <OHLCTooltip origin={[-40, 0]} />
 
-				
-				<CurrentCoordinate yAccessor={ema20.accessor()} fill={ema20.stroke()} />
-				<CurrentCoordinate yAccessor={ema50.accessor()} fill={ema50.stroke()} />
+        <MovingAverageTooltip
+          onClick={(e) => console.log(e)}
+          origin={[-38, 15]}
+          options={[
+            {
+              yAccessor: ema26.accessor(),
+              type: "EMA",
+              stroke: ema26.stroke(),
+              windowSize: ema26.options().windowSize,
+            },
+            {
+              yAccessor: ema12.accessor(),
+              type: "EMA",
+              stroke: ema12.stroke(),
+              windowSize: ema12.options().windowSize,
+            },
+          ]}
+        />
+      </Chart>
+      <Chart
+        id={2}
+        height={150}
+        yExtents={[(d) => d.volume, smaVolume50.accessor()]}
+        origin={(w, h) => [0, h - 400]}
+      >
+        <YAxis
+          axisAt="left"
+          orient="left"
+          ticks={5}
+          tickFormat={format(".2s")}
+        />
 
-				<EdgeIndicator itemType="last" orient="right" edgeAt="right"
-					yAccessor={d => d.close} fill={d => d.close > d.open ? "#6BA583" : "#DB0000"}/>
+        <MouseCoordinateY
+          at="left"
+          orient="left"
+          displayFormat={format(".4s")}
+        />
 
-				<OHLCTooltip origin={[-40, -10]}/>
-				
-				<GroupTooltip
-					layout="vertical"
-					origin={[-38, 15]}
-					verticalSize={20}
-					onClick={e => console.log(e)}
-					options={[
-						{
-							yAccessor: ema20.accessor(),
-							yLabel: `${ema20.type()}(${ema20.options().windowSize})`,
-							valueFill: ema20.stroke(),
-							withShape: true,
-						},
-						{
-							yAccessor: ema50.accessor(),
-							yLabel: `${ema50.type()}(${ema50.options().windowSize})`,
-							valueFill: ema50.stroke(),
-							withShape: true,
-						},
-					]}
-				/>
-			
-			</Chart>
-			<Chart id={2}
-				yExtents={d => d.volume}
-				height={100} origin={(w, h) => [0, h - 475]}
-			>
-				<YAxis axisAt="left" orient="left" ticks={5} tickFormat={format(".2s")}
-					tickStroke="#FFFFFF" />
-				<BarSeries
-					yAccessor={d => d.volume}
-					fill={d => d.close > d.open ? "#6BA583" : "#DB0000"} />
-			</Chart>
-			<Chart id={3}
-				yExtents={[0, 100]}
-				height={125} origin={(w, h) => [0, h - 375]} padding={{ top: 10, bottom: 10 }}
-			>
-				<XAxis axisAt="bottom" orient="bottom"
-					showTicks={false}
-					outerTickSize={0}
-					stroke="#FFFFFF" opacity={0.5} />
-				<YAxis axisAt="right" orient="right"
-					tickValues={[20, 50, 80]}
-					tickStroke="#FFFFFF"/>
-				<MouseCoordinateY
-					at="right"
-					orient="right"
-					displayFormat={format(".2f")} />
+        <BarSeries
+          yAccessor={(d) => d.volume}
+          fill={(d) => (d.close > d.open ? "#6BA583" : "#FF0000")}
+        />
+        <AreaSeries
+          yAccessor={smaVolume50.accessor()}
+          stroke={smaVolume50.stroke()}
+          fill={smaVolume50.fill()}
+        />
+      </Chart>
+      <Chart
+        id={3}
+        yExtents={[0, 100]}
+        height={125}
+        origin={(w, h) => [0, h - 250]}
+      >
+        <XAxis
+          axisAt="bottom"
+          orient="bottom"
+          showTicks={false}
+          outerTickSize={0}
+        />
+        <YAxis axisAt="right" orient="right" tickValues={[30, 50, 70]} />
+        <MouseCoordinateY
+          at="right"
+          orient="right"
+          displayFormat={format(".2f")}
+        />
 
-		</Chart>
-			<Chart id={5}
-				yExtents={[0, 100]}
-				height={125}
-				origin={(w, h) => [0, h - 125]}
-				padding={{ top: 10, bottom: 10 }}
-			>
-				<XAxis axisAt="bottom" orient="bottom"
-					{...xGrid}
-					tickStroke="#FFFFFF"
-					stroke="#FFFFFF" />
-				<YAxis axisAt="right" orient="right"
-					tickValues={[20, 50, 80]}
-					tickStroke="#FFFFFF"/>
+        <RSISeries yAccessor={(d) => d.rsi} />
 
-				<MouseCoordinateX
-					at="bottom"
-					orient="bottom"
-					displayFormat={timeFormat("%Y-%m-%d")} />
-				<MouseCoordinateY
-					at="right"
-					orient="right"
-					displayFormat={format(".2f")} />
+        <RSITooltip
+          origin={[-38, 15]}
+          yAccessor={(d) => d.rsi}
+          options={rsiCalculator.options()}
+        />
+      </Chart>
+      <Chart
+        id={8}
+        yExtents={atr14.accessor()}
+        height={125}
+        origin={(w, h) => [0, h - 125]}
+        padding={{ top: 10, bottom: 10 }}
+      >
+        <XAxis axisAt="bottom" orient="bottom" />
+        <YAxis axisAt="right" orient="right" ticks={2} />
 
-			</Chart>
-			<CrossHairCursor stroke="#FFFFFF" />
-		</ChartCanvas>
-    );
-  }
-}
+        <MouseCoordinateX
+          at="bottom"
+          orient="bottom"
+          displayFormat={timeFormat("%Y-%m-%d")}
+        />
+        <MouseCoordinateY
+          at="right"
+          orient="right"
+          displayFormat={format(".2f")}
+        />
+
+        <LineSeries yAccessor={atr14.accessor()} stroke={atr14.stroke()} />
+        <SingleValueTooltip
+          yAccessor={atr14.accessor()}
+          yLabel={`ATR (${atr14.options().windowSize})`}
+          yDisplayFormat={format(".2f")}
+          /* valueStroke={atr14.stroke()} - optional prop */
+          /* labelStroke="#4682B4" - optional prop */
+          origin={[-40, 15]}
+        />
+      </Chart>
+      <CrossHairCursor />
+    </ChartCanvas>
+   
+  );
+});
+
+StockChart.prototype  = {
+  data: PropTypes.array.isRequired,
+  width: PropTypes.number.isRequired,
+  ratio: PropTypes.number.isRequired,
+  type: PropTypes.oneOf(["svg", "hybrid"]).isRequired,
+};
 
 StockChart.defaultProps = {
   type: "svg",
 };
 
+StockChart = fitWidth(StockChart);
+StockChart.displayName ="StockChart"
 
+export default StockChart;

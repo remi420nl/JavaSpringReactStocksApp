@@ -167,7 +167,7 @@ export const postNewPosition = async (data) => {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
 
-  const url = `http://localhost:8080/api/newposition`;
+  const url = `http://localhost:8080/api/position`;
 
   try {
     const response = await axios.post(url, data, config);
@@ -186,7 +186,7 @@ export const deletePosition = async (id) => {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
 
-  const url = `http://localhost:8080/api/deleteposition/${id}`;
+  const url = `http://localhost:8080/api/position/${id}`;
 
   try {
     const response = await axios.delete(url, config);

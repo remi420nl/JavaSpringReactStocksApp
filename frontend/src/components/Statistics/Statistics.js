@@ -55,7 +55,6 @@ export default function Statistics() {
     sum += GetCurrentValue(p.stock, p.amount)
  
     })
-    console.log("end of loop", sum)
     return sum;
 
   }
