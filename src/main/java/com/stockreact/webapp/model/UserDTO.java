@@ -18,17 +18,17 @@ public class UserDTO {
     @NotBlank(message = "gebruikernaam is verplicht")
 	private String username;
 	
-    @NotBlank(message = "Nfvbvby")
+    @NotBlank(message = "Voornaam is verplicht")
 	private String firstname;
-    @NotBlank(message = "Nasvsvory")
+    @NotBlank(message = "Achternaam is verplicht")
 	private String lastname;
-    @NotBlank(message = "Nasvsvory")
+    @NotBlank(message = "Wachtwoord is verplicht")
 	private String password;
 	
 	private String city;
-	  @NotBlank(message = "Nasvsvory")
+	  @NotBlank(message = "Email is verplicht")
 	private String email;
-	
+	  @NotBlank(message = "Portfolionaam is verplicht")
 	private String portfolio;
 	
 	private String info;

@@ -6,7 +6,8 @@ import { Button } from "@material-ui/core";
 
 const DetailsForm = (props) => {
   const [data, setData] = useState([]);
-  const { values, change } = props;
+  const { values, change, next,prev } = props;
+  const [error,setError] = useState({})
   const rows = [];
 
   useEffect(() => {
@@ -17,15 +18,54 @@ const DetailsForm = (props) => {
       }
     }
     setData(rows);
-  }, []);
+  }, [error]);
+
+// copy of errors for readability
+const oldErrors = error;
+
 
   function handleclick(e) {
     if (e === "next") {
+      console.log("error", error)
       //e.preventDefault();
-      props.next();
+      if(checkFields()){
+        next()
+      }
     } else {
-      props.prev();
+      prev();
     }
+  }
+
+  function checkFields(){
+    const {values: { firstname, lastname, city, portfolio }} = props
+    const fields =  { firstname, lastname, city, portfolio };
+    let okfields = 0;
+    const errorMessage = "Te kort, minimaal 2 karakers";
+    let errors = {}
+    for (var key in fields) {
+      if (fields.hasOwnProperty(key)){
+        let result = checkLength(fields[key]);
+        okfields += result;
+        if(result < 1){
+          errors = {...errors, [key]: errorMessage}
+        }
+      }
+    
+    }
+    setError(errors)
+  return okfields > 3;
+  }
+
+  function checkLength(field){
+
+    
+   
+
+    if(field.value.length < 2){
+      return 0
+    }
+   return 1
+
   }
 
   function handleChange(e, v) {
@@ -35,13 +75,16 @@ const DetailsForm = (props) => {
   return (
     <div className="signupForm">
       <AppBar title="Enter Personal Details" />
-      {data.map((value) => (
+      {data.map((field) => (
         <TextField
-          key={value.name}
-          label={value.label}
-          //  placeholder={value.firstname.placeholder}
-          onChange={(e) => handleChange(e, value.name)}
-          defaultValue={value.value}
+          key={field.name}
+          label={field.label}
+          onChange={(e) => handleChange(e, field.name)}
+          defaultValue={field.value}
+          helperText= {error[`${field.name}`]}
+          FormHelperTextProps={{
+           style:{color: 'red'}
+         }}
         />
       ))}
       <div className="signupbuttons">

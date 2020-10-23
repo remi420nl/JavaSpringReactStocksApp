@@ -6,13 +6,55 @@ import Button from '@material-ui/core/Button';
 
 const PersonalDataForm=(props)=> {
 const [data, setData] = useState([])
-const {values, change} = props;
+const {values, change,next} = props;
 const [error,setError] = useState({})
 const rows = [];
 
 function nextpage (e) {
-    setError(props.next())
+ if(checkFields()){
+   next()
+ }
 }
+
+// copy of errors for readability
+  const oldErrors = error;
+
+function checkFields(){
+  const {values: {email, username, password}} = props
+  console.log("checking email..", username.value)
+
+  if (!validateEmail(email)) { 
+    setError({ email: "Ongeldig email-adres ## @ ## . ##"}) 
+   return }
+  if(username.value.length < 2){
+    setError({...oldErrors,[`${username.name}`]: errorMessage(username)} ) 
+    return;
+  }
+  if(password.value.length < 4){
+    setError({...oldErrors,[`${password.name}`]: errorMessage(password)} ) 
+    return;
+  }
+return true;
+}
+
+  function validateEmail (email)  {
+
+    let lastAt = email.value.lastIndexOf("@");
+    let lastDot = email.value.lastIndexOf(".");
+
+    if (
+      !(
+        lastAt < lastDot &&
+        lastAt > 0 &&
+        email.value.indexOf("@@") == -1 &&
+        lastDot > 2 &&
+        email.value.length - lastDot > 2
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
 
 useEffect(() => {
  for(var value in values){
@@ -24,33 +66,41 @@ useEffect(() => {
  setData(rows)
 },[])
 
+//calling prop in parent component that maintains the state
 function handleChange (e,field) {
   change(e,field)
   }
 
+  //minimum characters
+  const characters = {
+    "username" : 2,
+    "password" : 4
+  }
+
+  const errorMessage=(field) =>{
+    return `Te kort, minimaal ${characters[field.name]} karakers` 
+  }
 
 return (
     <div className = "signupForm">
         <>
             
-{data.map(value =>   
+{data.map(field =>   
  <TextField
- onBlur={(e) =>{if(e.target.value.length < 3) {
-   const oldErrors = error;
-   setError({...oldErrors,[`${value.name}`]: "Te kort, minimaal 2 karakers"} ) 
-  
+ onBlur={({target: {value}}) =>{if(value.length < 3 && field.name != "email") {
+   setError({...oldErrors,[`${field.name}`]: errorMessage(field)} ) 
+  }else{
+    setError({...oldErrors,[`${field.name}`]: ""})
   } }}
- key={value.name}
- label= {value.label}
- type={value.name}
- onChange={(e) => handleChange(e, value.name)}
- defaultValue = {value.value}
- helperText= {error[`${value.name}`]}
+ key={field.name}
+ label= {field.label}
+ type={field.name}
+ onChange={(e) => handleChange(e, field.name)}
+ defaultValue = {field.value}
+ helperText= {error[`${field.name}`]}
  FormHelperTextProps={{
   style:{color: 'red'}
-  
 }}
-inputProps={{ min : 3 }}
 requiered={true}
  />)}
       <div className="signupbuttons">

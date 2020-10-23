@@ -28,13 +28,10 @@ export class SignupForm extends Component {
   };
 
   nextPage = () => {
-    if (this.validateEmail()) {
-      const { page } = this.state;
-      this.setState({
-        page: page + 1,
-      });
-    }
-    return { email: "Ongeldig email-adres ##@##.##" };
+    const { page } = this.state;
+    this.setState({
+      page: page + 1,
+    });
   };
 
   prevPage = () => {
@@ -42,33 +39,6 @@ export class SignupForm extends Component {
     this.setState({
       page: page - 1,
     });
-  };
-
-  validateEmail = () => {
-    const {
-      email: { value },
-    } = this.state;
-
-    // if email is emptie
-    if (value.length < 1) {
-      return true;
-    }
-
-    let lastAt = value.lastIndexOf("@");
-    let lastDot = value.lastIndexOf(".");
-
-    if (
-      !(
-        lastAt < lastDot &&
-        lastAt > 0 &&
-        value.indexOf("@@") == -1 &&
-        lastDot > 2 &&
-        value.length - lastDot > 2
-      )
-    ) {
-      return false;
-    }
-    return true;
   };
 
   handleSuccesfulAuth = (page) => {
@@ -114,7 +84,6 @@ export class SignupForm extends Component {
             next={this.nextPage}
             prev={this.prevPage}
             values={totalvalues}
-           
           />
         );
       case 4:
