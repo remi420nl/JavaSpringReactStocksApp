@@ -39,8 +39,6 @@ public class Portfolio {
 	
 	private String name;
 	
-	
-	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;

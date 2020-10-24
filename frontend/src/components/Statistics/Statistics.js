@@ -22,6 +22,7 @@ export default function Statistics() {
   const classes = useStyles();
   const [portfolios, setPortfolios] = useState([]);
   const [totals,setTotals] = useState([])
+  const [isLoaded,setIsLoaded] = useState(false)
 
   useEffect(() => {
     getPortfolios();
@@ -47,17 +48,17 @@ export default function Statistics() {
 
   }
 
-  function calculateCurrentValue(positions){
+  function  calculateCurrentValue (positions) {
 
     let sum = 0;
 
     positions.forEach(p =>{
-    sum += GetCurrentValue(p.stock, p.amount)
- 
-    })
-    return sum;
+     GetCurrentValue(p.stock, p.amount, (response) => {
+      sum += response}).then(() => setIsLoaded(true))})
+  return sum;
+}
 
-  }
+
 
 
   function convertToTotal(){
@@ -91,6 +92,7 @@ export default function Statistics() {
     }
 
   if (portfolios.length > 0) {
+    if(isLoaded){
     return (
       <div className="statistics">
         <TableContainer className={classes.table} component={Paper}>
@@ -110,8 +112,8 @@ export default function Statistics() {
                 <TableRow key={i}>
                   <TableCell>{i+1}</TableCell>
                   <TableCell align="right">{row.name}</TableCell>
-                  <TableCell align="right">{row.oldvalue}</TableCell>
-                  <TableCell align="right">{row.newvalue}</TableCell>
+                  <TableCell align="right">€{row.oldvalue}</TableCell>
+                  <TableCell align="right">€{row.newvalue}</TableCell>
                   <TableCell align="right" style={{ color: row.interest > 0 ? "green" : "red"}}>{row.interest} %</TableCell>
                 </TableRow>
               ))}
@@ -119,7 +121,9 @@ export default function Statistics() {
           </Table>
         </TableContainer>
       </div>
-    );
+    );}else{
+      return <div>Portfolios laden..</div>;
+    }
   } else {
     return <div>Er zijn geen portfolios in ons systeem</div>;
   }

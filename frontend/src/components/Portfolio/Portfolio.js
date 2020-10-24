@@ -164,7 +164,7 @@ function Row(props) {
 
   const getDifference = async (stock, amount, oldValue) => {
     await GetCurrentValue(stock, amount, (response) => {
-      setCurrentValue(response);
+      setCurrentValue(response.toFixed(2));
       setDifference(
         parseFloat(((response - oldValue) / oldValue) * 100).toFixed(2)
       );
@@ -199,7 +199,7 @@ function Row(props) {
           </TableCell>
           <TableCell align="right">{row.stock.symbol}</TableCell>
           <TableCell align="right">{row.amount}</TableCell>
-          <TableCell align="right">€{row.value}</TableCell>
+          <TableCell align="right">€{row.value.toFixed(2)}</TableCell>
           <TableCell align="right">€{currentValue}</TableCell>
           <TableCell
             align="right"
@@ -237,9 +237,9 @@ function Row(props) {
                           {row.date}
                         </TableCell>
                         <TableCell>{row.amount}</TableCell>
-                        <TableCell align="right">€{row.price}</TableCell>
+                        <TableCell align="right">€{row.price.toFixed(2)}</TableCell>
                         <TableCell align="right">
-                          €{row.amount * row.price}
+                          €{(row.amount * row.price).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ))}

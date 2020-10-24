@@ -85,6 +85,10 @@ const oldErrors = error;
           FormHelperTextProps={{
            style:{color: 'red'}
          }}
+         inputProps={{
+          autoCapitalize: 'none',
+        }}
+        autoCapitalize = 'none'
         />
       ))}
       <div className="signupbuttons">

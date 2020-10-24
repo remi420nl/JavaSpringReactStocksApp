@@ -47,7 +47,7 @@ public class PositionService {
 
 		Stock stock = null;
 		Portfolio portfolio = null;
-
+		System.out.println(dto.getPrice());
 		if (optionalstock.isPresent()) {
 			stock = optionalstock.get();
 			stock.setLastUpdate(dto.getDate());

@@ -112,7 +112,7 @@ function Stocks(props) {
         value: amount * stock.price,
         date: "" + now.getFullYear() + now.getMonth() + now.getDate(),
       };
-      console.log("value ", data.price)
+   
       //Api call
       postNewPosition(data).catch(() => {
         return false;
