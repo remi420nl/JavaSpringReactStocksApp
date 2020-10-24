@@ -48,7 +48,8 @@ public class PortfolioServiceImpl implements PortfolioService {
 
 
 	private PortfolioDTO mapToDto(Portfolio p) {
-		return PortfolioDTO.builder().description(p.getName()).positions(p.getPositions()).build();
+		return PortfolioDTO.builder().description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
+				.build();
 		
 	}
 

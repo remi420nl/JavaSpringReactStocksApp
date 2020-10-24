@@ -88,6 +88,9 @@ export class LoginForm extends Component {
             //  placeholder={value.firstname.placeholder}
             onChange={(e) => this.handleChange(e, "username")}
             defaultValue={username}
+            inputProps={{
+              autoCapitalize: 'none',
+            }}
           />
           {/* piece of code copied from material ui for a modern password field with visibility option */}
           <FormControl>
@@ -98,6 +101,7 @@ export class LoginForm extends Component {
               id="standard-adornment-password"
               type={showPassword ? "text" : "password"}
               value={password}
+              autoCapitalize='none'
               onChange={(e) => this.handleChange(e, "password")}
               endAdornment={
                 <IconButton

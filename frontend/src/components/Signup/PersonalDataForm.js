@@ -101,6 +101,10 @@ return (
  FormHelperTextProps={{
   style:{color: 'red'}
 }}
+inputProps={{
+  autoCapitalize: 'false',
+}}
+autoCapitalize="false"
 requiered={true}
  />)}
       <div className="signupbuttons">
