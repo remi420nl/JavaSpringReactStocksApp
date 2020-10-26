@@ -27,7 +27,7 @@ body {
 /* height is set to 100 otherwise the aligment wont work */
 
 .headermenu{
-
+    letter-spacing: 1px;
 top:0;
 left:0;
 z-index:1;
@@ -54,7 +54,8 @@ nav {
     --border-radius: 8px;
     --speed: 500ms;
     --primary-color: #ffff;
-    --overlay-color: rgba(24,39,51,0.85)
+    --overlay-color: rgba(24,39,51,0.85)l
+   
 
 }
 
@@ -115,17 +116,6 @@ font-weight: bold;
  
 }
 
-.portfoliobuttons{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row ;
-}
-
-.portfoliocontent{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column ;
-}
 
 .signupForm {
     display: flex;
@@ -219,7 +209,8 @@ color: white
 
 .nav-text:hover{
     text-decoration: none;
-    background-color:grey;
+    color:white;
+    background-color:rgba(128, 128, 128, 0.3);
     width: 80%;;
     border-radius: 5px;
 }
@@ -236,3 +227,4 @@ color: white
     justify-content: start;
     align-items: center;
 }
+

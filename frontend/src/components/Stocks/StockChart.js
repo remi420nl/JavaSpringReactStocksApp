@@ -89,7 +89,7 @@ import {
   RSITooltip,
   SingleValueTooltip,
 } from "react-stockcharts/lib/tooltip";
-import { ema, rsi, sma, atr } from "react-stockcharts/lib/indicator";
+import { ema, rsi, sma } from "react-stockcharts/lib/indicator";
 import {
   BarSeries,
   AreaSeries,
@@ -106,29 +106,31 @@ import { render } from "react-dom";
   
 
 
-  const ema26 = ema()
+  const ema55 = ema()
     .id(0)
-    .options({ windowSize: 26 })
+    .options({ windowSize: 55 })
     .merge((d, c) => {
-      d.ema26 = c;
+      d.ema55 = c;
     })
-    .accessor((d) => d.ema26);
+    .accessor((d) => d.ema55);
 
-  const ema12 = ema()
+  const ema20 = ema()
     .id(1)
-    .options({ windowSize: 12 })
+    .options({ windowSize: 20 })
     .merge((d, c) => {
-      d.ema12 = c;
+      d.ema20 = c;
     })
-    .accessor((d) => d.ema12);
+    .accessor((d) => d.ema20);
 
-  const smaVolume50 = sma()
+
+    const smaVolume50 = sma()
     .id(3)
     .options({ windowSize: 50, sourcePath: "volume" })
     .merge((d, c) => {
       d.smaVolume50 = c;
     })
     .accessor((d) => d.smaVolume50);
+
 
   const rsiCalculator = rsi()
     .options({ windowSize: 14 })
@@ -137,15 +139,8 @@ import { render } from "react-dom";
     })
     .accessor((d) => d.rsi);
 
-  const atr14 = atr()
-    .options({ windowSize: 14 })
-    .merge((d, c) => {
-      d.atr14 = c;
-    })
-    .accessor((d) => d.atr14);
-
-  const calculatedData = ema26(
-    ema12(smaVolume50(rsiCalculator(atr14(stockdata))))
+  const calculatedData = ema55(
+    ema20(rsiCalculator(smaVolume50(stockdata)))
   );
   const xScaleProvider = discontinuousTimeScaleProvider.inputDateAccessor(
     (d) => d.date
@@ -178,7 +173,7 @@ import { render } from "react-dom";
       <Chart
         id={1}
         height={300}
-        yExtents={[(d) => [d.high, d.low], ema26.accessor(), ema12.accessor()]}
+        yExtents={[(d) => [d.high, d.low], ema55.accessor(), ema20.accessor()]}
         padding={{ top: 10, bottom: 20 }}
       >
         <XAxis
@@ -196,11 +191,11 @@ import { render } from "react-dom";
         />
 
         <CandlestickSeries />
-        <LineSeries yAccessor={ema26.accessor()} stroke={ema26.stroke()} />
-        <LineSeries yAccessor={ema12.accessor()} stroke={ema12.stroke()} />
+        <LineSeries yAccessor={ema55.accessor()} stroke={ema55.stroke()} />
+        <LineSeries yAccessor={ema20.accessor()} stroke={ema20.stroke()} />
 
-        <CurrentCoordinate yAccessor={ema26.accessor()} fill={ema26.stroke()} />
-        <CurrentCoordinate yAccessor={ema12.accessor()} fill={ema12.stroke()} />
+        <CurrentCoordinate yAccessor={ema55.accessor()} fill={ema55.stroke()} />
+        <CurrentCoordinate yAccessor={ema20.accessor()} fill={ema20.stroke()} />
 
         <EdgeIndicator
           itemType="last"
@@ -217,16 +212,16 @@ import { render } from "react-dom";
           origin={[-38, 15]}
           options={[
             {
-              yAccessor: ema26.accessor(),
+              yAccessor: ema55.accessor(),
               type: "EMA",
-              stroke: ema26.stroke(),
-              windowSize: ema26.options().windowSize,
+              stroke: ema55.stroke(),
+              windowSize: ema55.options().windowSize,
             },
             {
-              yAccessor: ema12.accessor(),
+              yAccessor: ema20.accessor(),
               type: "EMA",
-              stroke: ema12.stroke(),
-              windowSize: ema12.options().windowSize,
+              stroke: ema20.stroke(),
+              windowSize: ema20.options().windowSize,
             },
           ]}
         />
@@ -260,64 +255,34 @@ import { render } from "react-dom";
           fill={smaVolume50.fill()}
         />
       </Chart>
-      <Chart
-        id={3}
-        yExtents={[0, 100]}
-        height={125}
-        origin={(w, h) => [0, h - 250]}
-      >
-        <XAxis
-          axisAt="bottom"
-          orient="bottom"
-          showTicks={false}
-          outerTickSize={0}
-        />
-        <YAxis axisAt="right" orient="right" tickValues={[30, 50, 70]} />
-        <MouseCoordinateY
-          at="right"
-          orient="right"
-          displayFormat={format(".2f")}
-        />
+        <Chart
+          id={3}
+          yExtents={[0, 100]}
+          height={125}
+          origin={(w, h) => [0, h - 250]}
+        >
+          <XAxis
+            axisAt="bottom"
+            orient="bottom"
+            showTicks={false}
+            outerTickSize={0}
+          />
+          <YAxis axisAt="right" orient="right" tickValues={[30, 50, 70]} />
+          <MouseCoordinateY
+            at="right"
+            orient="right"
+            displayFormat={format(".2f")}
+          />
 
-        <RSISeries yAccessor={(d) => d.rsi} />
+          <RSISeries yAccessor={(d) => d.rsi} />
 
-        <RSITooltip
-          origin={[-38, 15]}
-          yAccessor={(d) => d.rsi}
-          options={rsiCalculator.options()}
-        />
-      </Chart>
-      <Chart
-        id={8}
-        yExtents={atr14.accessor()}
-        height={125}
-        origin={(w, h) => [0, h - 125]}
-        padding={{ top: 10, bottom: 10 }}
-      >
-        <XAxis axisAt="bottom" orient="bottom" />
-        <YAxis axisAt="right" orient="right" ticks={2} />
-
-        <MouseCoordinateX
-          at="bottom"
-          orient="bottom"
-          displayFormat={timeFormat("%Y-%m-%d")}
-        />
-        <MouseCoordinateY
-          at="right"
-          orient="right"
-          displayFormat={format(".2f")}
-        />
-
-        <LineSeries yAccessor={atr14.accessor()} stroke={atr14.stroke()} />
-        <SingleValueTooltip
-          yAccessor={atr14.accessor()}
-          yLabel={`ATR (${atr14.options().windowSize})`}
-          yDisplayFormat={format(".2f")}
-          /* valueStroke={atr14.stroke()} - optional prop */
-          /* labelStroke="#4682B4" - optional prop */
-          origin={[-40, 15]}
-        />
-      </Chart>
+          <RSITooltip
+            origin={[-38, 15]}
+            yAccessor={(d) => d.rsi}
+            options={rsiCalculator.options()}
+          />
+        </Chart>
+      
       <CrossHairCursor />
     </ChartCanvas>
    

@@ -29,57 +29,92 @@ export default function Statistics() {
   }, []);
 
   useEffect(() => {
-    convertToTotal()
+   calculateValues()
   },[portfolios])
 
 
   function getPortfolios() {
     getAllPortfolios().then((p) => {
       setPortfolios(p.data);
-    });
+    })
   }
 
-  function calculateOldValue (positions){
-    let sum = 0;
+  function calculateValues (){
+    
+    if(portfolios){
 
-   positions.forEach(p => sum += p.value);
+      portfolios.forEach((portfolio) => {
 
-   return sum;
+        let sum = 0;
+        portfolio.positions.forEach(position => 
+         sum += position.value)
+        
+         portfolio['oldvalue'] = sum;
+         portfolio['currentvalue'] = 0
+         calculateCurrentValue(portfolio, (value) => {
+          portfolio['currentvalue'] = value
+          convertToTotal()
+         
+          
+         })
+    
 
+      })
+
+    }
+
+   
+
+    
   }
 
-  function  calculateCurrentValue (positions) {
+   function calculateCurrentValue (portfolio,callback) {
 
+    const length = portfolio.positions.length;
+    let count = 0;
     let sum = 0;
 
-    positions.forEach(p =>{
-     GetCurrentValue(p.stock, p.amount, (response) => {
-      sum += response}).then(() => setIsLoaded(true))})
-  return sum;
-}
+    portfolio.positions.map(position => {
+    GetCurrentValue(position.stock, position.amount, (response) => {
+       sum += response;
+       console.log("response ", response)
+      count++;
+      console.log(count, length)
+        if (length === count) {
+          callback(sum);
+        }
+      })
+    })
 
-
+    }
+  
 
 
   function convertToTotal(){
-    console.log(portfolios);
+
+  
     let summarytotals = [];
     let summary = {}
 
     portfolios.forEach(p => {
+     
       summary = {},
       summary['name'] = p.owner,
-      summary['oldvalue'] = calculateOldValue(p.positions),
-      summary['newvalue'] = calculateCurrentValue(p.positions) 
-      summary['interest'] = getDifference(summary['newvalue'],  summary['oldvalue'])
+      summary['oldvalue'] = p.oldvalue,
+      summary['newvalue'] = p.currentvalue,
+      summary['difference'] = getDifference(summary['newvalue'],  summary['oldvalue'])
       summarytotals.push(summary);
+
     }
       )
 
   //sorting so the portfolio with highest interest (positive difference) is on top
-  summarytotals.sort((a,b) => b.interest - a.interest)
+  summarytotals.sort((a,b) => b.difference - a.difference)
     
     setTotals(summarytotals);
+    
+    setIsLoaded(true)
+   
     }
 
     const getDifference = (newValue, oldValue) => {
@@ -112,9 +147,9 @@ export default function Statistics() {
                 <TableRow key={i}>
                   <TableCell>{i+1}</TableCell>
                   <TableCell align="right">{row.name}</TableCell>
-                  <TableCell align="right">€{row.oldvalue}</TableCell>
-                  <TableCell align="right">€{row.newvalue}</TableCell>
-                  <TableCell align="right" style={{ color: row.interest > 0 ? "green" : "red"}}>{row.interest} %</TableCell>
+                  <TableCell align="right">€{row.oldvalue.toFixed(2)}</TableCell>
+                  <TableCell align="right">€{row.newvalue.toFixed(2)}</TableCell>
+                  <TableCell align="right" style={{ color: row.difference >= 0 ? "green" : "red"}}>{row.difference} %</TableCell>
                 </TableRow>
               ))}
             </TableBody>

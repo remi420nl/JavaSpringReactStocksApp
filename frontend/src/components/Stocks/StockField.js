@@ -23,14 +23,19 @@ export const StockField = (props) => {
 
 
     const handleChange = ({target: {value}}) =>{
+
+    //  event.preventDefault();
+    if(!isNaN(value)){
       props.setAmount(value);
-      setAmount(value)
+      setAmount(value)}
+      
     }
     const classes = useStyles();
   
     const handleSubmit = () => {
+
       if(submitPosition(amount)){
-        console.log("sub")
+        
         setNotification("Toegevoegd aan portfolio!")
       }
     }

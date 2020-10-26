@@ -6,7 +6,7 @@ export  const StockDetails = (props) => {
     if(price){
     return (
         <div className="stockdetails">
-            <h3>{name}Aandeel</h3>
+            <h3>{name}</h3>
             <div>
                Huidige koers {price}
             </div>

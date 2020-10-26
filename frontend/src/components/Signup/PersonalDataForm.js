@@ -105,7 +105,6 @@ inputProps={{
   autoCapitalize: 'false',
 }}
 autoCapitalize="false"
-requiered={true}
  />)}
       <div className="signupbuttons">
            <Button 
