@@ -10,17 +10,18 @@ const now = new Date();
 const currentdate = parseInt("" + now.getFullYear() + now.getMonth() + now.getDate());
 const stockdate = parseInt(stock.lastUpdate);
 
-
 if(currentdate > stockdate || stockdate == undefined){
 
 fetchTickerData(stock.symbol).then((x) => {
 let obj = x.data["Time Series (Daily)"];
+
 let latest = obj[Object.keys(obj)[0]];
 let value =  parseFloat(latest["4. close"])
 price = value;
 
  callback(price * amount)
-})
+
+}).catch(e  =>  console.log(e))
 
 //TODO: update price in database entity
 
