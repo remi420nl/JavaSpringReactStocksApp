@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getJwt } from "../features/JwtHelper";
-import {pubKey} from './apikeys'
+import {pubKey, newsKey} from './apikeys'
 
 // const url = 'https://cloud.iexapis.com/beta/ref-data/symbols?token='
 
@@ -146,7 +146,7 @@ export const CheckLoginStatus = async() => {
 }
   
 export const Signup = async (user) => {
-  console.log("signup form data ", user);
+
 
   const url = `http://localhost:8080/api/register`;
 
@@ -156,7 +156,7 @@ export const Signup = async (user) => {
     return response;
   } catch (error) {
     console.log("error occured ", error);
-    //   return error;
+  
   }
 };
 
@@ -175,7 +175,7 @@ export const postNewPosition = async (data) => {
     return response;
   } catch (error) {
     console.log("error occured ", error);
-    //   return error;
+ 
   }
 };
 
@@ -194,6 +194,42 @@ export const deletePosition = async (id) => {
     return response;
   } catch (error) {
     console.log("error occured ", error);
+   
+  }
+}
+
+
+export const updateStockPrice = async (id,newprice,date) => {
+
+  const url = `http://localhost:8080/api/stock/${id}`;
+  
+  const data = {
+      latestPrice : newprice,
+      lastUpdate : date
+  }
+
+  try {
+    const response = await axios.post(url, data);
+
+    return response;
+  } catch (error) {
+    console.log("error occured while updating stock ", error);
     //   return error;
+  }
+}
+
+
+export const getNews = async () => {
+
+
+
+  const url = `https://newsapi.org/v2/top-headlines?country=nl&apiKey=${newsKey}`;
+
+  try {
+    const response = await axios.get(url);
+
+    return response;
+  } catch (error) {
+    console.log("error occured ", error);
   }
 }

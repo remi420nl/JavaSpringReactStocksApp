@@ -10,7 +10,7 @@ useEffect(() => {
     console.log('success', name)
 })
   return (
-    <div className="signupForm">
+    <div className="signupform">
       <AppBar title="Success" />
     <h1> {name}, bedankt voor het registreren</h1>
     <button onClick={() => success('/login')}>Klik hier om in te loggen</button>

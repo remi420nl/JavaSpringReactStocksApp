@@ -13,10 +13,12 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { fetchPortfoliosByUser, fetchUserDetails } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "../position/PositionOptions";
+import { ThemeProvider } from "styled-components";
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 class Portfolio extends Component {
   constructor(props) {
@@ -102,7 +104,18 @@ class Portfolio extends Component {
     });
   };
 
+
   render() {
+
+    const theme = createMuiTheme({
+      typography: {
+        "fontFamily": `"Roboto", "Helvetica", "Arial", sans-serif`,
+        "fontSize": 18,
+        "fontWeight": 500
+      },
+ 
+    });
+    
     const { portfolio, userdetails, isLoaded } = this.state;
 
     const selectPosition = (id) => {
@@ -131,6 +144,7 @@ class Portfolio extends Component {
     ) {
       return (
         <div className="portfolio">
+      
           <PortfolioHeader
             owner={portfolio.owner}
             description={portfolio.description}
@@ -139,10 +153,20 @@ class Portfolio extends Component {
           />
 
           <div className="portfoliocontent">
-            <TableContainer component={Paper}>
-              <Table aria-label="collapsible table">
-                <TableHead>
-                  <TableRow>
+          <MuiThemeProvider  theme={theme}>
+            <TableContainer
+            theme
+            component={Paper} classes={{ root: 'table-container'}}
+            >
+              <Table aria-label="collapsible table"
+             
+              >
+                <TableHead
+          
+                >
+                  <TableRow
+                  
+                 >
                     <TableCell />
                     <TableCell>Soort</TableCell>
                     <TableCell align="left">Naam</TableCell>
@@ -165,6 +189,7 @@ class Portfolio extends Component {
                 </TableBody>
               </Table>
             </TableContainer>
+            </MuiThemeProvider >
             <div className="optionsbutton">
               <PositionOptions
                 selectedPositions={this.state.selectedPositions}
@@ -175,7 +200,7 @@ class Portfolio extends Component {
         </div>
       );
     } else {
-      return <div>loading..</div>;
+      return <div className="portfolio">loading..</div>;
     }
   }
 }

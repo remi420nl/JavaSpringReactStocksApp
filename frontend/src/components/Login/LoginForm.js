@@ -82,7 +82,7 @@ export class LoginForm extends Component {
     const { loginStatus } = this.props;
     if (!loginStatus) {
       return (
-        <div className="signupForm">
+        <div className="signupform">
           <TextField
             label="Gebruikersnaam"
             //  placeholder={value.firstname.placeholder}

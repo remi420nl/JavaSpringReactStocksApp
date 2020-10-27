@@ -82,8 +82,8 @@ function handleChange (e,field) {
   }
 
 return (
-    <div className = "signupForm">
-        <>
+    <div className = "signupform">
+    
             
 {data.map(field =>   
  <TextField
@@ -113,7 +113,7 @@ autoCapitalize="false"
               onClick={nextpage}
             >Volgende</Button>
        </div>
-        </>
+  
       
 </div>
 )

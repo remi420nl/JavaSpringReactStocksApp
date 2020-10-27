@@ -73,7 +73,7 @@ const oldErrors = error;
   }
 
   return (
-    <div className="signupForm">
+    <div className="signupform">
       <AppBar title="Enter Personal Details" />
       {data.map((field) => (
         <TextField
