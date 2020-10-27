@@ -45,7 +45,7 @@ public class PositionController {
 
 	private final PositionService positionService;
 
-	//@PostMapping("/newposition")
+	
 	@PostMapping("/position")
 	public ResponseEntity<Position> createPosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
 			throws URISyntaxException {

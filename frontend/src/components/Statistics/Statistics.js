@@ -130,10 +130,12 @@ export default function Statistics() {
     if(isLoaded){
     return (
       <div className="statistics">
-        <TableContainer className={classes.table} component={Paper}>
+        <div className="statisticscontent">
+        <TableContainer  component={Paper}    classes={{ root: 'table-container' }}>
           <div>Aantal Deelnemers: {portfolios.length}</div>
-          <Table aria-label="simple table">
-            <TableHead>
+          <Table>
+            <TableHead
+              className='table-header' >
               <TableRow>
                 <TableCell>Plaats</TableCell>
                 <TableCell align="right">Naam</TableCell>
@@ -155,6 +157,7 @@ export default function Statistics() {
             </TableBody>
           </Table>
         </TableContainer>
+        </div>
       </div>
     );}else{
       return <div>Portfolios laden..</div>;

@@ -12,16 +12,33 @@
 
 body {
     line-height: 1.4;
-    background-color: var(--primary-color);
+
+    background: url(d.jpg) repeat 0 0; 
+    background-repeat: no-repeat;
+    background-size: cover
+
 }
+
 
 .container{
-    max-width: 960px;
-    margin: auto;
-    overflow: hidden;
-    padding: 0 3rm;
-}
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+   margin-top: 50px;
+    
+ }
+  
 
+.home{
+
+  /* margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  
+   */
+    height: 100vh;
+}
 
 
 /* height is set to 100 otherwise the aligment wont work */
@@ -31,12 +48,6 @@ body {
 top:0;
 left:0;
 z-index:1;
-}
-
-
-#app {
-   
-    margin: 0 auto;
 }
 
 
@@ -117,10 +128,6 @@ font-weight: bold;
 }
 
 
-.signupForm {
-    display: flex;
-    flex-direction: column;
-}
 
 
 .signupbuttons Button{
@@ -227,4 +234,258 @@ color: white
     justify-content: start;
     align-items: center;
 }
+
+
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+
+.portfolio,
+
+.statistics
+{
+ 
+
+  left:350px;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  align-items: center;
+    width: 100%;
+margin: auto;
+
+
+}
+
+
+
+.signupform{
+ margin:auto;
+  max-width: 250px;
+  min-width: 200px;
+  min-height: 220px;
+  max-height: 350;
+  border: 1px solid rgb(92, 87, 87);
+  box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.12), 0 1px 2px 4px rgba(0, 0, 0, 0.24);
+
+  padding: 10px;
+ 
+}
+
+
+
+.signupform button{
+  margin: auto;
+}
+
+body{
+  font-family: 'Lato', sans-serif;
+}
+
+
+.portfolioheader{
+  
+  display: flex;
+flex-direction: row;
+
+  padding: 10px 5px;
+  justify-content: space-between;
+
+
+}
+
+.portfoliodetails span{
+  display: block;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 5px 0;
+
+}
+
+.portfoliosummary span{
+  display: block;
+  padding-left: 10px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 5px 0;
+}
+
+
+.portfoliocontent, .statisticscontent{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.table-container
+{
+    border: 5px solid green;
+    background-color: rgba(238, 235, 235, 0.61) !important;
+    font-weight: bolder;
+}
+
+.table-header th{
+ color:red;
+    text-shadow: 2px 2px 3px rgba(255,255,255,0.5);
+
+
+}
+
+
+.portfoliobuttons{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row ;
+}
+
+
+
+
+.stockscontainer{
+  border: 3px solid green;
+  display: flex;
+  padding: 32px;
+  right: 20px;
+ 
+  width:100%;
+  flex-direction: column;
+}
+
+.stockspage{
+  background: rgba(170, 170, 170, 0.8);
+  border: 3px solid blue;
+  display: flex;
+  margin: auto;
+  width: 100%;
+  overflow: hidden;
+  justify-content: flex-end;
+}
+
+
+.stockoptions{
+  border: 3px solid red;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height:250px
+}
+
+
+/* flex item 1 */
+.stocksdropdown{
+
+   border: 3px solid black;
+  margin:0 50px;
+  display: flex;
+ 
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.stocksearchfield{
+  display: flex;
+
+  width: 50%;
+
+  flex-direction: column;
+  }
+  
+
+
+
+/* flex item 2 */
+.stockchart{
+  text-align: center;
+  border: 3px solid black;
+  margin: auto;
+  width: 100%;
+
+}
+.stockfield{
+  display: flex;
+  flex-direction: column;
+}
+
+.stockdetails{
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   */
+  box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.12), 0 1px 2px 4px rgba(0, 0, 0, 0.24);
+  display : flex;
+  align-items : center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.stockdetails h3{
+color: rgb(85, 90, 90);
+padding: 15px;
+font-weight: 600;
+}
+
+.choosestock{
+  text-align: center;
+  font-weight: bold;
+  
+}
+
+.optionsbutton{
+  margin-top: 10px;
+}
+
+.optionlist{
+
+ overflow-y: scroll;
+  width: 100%;
+}
+
+.option{
+  padding:5px
+} 
+
+.option:hover{
+  font-weight: bolder;
+  
+} 
+
+.option:nth-child(even){
+background: #CCC
+}
+.option:nth-child(odd){
+  background:  #FFF
+  }
+.option .radio{
+display: none;
+}
+
+
+
+
+
+  
+  /* .option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 500px;
+    padding: 5px;
+  font-size: 14px;
+  }
+  
+  .option,
+  span {
+    font-size: 28px;
+    text-transform: capitalize;
+  }
+   */
+  
+
+  input {
+    padding: 10px;
+    height: 20px;
+    width: 500px;
+    border: 1px solid purple;
+    margin: 10px;
+    font-size: 18px;
+    text-transform: capitalize;
+  }
 

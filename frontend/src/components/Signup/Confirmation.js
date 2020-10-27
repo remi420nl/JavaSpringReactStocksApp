@@ -58,7 +58,7 @@ function generateResponse(){
 
 
     return(
-<div className="confirmpage">
+<div className="signupform">
 <h3>Overzicht</h3>
  <List>
  {data.map(value => 

@@ -30,10 +30,10 @@ function App() {
      if(response.status == 200){
       setLoginStatus(true);
       setName(response.data.firstname);
-      console.log(" no error occured")
+    
 
       }}).catch(error =>
-        {console.log("error occured")})
+        {console.log("error occured", error)})
     
     //   setLoginStatus(true);
     //   console.log("response", response)
@@ -64,7 +64,7 @@ function App() {
                   loginStatus ? `Hallo  ${name}` : 'Niet Ingelogd' 
                  )}
               />
-        <div className="showcase">
+        <div className="container">
         <Switch>
         
           <Route
