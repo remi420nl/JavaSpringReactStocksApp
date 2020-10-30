@@ -49,7 +49,10 @@ export class LoginForm extends Component {
     }
     const login = async () => {
       await Login(username, password).then(response => {
+        
         localStorage.setItem("jwt-token", response.data.jwt);
+        localStorage.setItem("UserId", response.data.userId)
+
         if (response.status == 200){
        render({
         name: response.data.username,
@@ -57,7 +60,6 @@ export class LoginForm extends Component {
        })
        this.props.history.push("/")
         }
-        console.log(response)
       })
     };
     login()

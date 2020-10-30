@@ -9,9 +9,6 @@ import { getJwt } from "./features/JwtHelper";
 
 axios.defaults.baseURL='http://localhost:8080/api';
 
-
-
-
 render(
     <Router>
         <App />

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.stockreact.webapp.filter.JWTRequestFilter;
 import com.stockreact.webapp.service.CustomUserDetailsService;
@@ -55,6 +56,7 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	    return super.authenticationManagerBean();
 	}
 	
+
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
 		
@@ -63,6 +65,7 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
+              
                 .antMatchers(HttpMethod.GET, "/api/loginpage")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/api/stock/**")

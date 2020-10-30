@@ -126,7 +126,7 @@ export default function Statistics() {
   
     }
 
-  if (portfolios.length > 0) {
+  if (portfolios && portfolios.length > 0) {
     if(isLoaded){
     return (
       <div className="statistics">

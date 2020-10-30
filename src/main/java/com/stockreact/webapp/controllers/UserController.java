@@ -1,5 +1,9 @@
 package com.stockreact.webapp.controllers;
 
+import java.security.Principal;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +13,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -86,10 +92,12 @@ public class UserController {
 		
 		UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 		
+		User user = (User) userDetails;
+		
 		final String jwt = jwtUtil.generateToken(userDetails);
 		
 		//creates a response using the jwt token for the json return body
-		AuthenticationResponse response = new AuthenticationResponse(jwt);
+		AuthenticationResponse response = new AuthenticationResponse(jwt,user.getId());
 	
 		return ResponseEntity.ok(response);
 	}
@@ -107,4 +115,24 @@ public class UserController {
 	    public final ResponseEntity<Exception> handleAllExceptions(RuntimeException ex) {
 	        return new ResponseEntity<Exception>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
+	 
+	 
+	@GetMapping("/user/{id}")
+	 public UserDTO getUser(@PathVariable Long id) {
+	        UserDTO userDto = userService.getById(id);
+	        
+	     
+	        return userDto;
+	    
+		} 
+	 
+	 	@PostMapping("/user/{id}")
+		public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDto) {
+	 		
+	 		System.out.println(userDto);
+		
+		return userService.updateUser(id, userDto);
+		
+		 
+		}
 }
