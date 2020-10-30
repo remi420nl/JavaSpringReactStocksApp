@@ -4,7 +4,9 @@ export const getJwt = () => {
 
 
 export const clearJwt = () => {
-    console.log('cleared')
  localStorage.clear()
 }
 
+export const getUserId = () => {
+    return localStorage.getItem('UserId')
+}

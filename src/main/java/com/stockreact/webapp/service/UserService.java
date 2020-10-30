@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.stockreact.webapp.exception.StockAppException;
 import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.model.UserDTO;
@@ -53,8 +54,42 @@ public class UserService {
 		.email(userDto.getEmail()).city(userDto.getCity()).password(encodedPassword).portfolios(new ArrayList<Portfolio>()).build();
 		
 	}
+
+	
+	public UserDTO mapToDto(User user) {
+	return UserDTO.builder().username(user.getUsername()).firstname(user.getFirstname()).lastname(user.getLastname()).email(user.getEmail()).city(user.getCity()).build();
+	
+	}
+	
+	
+	public UserDTO getById(Long id) {
+		
+		User user = userRepo.findById(id).map(u -> u).orElseThrow(() -> new StockAppException("User not found"));
+		
+		return mapToDto(user);
+		
+	}
 	
 
+	public UserDTO updateUser(Long id, UserDTO userDto) {
+		
+		User user = userRepo.getOne(id);
+		
+		user.setFirstname(userDto.getFirstname());
+		user.setLastname(userDto.getLastname());
+		user.setEmail(userDto.getEmail());
+		user.setCity(userDto.getCity());
+		if(userDto.getPassword() != null) {
+		String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
+		user.setPassword(encodedPassword);
+		}
+		
+		User saveduser = userRepo.save(user);
+		return mapToDto(saveduser);
+		
+	}
+
+	
 
 	
 	

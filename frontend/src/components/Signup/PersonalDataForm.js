@@ -1,6 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -104,7 +103,6 @@ return (
 inputProps={{
   autoCapitalize: 'false',
 }}
-autoCapitalize="false"
  />)}
       <div className="signupbuttons">
            <Button 

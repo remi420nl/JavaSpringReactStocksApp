@@ -11,11 +11,12 @@ import Authenticate from "./authenticate/Authenticate";
 import { fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
 import { getJwt, clearJwt } from "../features/JwtHelper";
-
+import {Profile} from "./User/Profile"
 
 
 
 import "./App.css";
+
 
 
 function App() {
@@ -45,21 +46,16 @@ function App() {
   },[loginStatus]);
 
 
-  
-  function logout() {
-    console.log("log out called")
-    setLoginStatus(false)
-    
-    clearJwt();
-  }
+
 
   return (
     <>
       <Router>
-      <Header 
-                
+      <Header    
+               
                 loginStatus={loginStatus}
-                logout={logout}
+                setLoginStatus={() => (setLoginStatus(false), clearJwt(), setName(""))}
+                name={name}
                 render={() => (
                   loginStatus ? `Hallo  ${name}` : 'Niet Ingelogd' 
                  )}
@@ -104,6 +100,7 @@ function App() {
             )}
           />
           <Route path="/auth" component={Authenticate} />
+          <Route path="/profile" component={Profile} />
           <Route component={PageNotFound} />
         </Switch>
         </div>

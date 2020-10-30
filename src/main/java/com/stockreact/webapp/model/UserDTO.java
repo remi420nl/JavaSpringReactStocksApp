@@ -22,13 +22,12 @@ public class UserDTO {
 	private String firstname;
     @NotBlank(message = "Achternaam is verplicht")
 	private String lastname;
-    @NotBlank(message = "Wachtwoord is verplicht")
+    
 	private String password;
 	
 	private String city;
 	  @NotBlank(message = "Email is verplicht")
 	private String email;
-	  @NotBlank(message = "Portfolionaam is verplicht")
 	private String portfolio;
 	
 	private String info;

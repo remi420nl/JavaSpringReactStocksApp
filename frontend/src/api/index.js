@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getJwt } from "../features/JwtHelper";
+import { getJwt , getUserId} from "../features/JwtHelper";
 import {pubKey, newsKey} from './apikeys'
 
 // const url = 'https://cloud.iexapis.com/beta/ref-data/symbols?token='
@@ -219,17 +219,60 @@ export const updateStockPrice = async (id,newprice,date) => {
 }
 
 
-export const getNews = async () => {
+export const getUser = async () => {
+  const token = "Bearer " + getJwt();
+  const userId = getUserId();
 
-
-
-  const url = `https://newsapi.org/v2/top-headlines?country=nl&apiKey=${newsKey}`;
+  const config = {
+    headers: { Authorization: token, "Content-Type": "application/json" },
+  };
+  
+  const url = `http://localhost:8080/api/user/${userId}`;
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url,config);
 
     return response;
   } catch (error) {
     console.log("error occured ", error);
+  
   }
+
+
+}
+
+
+
+export const updateUser = async (data) => {
+  const token = "Bearer " + getJwt();
+  const userId = getUserId();
+
+  const config = {
+    headers: { Authorization: token, "Content-Type": "application/json" },
+  };
+  
+  const url = `http://localhost:8080/api/user/${userId}`;
+
+  try {
+    const response = await axios.post(url, data,config);
+
+    return response;
+  } catch (error) {
+    console.log("error occured ", error);
+  
+  }
+
+
+}
+
+
+
+
+export const getNews = async () => {
+
+  const url = `http://newsapi.org/v2/top-headlines?country=nl&category=business&apiKey=${newsKey}`;
+
+    return await axios.get(url).then(response => {return response.data.articles});
+
+
 }

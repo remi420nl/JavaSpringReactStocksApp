@@ -7,16 +7,41 @@ function HomePage (props) {
 
     const {render} = props
     const [articles,setArticles] = useState([]);
+    const [modified,setModified] = useState([])
     const [amountOfItems,setAmountOfItems] = useState(6)
 
-   useEffect(() => {
 
-       const response =  getNews();
-       response.then(data => {setArticles(data.data.articles);
-    console.log(data.data.articles)}
-       )
-   })
+useEffect(() => {
+
+    getNews().then(response =>  {
+        setArticles(response)
+      })
+      
+},[])
+
+   useEffect(() => {
+  modifyData()
+
+    },[articles.length > 0])
+   
+
  
+
+const modifyData = () => {
+//removing news items without an image and description an removing the website name from the title string after the - dash
+let data = Array.isArray(articles) && articles.filter(a => a.description !== null && a.image !== null)
+.map(a => ({...a, title : a.title.substring(0, a.title.lastIndexOf("-"))}))
+setArticles(data)
+}
+
+
+
+
+//filter all witouth pic
+
+//
+
+
     const status = () =>{
         if(!props.loginStatus){
             return <p>Status: Uitgelogd</p>
@@ -26,20 +51,23 @@ function HomePage (props) {
 if(articles){
 return (
     <div className="home">
+   
         <Grid container spacing={4}>
           {articles.slice(0, amountOfItems).map((a,i) => 
-             <Grid key={i} item xs={4}>
+             <Grid key={i} item xs={12} sm={6} md={4}>
              <Card title={a.title}
              content={a.content}
-             url={a.utl}
+             url={a.url}
              image={a.urlToImage}
              date={a.publishedAt}
              description={a.description}
+             author={a.author}
              />
              </Grid>
             )}
       
         </Grid>
+       
     </div>
 )}else{
     return(
