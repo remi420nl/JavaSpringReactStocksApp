@@ -15,7 +15,7 @@ import {Signup} from '../../api';
 
 
     useEffect(() => {
-        console.log('values', values)
+
         for(var value in values){
          if(values.hasOwnProperty(value)){
            const fieldData = values[value];
@@ -32,9 +32,11 @@ import {Signup} from '../../api';
         console.log('Response ' , response);
         if(response.status === 200){
              next()
-        } 
-      })
-      setError("Er is iets fout gegaan");
+        }else{
+          console.log("fout", response)
+        }
+      }).catch(e => 
+      setError(e.response.data.message))
       }else{
         console.log("option", option)
         prev();

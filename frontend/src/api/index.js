@@ -129,7 +129,6 @@ export const Login = async (username, password) => {
 
   const url = `http://localhost:8080/api/authenticate`;
 
-
   return await axios.post(url, data)
     
   }
@@ -150,14 +149,9 @@ export const Signup = async (user) => {
 
   const url = `http://localhost:8080/api/register`;
 
-  try {
-    const response = await axios.post(url, user);
-
-    return response;
-  } catch (error) {
-    console.log("error occured ", error);
   
-  }
+   return  await axios.post(url, user);
+
 };
 
 export const postNewPosition = async (data) => {
