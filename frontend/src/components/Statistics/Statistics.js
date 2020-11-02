@@ -10,16 +10,10 @@ import Paper from "@material-ui/core/Paper";
 import { getAllPortfolios } from "../../api/index";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 
-// https://material-ui.com/components/tables/
-const useStyles = makeStyles({
-  table: {
-    maxWidth: 600,
-  },
-});
+
 
 
 export default function Statistics() {
-  const classes = useStyles();
   const [portfolios, setPortfolios] = useState([]);
   const [totals,setTotals] = useState([])
   const [isLoaded,setIsLoaded] = useState(false)
@@ -42,28 +36,35 @@ export default function Statistics() {
   function calculateValues (){
     
     if(portfolios){
-
+      
       portfolios.forEach((portfolio) => {
 
+        //setting values for porfolios with no positions
+        if(portfolio.positions.length < 1){
+        
+          portfolio['oldvalue'] = 0;
+          portfolio['currentvalue'] = 0
+     
+   
+        }
+        if(portfolio.positions.length > 0){
         let sum = 0;
         portfolio.positions.forEach(position => 
+
          sum += position.value)
         
          portfolio['oldvalue'] = sum;
          portfolio['currentvalue'] = 0
          calculateCurrentValue(portfolio, (value) => {
           portfolio['currentvalue'] = value
-          convertToTotal()
-         
-          
+       
          })
-    
-
+        }
       })
 
     }
 
-   
+    convertToTotal()
 
     
   }
@@ -74,12 +75,13 @@ export default function Statistics() {
     let count = 0;
     let sum = 0;
 
+   
     portfolio.positions.map(position => {
     GetCurrentValue(position.stock, position.amount, (response) => {
        sum += response;
-       console.log("response ", response)
+   
       count++;
-      console.log(count, length)
+   
         if (length === count) {
           callback(sum);
         }
@@ -151,7 +153,7 @@ export default function Statistics() {
                   <TableCell align="right">{row.name}</TableCell>
                   <TableCell align="right">€{row.oldvalue.toFixed(2)}</TableCell>
                   <TableCell align="right">€{row.newvalue.toFixed(2)}</TableCell>
-                  <TableCell align="right" style={{ color: row.difference >= 0 ? "green" : "red"}}>{row.difference} %</TableCell>
+                  <TableCell align="right" style={{ color: row.difference >= 0 ? "green" : "red" , fontWeight:"700",fontSize:"1.1em"}}>{row.difference} %</TableCell>
                 </TableRow>
               ))}
             </TableBody>

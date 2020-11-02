@@ -31,6 +31,13 @@ public class UserService {
 	
 	public User registerUser(UserDTO userDto) {
 		
+		//first check if username already exists
+		int check = userRepo.checkUsernameExists(userDto.getUsername());
+		if(check == 1) {
+			throw new StockAppException("Gebruikersnaam is reeds in gebruik");
+		}
+		
+		
 		User user = mapToUser(userDto);
 		System.out.println("user: "+ user.getFirstname());
 		

@@ -60,7 +60,7 @@ export class LoginForm extends Component {
        })
        this.props.history.push("/")
         }
-      })
+      }).catch(e =>  this.setState({ error: e.response.data.message }))
     };
     login()
   };

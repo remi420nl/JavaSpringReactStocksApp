@@ -322,16 +322,14 @@ flex-direction: row;
 
 .table-container
 {
-    border: 5px solid green;
+
     background-color: rgba(238, 235, 235, 0.61) !important;
     font-weight: bolder;
 }
 
 .table-header th{
- color:red;
+  font-weight: bold;
     text-shadow: 2px 2px 3px rgba(255,255,255,0.5);
-
-
 }
 
 
@@ -345,7 +343,7 @@ flex-direction: row;
 
 
 .stockscontainer{
-  border: 3px solid green;
+
   display: flex;
   padding: 32px;
   right: 20px;
@@ -356,7 +354,7 @@ flex-direction: row;
 
 .stockspage{
   background: rgba(170, 170, 170, 0.8);
-  border: 3px solid blue;
+
   display: flex;
   margin: auto;
   width: 100%;
@@ -366,7 +364,7 @@ flex-direction: row;
 
 
 .stockoptions{
-  border: 3px solid red;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -377,7 +375,6 @@ flex-direction: row;
 /* flex item 1 */
 .stocksdropdown{
 
-   border: 3px solid black;
   margin:0 50px;
   display: flex;
  
@@ -400,7 +397,7 @@ flex-direction: row;
 /* flex item 2 */
 .stockchart{
   text-align: center;
-  border: 3px solid black;
+
   margin: auto;
   width: 100%;
 
@@ -486,7 +483,7 @@ display: none;
     padding: 10px;
     height: 20px;
     width: 500px;
-    border: 1px solid purple;
+
     margin: 10px;
     font-size: 18px;
     text-transform: capitalize;

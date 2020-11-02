@@ -16,9 +16,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import com.stockreact.webapp.filter.CustomAuthenticationProvider;
 import com.stockreact.webapp.filter.JWTRequestFilter;
 import com.stockreact.webapp.service.CustomUserDetailsService;
 
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 
 
+	private final CustomAuthenticationProvider authenticationProvider;
 	private final CustomUserDetailsService userDetailsService;
 	private final JWTRequestFilter jwtRequestFilter;
 
@@ -40,6 +43,8 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(passwordEncoder( ));
 	}
 
+
+	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -47,7 +52,8 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+	
+		auth.authenticationProvider(authenticationProvider);
 	}
 	
 	@Override

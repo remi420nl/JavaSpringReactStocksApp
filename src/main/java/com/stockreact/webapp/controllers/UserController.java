@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +28,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.stockreact.webapp.exception.BadCredentialsException;
 import com.stockreact.webapp.exception.StockAppException;
+import com.stockreact.webapp.exception.UserNotFoundException;
 import com.stockreact.webapp.model.AuthenticationRequest;
 import com.stockreact.webapp.model.AuthenticationResponse;
 
@@ -79,18 +80,25 @@ public class UserController {
 	@PostMapping("/authenticate")
 	public ResponseEntity<?>  Authenticate(@RequestBody AuthenticationRequest request) throws StockAppException {
 		
-		UsernamePasswordAuthenticationToken token;
-		
+	
+	
+		UsernamePasswordAuthenticationToken token = null;
+	
 		try {
 			token = new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword());
-			
+	
 			authManager.authenticate(token);
-		} catch (BadCredentialsException e) {
-			
-			e.printStackTrace();
-			throw new StockAppException("Incorrent username or password");}
+		
+		} 	catch (BadCredentialsException e) {
+			throw new BadCredentialsException();
+		}
+		
+		
 		
 		UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+
+		System.out.println("configure" );
+
 		
 		User user = (User) userDetails;
 		
@@ -111,11 +119,7 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	} 
 	
-	 @ExceptionHandler(RuntimeException.class)
-	    public final ResponseEntity<Exception> handleAllExceptions(RuntimeException ex) {
-	        return new ResponseEntity<Exception>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	 
+	
 	 
 	@GetMapping("/user/{id}")
 	 public UserDTO getUser(@PathVariable Long id) {

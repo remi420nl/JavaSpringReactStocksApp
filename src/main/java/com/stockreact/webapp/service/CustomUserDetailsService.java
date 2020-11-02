@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.stockreact.webapp.exception.StockAppException;
+import com.stockreact.webapp.exception.UserNotFoundException;
 import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.repository.UserRepository;
 
@@ -23,9 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
-		User user = userRepository.findByUsername(username).orElseThrow(() -> new StockAppException("User " + username + " not found ") );
-		System.out.println("user found! " + user.getUsername());
-	
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username) );
+
 		return (UserDetails) user;
 	}
 	
