@@ -12,7 +12,7 @@ const PositionOptions = (props) => {
   const options = [
     {
       id: 1,
-      name: "delete",
+      name: "Verwijder positie",
     },
     {
       id: 2,

@@ -1,9 +1,8 @@
 import axios from "axios";
-import { getJwt , getUserId} from "../features/JwtHelper";
-import {pubKey, newsKey} from './apikeys'
+import { getJwt, getUserId } from "../features/JwtHelper";
+import { pubKey, newsKey } from "./apikeys";
 
 // const url = 'https://cloud.iexapis.com/beta/ref-data/symbols?token='
-
 
 // export const fetchTickers = async () => {
 //     try {
@@ -14,7 +13,6 @@ import {pubKey, newsKey} from './apikeys'
 //       return error;
 //     }
 //   };
-
 
 //   export const fetchTickerData = async (ticker, range) => {
 
@@ -42,7 +40,6 @@ import {pubKey, newsKey} from './apikeys'
 
 export const fetchTickerData = async (ticker) => {
   const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=${pubKey}`;
-
 
   try {
     const data = await axios.get(url);
@@ -108,17 +105,16 @@ export const fetchUserDetails = async () => {
   const url = `http://localhost:8080/api/userdetails`;
   const token = "Bearer " + getJwt();
 
-
-  if(token.length < 12) {return "Not logged in"}
+  if (token.length < 12) {
+    return "Not logged in";
+  }
   const config = {
     headers: { Authorization: token },
   };
 
-  
-    const userdetails = await axios.get(url, config);
+  const userdetails = await axios.get(url, config);
 
-    return userdetails;
- 
+  return userdetails;
 };
 
 export const Login = async (username, password) => {
@@ -129,29 +125,23 @@ export const Login = async (username, password) => {
 
   const url = `http://localhost:8080/api/authenticate`;
 
-  return await axios.post(url, data)
-    
-  }
+  return await axios.post(url, data);
+};
 
-export const CheckLoginStatus = async() => {
+export const CheckLoginStatus = async () => {
   const token = "Bearer " + getJwt();
   const config = {
     headers: { Authorization: token },
   };
   const url = `http://localhost:8080/api/user`;
 
- 
-  return await axios.get(url, config)
-}
-  
+  return await axios.get(url, config);
+};
+
 export const Signup = async (user) => {
-
-
   const url = `http://localhost:8080/api/register`;
 
-  
-   return  await axios.post(url, user);
-
+  return await axios.post(url, user);
 };
 
 export const postNewPosition = async (data) => {
@@ -169,7 +159,6 @@ export const postNewPosition = async (data) => {
     return response;
   } catch (error) {
     console.log("error occured ", error);
- 
   }
 };
 
@@ -188,19 +177,16 @@ export const deletePosition = async (id) => {
     return response;
   } catch (error) {
     console.log("error occured ", error);
-   
   }
-}
+};
 
-
-export const updateStockPrice = async (id,newprice,date) => {
-
+export const updateStockPrice = async (id, newprice, date) => {
   const url = `http://localhost:8080/api/stock/${id}`;
-  
+
   const data = {
-      latestPrice : newprice,
-      lastUpdate : date
-  }
+    latestPrice: newprice,
+    lastUpdate: date,
+  };
 
   try {
     const response = await axios.post(url, data);
@@ -210,8 +196,7 @@ export const updateStockPrice = async (id,newprice,date) => {
     console.log("error occured while updating stock ", error);
     //   return error;
   }
-}
-
+};
 
 export const getUser = async () => {
   const token = "Bearer " + getJwt();
@@ -220,22 +205,17 @@ export const getUser = async () => {
   const config = {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
-  
+
   const url = `http://localhost:8080/api/user/${userId}`;
 
   try {
-    const response = await axios.get(url,config);
+    const response = await axios.get(url, config);
 
     return response;
   } catch (error) {
     console.log("error occured ", error);
-  
   }
-
-
-}
-
-
+};
 
 export const updateUser = async (data) => {
   const token = "Bearer " + getJwt();
@@ -244,29 +224,38 @@ export const updateUser = async (data) => {
   const config = {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
-  
+
   const url = `http://localhost:8080/api/user/${userId}`;
 
   try {
-    const response = await axios.post(url, data,config);
+    const response = await axios.post(url, data, config);
 
     return response;
   } catch (error) {
     console.log("error occured ", error);
-  
   }
+};
 
+export const setCompetitionValue = async (id,value) => {
+  const token = "Bearer " + getJwt();
+  const config = {
+    headers: { Authorization: token, "Content-Type": "application/json" },
+  };
 
-}
+  const url = `http://localhost:8080/api/portfolio/${id}/${value}`;
 
-
-
+  try {
+    const response = await axios.get(url,config);
+    return response;
+  } catch (e) {
+    console.log("error occured ", e.response.data.message);
+  }
+};
 
 export const getNews = async () => {
-
   const url = `http://newsapi.org/v2/top-headlines?country=nl&category=business&apiKey=${newsKey}`;
 
-    return await axios.get(url).then(response => {return response.data.articles});
-
-
-}
+  return await axios.get(url).then((response) => {
+    return response.data.articles;
+  });
+};

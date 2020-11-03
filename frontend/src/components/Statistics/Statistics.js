@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { getAllPortfolios } from "../../api/index";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 
 
 
@@ -28,8 +30,9 @@ export default function Statistics() {
 
 
   function getPortfolios() {
-    getAllPortfolios().then((p) => {
-      setPortfolios(p.data);
+  
+    getAllPortfolios().then(({data}) => {
+      setPortfolios(data.filter(x => x.competition))
     })
   }
 
@@ -119,6 +122,14 @@ export default function Statistics() {
    
     }
 
+    const theme = createMuiTheme({
+      typography: {
+        fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
+        fontSize: 18,
+        fontWeight: 500,
+      },
+    });
+
     const getDifference = (newValue, oldValue) => {
      
       const difference = parseFloat((newValue - oldValue)/oldValue * 100).toFixed(2)
@@ -133,6 +144,7 @@ export default function Statistics() {
     return (
       <div className="statistics">
         <div className="statisticscontent">
+        <MuiThemeProvider theme={theme}>
         <TableContainer  component={Paper}    classes={{ root: 'table-container' }}>
           <div>Aantal Deelnemers: {portfolios.length}</div>
           <Table>
@@ -153,12 +165,13 @@ export default function Statistics() {
                   <TableCell align="right">{row.name}</TableCell>
                   <TableCell align="right">€{row.oldvalue.toFixed(2)}</TableCell>
                   <TableCell align="right">€{row.newvalue.toFixed(2)}</TableCell>
-                  <TableCell align="right" style={{ color: row.difference >= 0 ? "green" : "red" , fontWeight:"700",fontSize:"1.1em"}}>{row.difference} %</TableCell>
+                  <TableCell align="right" style={{ color: row.difference >= 0 ? "green" : "crimson" , fontWeight:"700",fontSize:"1.1em"}}>{row.difference} %</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+        </MuiThemeProvider>
         </div>
       </div>
     );}else{

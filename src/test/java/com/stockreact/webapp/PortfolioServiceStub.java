@@ -78,4 +78,11 @@ public class PortfolioServiceStub implements PortfolioService {
 		return null;
 	}
 
+
+	@Override
+	public boolean setCompetition(boolean competition, Long id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

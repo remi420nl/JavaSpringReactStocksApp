@@ -13,12 +13,11 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
 import { fetchPortfoliosByUser, fetchUserDetails } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "../position/PositionOptions";
-import { ThemeProvider } from "styled-components";
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider } from "@material-ui/core/styles";
 
 class Portfolio extends Component {
   constructor(props) {
@@ -26,14 +25,13 @@ class Portfolio extends Component {
   }
   state = {
     portfolio: null,
-    userdetails: null,
     selectedPositions: [],
-
     currentvalue: {},
     difference: {},
     isLoaded: false,
     currentTotalValue: 0,
     oldTotalValue: 0,
+    competition: null,
   };
 
   componentDidMount() {
@@ -41,33 +39,15 @@ class Portfolio extends Component {
       this.props.history.push("/login");
     } else {
       this.updatePositions();
-
-      fetchUserDetails().then((details) => {
-        this.setState({
-          userdetails: details.data,
-        });
-      });
-    }
   }
-
-  //getting the updated value which are being calculation in the Row function and being passed passed back
-  // to this parent class
-
+  }
   updatePositions = () => {
-    //if argument is passed it means this index needs to be removed from the selected array since it has been removed
-    // if(index){
-    //   const updated = [...this.state.selectedPositions]
-    //   console.log("updatedarray...... ", updated)
-    //   updated.splice(index,1);
-    //   this.setState({
-    //     selectedPositions: updated
-    //   })
-    // }
     fetchPortfoliosByUser()
-      .then((response) => {
+      .then(({ data }) => {
         this.setState({
-          portfolio: response.data,
+          portfolio: data,
           selectedPositions: [],
+          competition: data.competition
         });
       })
       .then(() =>
@@ -75,22 +55,27 @@ class Portfolio extends Component {
           let old = 0;
           let current = 0;
           this.state.portfolio.positions.map((p) => {
-            (old += p.value),
-              (current += p.currentvalue),
-              this.setState({
-                isLoaded: true,
-                oldTotalValue: old,
-                currentTotalValue: current.toFixed(2),
-              });
+            (old += p.value), (current += p.currentvalue);
+          });
+          this.setState({
+            isLoaded: true,
+            oldTotalValue: old,
+            currentTotalValue: current,
           });
         })
       );
   };
 
   setCurrentPrice = async (callback) => {
-    const length = this.state.portfolio.positions.length;
+  const {portfolio:{positions}} = this.state;    
+  //to continue when an empty portfolio is being passed
+    if(positions.length < 1){
+      callback()
+    }
+
+    const length = positions.length;
     let count = 0;
-    this.state.portfolio.positions.map((p) => {
+    positions.map((p) => {
       GetCurrentValue(p.stock, p.amount, (response) => {
         p["currentvalue"] = parseFloat(response);
         p["difference"] = parseFloat(
@@ -104,19 +89,16 @@ class Portfolio extends Component {
     });
   };
 
-
   render() {
-
     const theme = createMuiTheme({
       typography: {
-        "fontFamily": `"Roboto", "Helvetica", "Arial", sans-serif`,
-        "fontSize": 18,
-        "fontWeight": 500
+        fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
+        fontSize: 18,
+        fontWeight: 500,
       },
- 
     });
-    
-    const { portfolio, userdetails, isLoaded } = this.state;
+
+    const { portfolio, isLoaded } = this.state;
 
     const selectPosition = (id) => {
       const { selectedPositions } = this.state;
@@ -139,57 +121,52 @@ class Portfolio extends Component {
 
     if (
       isLoaded &&
-      Array.isArray(portfolio.positions) &&
-      userdetails !== null
-    ) {
+      Array.isArray(portfolio.positions)
+     ) {
       return (
         <div className="portfolio">
-      
           <PortfolioHeader
             owner={portfolio.owner}
+            id={portfolio.id}
             description={portfolio.description}
             currentTotalValue={this.state.currentTotalValue}
             oldTotalValue={this.state.oldTotalValue}
+            competition={this.state.portfolio.competition}
           />
 
           <div className="portfoliocontent">
-          <MuiThemeProvider  theme={theme}>
-            <TableContainer
-            theme
-            component={Paper} classes={{ root: 'table-container'}}
-            >
-              <Table aria-label="collapsible table"
-             
+            <MuiThemeProvider theme={theme}>
+              <TableContainer
+                theme
+                component={Paper}
+                classes={{ root: "table-container" }}
               >
-                <TableHead
-          
-                >
-                  <TableRow
-                  
-                 >
-                    <TableCell />
-                    <TableCell>Soort</TableCell>
-                    <TableCell align="left">Naam</TableCell>
-                    <TableCell align="right">Symbool</TableCell>
-                    <TableCell align="right">Aantal</TableCell>
-                    <TableCell align="right">Aanschaf Waarde</TableCell>
-                    <TableCell align="right">Huidige Waarde</TableCell>
-                    <TableCell align="right">Rendement</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {portfolio.positions.map((row, key) => (
-                    <Row
-                      key={key}
-                      row={row}
-                      selectedPositions={this.state.selectedPositions}
-                      selectPosition={selectPosition}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            </MuiThemeProvider >
+                <Table aria-label="collapsible table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell>Soort</TableCell>
+                      <TableCell align="left">Naam</TableCell>
+                      <TableCell align="right">Symbool</TableCell>
+                      <TableCell align="right">Aantal</TableCell>
+                      <TableCell align="right">Aanschaf Waarde</TableCell>
+                      <TableCell align="right">Huidige Waarde</TableCell>
+                      <TableCell align="right">Rendement</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {portfolio.positions.map((row, key) => (
+                      <Row
+                        key={key}
+                        row={row}
+                        selectedPositions={this.state.selectedPositions}
+                        selectPosition={selectPosition}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </MuiThemeProvider>
             <div className="optionsbutton">
               <PositionOptions
                 selectedPositions={this.state.selectedPositions}
@@ -200,26 +177,19 @@ class Portfolio extends Component {
         </div>
       );
     } else {
-      return <div className="portfolio">loading..</div>;
+      return <div className="portfolio">Laden..</div>;
     }
   }
 }
 
-//helper function to return the 2 last cells. To obtain cleaner code
-//stock, amount, oldValue
 
 function Row(props) {
   const { row, selectedPositions, selectPosition } = props;
   const [open, setOpen] = useState(false);
   const [isLoaded, setIsloaded] = useState(false);
-  const [currentValue, setCurrentValue] = useState();
-  const [difference, setDifference] = useState();
-  // const classes = useRowStyles();
 
-  useEffect(() => {
-    //getDifference();
-  }, [!isLoaded]);
 
+  useEffect(() => {}, [!isLoaded]);
 
   return (
     <React.Fragment>
@@ -252,16 +222,10 @@ function Row(props) {
         <TableCell align="right">€{row.currentvalue.toFixed(2)}</TableCell>
         <TableCell
           align="right"
-          style={{ color: row.difference >= 0 ? "green" : "red" }}
+          style={{ color: row.difference >= 0 ? "green" : "crimson" }}
         >
           {row.difference} %
         </TableCell>
-        {/* <TableCell
-          align="right"
-          style={{ color: this.state.difference[row.id] > 0 ? "green" : "red" }}
-        >
-          {this.state.difference[row.id].toFixed(2)} %
-        </TableCell> */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
