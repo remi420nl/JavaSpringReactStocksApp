@@ -15,11 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PortfolioDTO {
 	
+	private Long id;
 	private String owner;
 	private String description;
+	private boolean competition;
 	
 	private List<Position> positions;
 
-	
 	
 }

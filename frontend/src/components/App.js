@@ -12,37 +12,21 @@ import { fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
 import { getJwt, clearJwt } from "../features/JwtHelper";
 import {Profile} from "./User/Profile"
-
-
-
 import "./App.css";
-
-
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
   const [name, setName] = useState();
 
   useEffect(() => {
-    //getting current username if token is present and not expired
 
-    console.log("app usestate")
     fetchUserDetails().then(response =>{
      if(response.status == 200){
       setLoginStatus(true);
       setName(response.data.firstname);
-    
 
       }}).catch(error =>
         {console.log("error occured", error)})
-    
-    //   setLoginStatus(true);
-    //   console.log("response", response)
-    //   setUsername(response.data);
-    //  }
-     
-    //  ).catch((error) => console.log("error while getting user ", error))
- 
   },[loginStatus]);
 
 
@@ -52,7 +36,6 @@ function App() {
     <>
       <Router>
       <Header    
-               
                 loginStatus={loginStatus}
                 setLoginStatus={() => (setLoginStatus(false), clearJwt(), setName(""))}
                 name={name}
@@ -100,7 +83,15 @@ function App() {
             )}
           />
           <Route path="/auth" component={Authenticate} />
-          <Route path="/profile" component={Profile} />
+          <Route
+          path="/profile"
+          render={(props) => (
+            <Profile
+            {...props}
+              loginStatus={loginStatus}
+            />
+          )}
+           />
           <Route component={PageNotFound} />
         </Switch>
         </div>

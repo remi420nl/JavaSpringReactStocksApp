@@ -125,15 +125,12 @@ public class UserController {
 	 public UserDTO getUser(@PathVariable Long id) {
 	        UserDTO userDto = userService.getById(id);
 	        
-	     
 	        return userDto;
 	    
 		} 
 	 
 	 	@PostMapping("/user/{id}")
 		public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDto) {
-	 		
-	 		System.out.println(userDto);
 		
 		return userService.updateUser(id, userDto);
 		

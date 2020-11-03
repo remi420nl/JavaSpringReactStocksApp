@@ -25,4 +25,6 @@ public interface PortfolioService {
 	
 	public PortfolioDTO getByUserIncludingPositions(User user) ;
 	
+	public boolean setCompetition(boolean competition,Long id);
+	
 }

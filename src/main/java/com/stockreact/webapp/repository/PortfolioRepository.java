@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.Position;
@@ -28,5 +30,10 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long>{
 
 
 	Optional<Portfolio> findByUserId(Long userId);
+
+    @Transactional
+    @Modifying
+	@Query("update Portfolio p SET p.competition = ?1 WHERE p.id = ?2")
+	int updateCompetion(boolean competition, Long id);
 }
 	

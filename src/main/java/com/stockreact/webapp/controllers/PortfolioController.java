@@ -85,11 +85,10 @@ public class PortfolioController {
 		return ResponseEntity.created(new URI("/api/portfolio" + result.getId())).body(result);
 	}
 	
-	@GetMapping("/portfolio/{id}")
-	public PortfolioDTO getStocksForPortfolioById(@PathVariable Long id) {
-		System.out.println("getstocksforportfoliobyID called..");
+	@GetMapping("/portfolio/{id}/{competition}")
+	public boolean getStocksForPortfolioById(@PathVariable Long id, @PathVariable boolean competition) {
 	
-		return portfolioService.getAllStocksByPortfolioId(id);
+		return portfolioService.setCompetition(competition, id);
 		
 	}
 	

@@ -26,9 +26,8 @@ public class PortfolioServiceImpl implements PortfolioService {
 
 	private PortfolioRepository portfolioRepo;
 	
-	
 	public void createPortfolio (String name) {
-		
+		//TODO
 	}
 
 
@@ -43,14 +42,12 @@ public class PortfolioServiceImpl implements PortfolioService {
 			dtos.add(mapToDto(p));
 		}
 		return dtos; 
-		
 	}
 
 
 	private PortfolioDTO mapToDto(Portfolio p) {
-		return PortfolioDTO.builder().description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
-				.build();
-		
+		return PortfolioDTO.builder().id(p.getId()).description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
+				.competition(p.isCompetition()).build();
 	}
 
 
@@ -58,11 +55,9 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return  portfolioRepo.findById(id);
 	}
 
-	public Portfolio save(@Valid Portfolio p) {
-		
-		return portfolioRepo.save(p);
+	public Portfolio save(@Valid Portfolio portfolio) {
+		return portfolioRepo.save(portfolio);
 	}
-
 
 	public void delete(Long id) {
 		portfolioRepo.deleteById(id);		
@@ -80,10 +75,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 		}
 		
 		List<PositionDTO> positions = portfolioRepo.getPortfolioWithPositions(id);
-//		
-//		PortfolioDTO postDTO = new PostDTO();
-//		postDTO.setOwner(portfolio.getName());
-//		postDTO.setPositions(positions);
+
 		PortfolioDTO portFolioDTO = PortfolioDTO.builder().description(portfolio.getName())
 				.build();
 		return portFolioDTO;
@@ -97,12 +89,20 @@ public class PortfolioServiceImpl implements PortfolioService {
 		Optional<Portfolio> portfolio = portfolioRepo.findByUserId(user.getId());
 		if(portfolio.isPresent()) {
 			PortfolioDTO portfolioDTO = mapToDto(portfolio.get());
-			System.out.println("description " + portfolioDTO.getDescription());
 			portfolioDTO.setOwner(user.getFirstname() + ' ' + user.getLastname());
 			return portfolioDTO;
 		}
 		return null;
 	
+	}
+
+
+	@Override
+	public boolean setCompetition(boolean competition, Long id) {
+		
+		int result = portfolioRepo.updateCompetion(competition, id);
+		System.out.println("result" + result);
+		return result == 1  ? true : false;
 	}  
 	
 	

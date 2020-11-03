@@ -39,20 +39,14 @@ public class Portfolio {
 	
 	private String name;
 	
+	private boolean competition = true;
+	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 	
 
-	
-	
-//	@OneToMany(  
-//		    cascade = CascadeType.ALL,
-//		    orphanRemoval = true)
-
-// TRY on Position ManytoOne side:   @JoinColumn(name = "id", referencedColumnName = "id") and set  this to (fetch = lazy)
-
-	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonBackReference
 	private List<Position> positions;
 	

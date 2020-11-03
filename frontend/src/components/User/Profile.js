@@ -13,9 +13,15 @@ export const Profile = (props) => {
   const [data, setData] = useState({});
   const [password, setPassword] = useState();
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [error, setError] = useState("")
+  const {loginStatus} = props;
 
   useEffect(() => {
+    if(loginStatus){
     getUser().then(({ data }) => setData(data));
+    }else{
+      props.history.push("/login")
+    }
   }, []);
 
   const checkPassword = ({ target }) => {
@@ -27,11 +33,21 @@ export const Profile = (props) => {
   };
 
   const handleSubmit = () => {
-    if (passwordsMatch) {
+    if (passwordsMatch && password.length > 3) {
       data.password = password;
       updateUser(data);
     }
   };
+
+  const setPasswordField =(value) =>{
+    setPassword(value)
+    if(password && password.length < 3){
+      setError("Minimaal 4 karakters")
+    }else{
+      setError("")
+    }
+    console.log(value)
+  }
 
   if (data) {
     return (
@@ -103,8 +119,8 @@ export const Profile = (props) => {
                 key={"password"}
                 label="Wachtwoord"
                 type="password"
-                onChange={({ target }) => setPassword(target.value)}
-                //  helperText= {error[`${field.name}`]}
+                onBlur={({ target }) => setPasswordField(target.value)}
+               helperText= {error}
                 FormHelperTextProps={{
                   style: { color: "red" },
                 }}
@@ -138,6 +154,6 @@ export const Profile = (props) => {
       </div>
     );
   } else {
-    return <></>;
+    return <>Niet Ingelogd</>;
   }
 };
