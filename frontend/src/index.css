@@ -11,9 +11,11 @@
 body {
   line-height: 1.4;
 
-  background: url(d.jpg) repeat 0 0;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: url(d.jpg) 0 0;
+ background-repeat: no-repeat;
+ background-size: cover;
+ background-attachment: fixed;
+
 }
 
 .home {
@@ -22,7 +24,7 @@ body {
   text-align: center;
   
    */
-  height: 100vh;
+
   margin-left: 120px;
 }
 
@@ -196,6 +198,7 @@ a {
 }
 
 @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
 
 .container {
   text-align: center;
@@ -299,9 +302,10 @@ body {
   text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
 }
 
-.portfoliobuttons {
+.buttons {
+  padding-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-direction: row;
 }
 
