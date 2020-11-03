@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import * as IconsFa from "react-icons/fa";
 import * as IconsAi from "react-icons/ai";
-import { SidebarData } from "./Sidebar";
+import { SidebarData } from "./SidebarData";
 import {IconContext} from 'react-icons';
 
 const Header = (props) => {
