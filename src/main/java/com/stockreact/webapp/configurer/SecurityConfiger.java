@@ -52,7 +52,6 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	
 		auth.authenticationProvider(authenticationProvider);
 	}
 	
@@ -71,7 +70,6 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
-              
                 .antMatchers(HttpMethod.GET, "/api/loginpage")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/api/stock/**")

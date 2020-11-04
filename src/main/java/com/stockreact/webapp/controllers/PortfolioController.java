@@ -103,9 +103,7 @@ public class PortfolioController {
 			return ResponseEntity.ok(portFolioDTO);
 		}
 		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			
-		
-		
+
 	}
 	
 } 

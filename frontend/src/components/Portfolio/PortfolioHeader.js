@@ -1,4 +1,4 @@
-import React, {useEffect,useState,useRef} from "react";
+import React, {useEffect,useState} from "react";
 import Button from "@material-ui/core/Button";
 import { setCompetitionValue } from "../../api/index";
 import {  ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -16,8 +16,13 @@ export function PortfolioHeader(props) {
 
 const [joinCompetition,setJoinCompetition] = useState(competition)
 
+
 const setCompetition = () => {
-  setJoinCompetition(!joinCompetition);
+ 
+  setCompetitionValue(id,!joinCompetition).then(() => {
+    setJoinCompetition(!joinCompetition);
+   
+  }) 
 }
 
 const theme = createMuiTheme({
@@ -26,16 +31,16 @@ const theme = createMuiTheme({
   },
 });
 
-const isInitialMount = useRef(true);
+// const isInitialMount = useRef(true);
 
-useEffect(() => {
-  if (isInitialMount.current) {
-     isInitialMount.current = false;
-  } else {
+// useEffect(() => {
+//   if (isInitialMount.current) {
+//      isInitialMount.current = false;
+//   } else {
    
-   setCompetitionValue(id, joinCompetition)
-  }
-}), [setJoinCompetition];
+//    setCompetitionValue(id, joinCompetition)
+//   }
+// }), [setJoinCompetition];
 
   const difference = () => {
     if (oldTotalValue == 0) return 0;
@@ -44,10 +49,7 @@ useEffect(() => {
     ).toFixed(2);
   };
 
-  const setCompetiton = () => {
-    setCompetition(id,!competition);
-    
-  };
+
   return (
     <div className="portfolioheader">
       <div className="portfoliodetails">
@@ -64,11 +66,11 @@ useEffect(() => {
         Doet mee aan competitie:
         <span>{joinCompetition ? "Ja" : "Nee"}</span>
         <div>
-          {joinCompetition ? <Button color="secondary" variant="contained" onClick={setCompetiton}>
+          {joinCompetition ? <Button color="secondary" variant="contained" onClick={setCompetition}>
             Verlaten
           </Button> :
              <ThemeProvider theme={theme}>
-             <Button variant="contained" color="primary" onClick={setCompetiton}>
+             <Button variant="contained" color="primary" onClick={setCompetition}>
                Deelnemen
              </Button>
            </ThemeProvider>

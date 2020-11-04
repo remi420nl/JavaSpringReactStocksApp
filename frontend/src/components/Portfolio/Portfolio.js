@@ -32,6 +32,8 @@ class Portfolio extends Component {
     currentTotalValue: 0,
     oldTotalValue: 0,
     competition: null,
+    sorting : {},
+    columnName: null
   };
 
   componentDidMount() {
@@ -39,18 +41,70 @@ class Portfolio extends Component {
       this.props.history.push("/login");
     } else {
       this.updatePositions();
+    }
   }
-  }
+
+  ////Functions for sorting the colums
+  //getPropValue is to get the property from the Stock object in the Position object, which is seperated by a "."
+  getPropValue = (obj, col) => col.split('.').reduce((a, prop) => 
+    a[prop], obj
+  );
+
+  //Functon for ascending 
+  sortAscending = (a, b) => {
+    const {columnName} = this.state
+    const fieldA = this.getPropValue(a, columnName);
+  
+    //if its a string it needs different sorting
+    return typeof fieldA === 'string'
+    ? fieldA.localeCompare(this.getPropValue(b, columnName))
+    : fieldA - this.getPropValue(b, columnName);
+  };
+  
+  //Function for descending sorting
+  sortDescending = (a, b) => {
+    const {columnName} = this.state
+    const fieldA = this.getPropValue(a, columnName);
+
+    return typeof fieldA === 'string'
+    ? this.getPropValue(b, columnName).localeCompare(fieldA)
+    : this.getPropValue(b, columnName) - fieldA ;
+  };
+
+//Sort function gets called initialy on loading component and when column is clicked. Direction gets saved into state as well as the column (object property name)
+  sortTable = (column) => {
+
+    const { portfolio,sorting } = this.state;
+    let positions = [...portfolio.positions]
+
+    let direction = sorting[`${column}`] === "dsc" ? "asc" : "dsc"
+
+    this.setState({
+      sorting: {...sorting, [`${column}`] : direction},
+      columnName : column
+    }, ()=> {
+      //callback after setstate, based on the previous state the right sorting direction gets called and the appropriate fucked gets passed into the Array.sort function
+      direction === "asc" ?
+      positions.sort(this.sortAscending) :
+      positions.sort(this.sortDescending)
+     
+      //setting state by spreading the portfolio and overwriting the positions property
+      this.setState({
+        portfolio : {...portfolio, positions : positions}
+      })
+    })
+  };
+
   updatePositions = () => {
     fetchPortfoliosByUser()
       .then(({ data }) => {
         this.setState({
           portfolio: data,
           selectedPositions: [],
-          competition: data.competition
+          competition: data.competition,
         });
       })
-      .then(() =>
+      .then(() => {
         this.setCurrentPrice(() => {
           let old = 0;
           let current = 0;
@@ -62,17 +116,19 @@ class Portfolio extends Component {
             oldTotalValue: old,
             currentTotalValue: current,
           });
-        })
-      );
+        });
+        this.sortTable("stock.name");
+      });
   };
 
   setCurrentPrice = async (callback) => {
-  const {portfolio:{positions}} = this.state;    
-  //to continue when an empty portfolio is being passed
-    if(positions.length < 1){
-      callback()
+    const {
+      portfolio: { positions },
+    } = this.state;
+    //to continue when an empty portfolio is being passed
+    if (positions.length < 1) {
+      callback();
     }
-
     const length = positions.length;
     let count = 0;
     positions.map((p) => {
@@ -119,10 +175,7 @@ class Portfolio extends Component {
       }
     };
 
-    if (
-      isLoaded &&
-      Array.isArray(portfolio.positions)
-     ) {
+    if (isLoaded && Array.isArray(portfolio.positions)) {
       return (
         <div className="portfolio">
           <PortfolioHeader
@@ -146,12 +199,14 @@ class Portfolio extends Component {
                     <TableRow>
                       <TableCell />
                       <TableCell>Soort</TableCell>
-                      <TableCell align="left">Naam</TableCell>
-                      <TableCell align="right">Symbool</TableCell>
-                      <TableCell align="right">Aantal</TableCell>
-                      <TableCell align="right">Aanschaf Waarde</TableCell>
-                      <TableCell align="right">Huidige Waarde</TableCell>
-                      <TableCell align="right">Rendement</TableCell>
+                      <TableCell onClick={()=> this.sortTable("stock.name")} align="left">Naam</TableCell>
+                      <TableCell onClick={()=> this.sortTable("stock.symbol")}  align="right">Symbool</TableCell>
+                      <TableCell onClick={()=> this.sortTable("amount")}  align="right">Aantal</TableCell>
+                      <TableCell onClick={()=> this.sortTable("value")}  align="right">Aanschaf Waarde</TableCell>
+                      <TableCell onClick={()=> this.sortTable("currentvalue")}  align="right">Huidige Waarde</TableCell>
+                      <TableCell onClick={()=> this.sortTable("difference")}  align="right" >
+                        Rendement
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -182,12 +237,10 @@ class Portfolio extends Component {
   }
 }
 
-
 function Row(props) {
   const { row, selectedPositions, selectPosition } = props;
   const [open, setOpen] = useState(false);
   const [isLoaded, setIsloaded] = useState(false);
-
 
   useEffect(() => {}, [!isLoaded]);
 
