@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.stockreact.webapp.exception.StockAppException;
 import com.stockreact.webapp.model.History;
 import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.Position;
@@ -101,6 +102,9 @@ public class PositionService {
 
 		Position result = positionRepo.save(newposition);
 		
+		portfolio.setCash(portfolio.getCash()-dto.getValue());
+		portfolioRepo.save(portfolio);
+		
 		return result;
 
 }
@@ -121,7 +125,14 @@ public class PositionService {
 
 	
 	public void deleteById(Long id) {
+		
+		Position position = positionRepo.findById(id).map(p -> p).orElseThrow(() ->  new StockAppException("Position not found"));
 
+		Portfolio portfolio = portfolioRepo.findById(position.getPortfolio().getId()).map(p -> p).orElseThrow(() ->  new StockAppException("Portfolio not found"));
+		
+		portfolio.setCash(portfolio.getCash() + position.getValue());
+		
+		portfolioRepo.save(portfolio);
 		positionRepo.deleteById(id);
 	}
 }

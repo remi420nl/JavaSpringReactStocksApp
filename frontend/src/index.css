@@ -340,14 +340,14 @@ body {
   flex-direction: column;
 }
 
-.stockspage {
+.stockpage {
   background: rgba(170, 170, 170, 0.8);
-
+  flex-direction: column;
   display: flex;
   margin: auto;
   width: 100%;
   overflow: hidden;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
 }
 
 .stockoptions {
@@ -376,17 +376,23 @@ body {
 }
 
 /* flex item 2 */
-.stockchart {
-  text-align: center;
 
-  margin: auto;
-  width: 100%;
-}
 .stockfield {
+ 
   display: flex;
   flex-direction: column;
+  max-width: 10%
 }
 
+.stockcontainer{
+  display:flex;
+  flex-direction: column;
+} 
+
+.stockchart{
+  margin-top: 25px;
+  border: 5px solid green;
+}
 .stockdetails {
   /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   */
   box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.12),
@@ -395,6 +401,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  max-width: 35%;
+  margin:auto;
 }
 
 .stockdetails h3 {

@@ -10,7 +10,7 @@ import SignupForm from "./Signup/SignupForm";
 import Authenticate from "./authenticate/Authenticate";
 import { fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
-import { getJwt, clearJwt } from "../features/JwtHelper";
+import { getJwt, clearJwt, } from "../features/JwtHelper";
 import {Profile} from "./User/Profile"
 import "./App.css";
 
@@ -19,18 +19,13 @@ function App() {
   const [name, setName] = useState();
 
   useEffect(() => {
-
     fetchUserDetails().then(response =>{
      if(response.status == 200){
       setLoginStatus(true);
       setName(response.data.firstname);
-
       }}).catch(error =>
         {console.log("error occured", error)})
   },[loginStatus]);
-
-
-
 
   return (
     <>
@@ -39,7 +34,8 @@ function App() {
                 loginStatus={loginStatus}
                 setLoginStatus={() => (setLoginStatus(false), clearJwt(), setName(""))}
                 name={name}
-                render={() => (
+                render={(props) => (
+                  {...props},
                   loginStatus ? `Hallo  ${name}` : 'Niet Ingelogd' 
                  )}
               />
@@ -70,7 +66,7 @@ function App() {
             <Route
             path="/stocks"
             render={(props) => (
-              <Stocks {...props} portfolioId={1} />
+              <Stocks {...props} />
             )}
           />
           <Route path="/signup" component={SignupForm} />

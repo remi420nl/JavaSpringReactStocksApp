@@ -23,7 +23,6 @@ public class PositionDTO {
 		this.portfolioId = portfolioId;
 	}
 	
-	
 
 	@Id
 	private Long id;

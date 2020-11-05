@@ -17,7 +17,6 @@ useEffect(() => {
     getNews().then(response =>  {
         setArticles(response)
       })
-      
 },[])
 
    useEffect(() => {

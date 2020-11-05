@@ -11,6 +11,7 @@ useEffect(() => {
 
 
     const clock = () => {
+      console.log("staticsheader")
         let time = new Date()
         let clock = time.getHours() + ":" + time.getMinutes()+":"+time.getSeconds()
     setTime(clock)

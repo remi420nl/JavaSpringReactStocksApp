@@ -1,4 +1,4 @@
-import React, {Component}from "react";
+import React from "react";
 
 export  const StockDetails = (props) => {
     const {amount,price,name } = props;
@@ -8,10 +8,10 @@ export  const StockDetails = (props) => {
         <div className="stockdetails">
             <h3>{name}</h3>
             <div>
-               Huidige koers {price}
+               Huidige koers €{price}
             </div>
             <h4>
-               Totaal: {(amount*price).toFixed(2)}
+               Totaal: €{(amount*price).toFixed(2)}
             </h4>
         </div>)
         }
