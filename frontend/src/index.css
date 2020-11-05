@@ -215,12 +215,12 @@ a {
   flex-direction: column;
   height: 90vh;
   align-items: center;
-  width: 100%;
+  width: fit-content;
   margin: auto;
 
 }
 
-.portfolioheader {
+.portfolioheader, .statisticsheader {
   text-shadow: white 0px 0px 10px;
   font-weight: bold;
   display: flex;
@@ -232,14 +232,35 @@ a {
   width: 100%;
 }
 
+.statisticsheader{
+
+}
+
 .portfoliodetails span {
+
   display: block;
   font-weight: bold;
   font-size: 20px;
   letter-spacing: 1px;
   margin: 5px 0;
+ 
 }
 
+.countdown {
+display: flex;
+
+flex-direction: column;
+align-items:center
+
+}
+
+.countdown div {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+ margin-left: 5px;
+
+  }
 .portfoliosummary span {
   display: block;
   padding-left: 10px;
@@ -290,6 +311,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+ 
 }
 
 .table-container {

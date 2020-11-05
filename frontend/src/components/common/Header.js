@@ -27,7 +27,7 @@ if(!loginStatus){
 }
 
 
-},[loginStatus])
+})
 
 
   const clickHandler = () => {

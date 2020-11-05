@@ -11,8 +11,7 @@ import { getAllPortfolios } from "../../api/index";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
-
-
+import StatisticsHeader from "./StatisticsHeader"
 
 
 export default function Statistics() {
@@ -119,7 +118,7 @@ export default function Statistics() {
     setTotals(summarytotals);
     
     setIsLoaded(true)
-   
+  
     }
 
     const theme = createMuiTheme({
@@ -143,10 +142,12 @@ export default function Statistics() {
     if(isLoaded){
     return (
       <div className="statistics">
+        <StatisticsHeader amount={portfolios.length}/>
         <div className="statisticscontent">
+        
         <MuiThemeProvider theme={theme}>
         <TableContainer  component={Paper}    classes={{ root: 'table-container' }}>
-          <div>Aantal Deelnemers: {portfolios.length}</div>
+         
           <Table>
             <TableHead
               className='table-header' >
@@ -161,7 +162,7 @@ export default function Statistics() {
             <TableBody>
               {totals.map((row,i) => (
                 <TableRow key={i}>
-                  <TableCell>{i+1}</TableCell>
+                  <TableCell align="center">{i+1}</TableCell>
                   <TableCell align="right">{row.name}</TableCell>
                   <TableCell align="right">€{row.oldvalue.toFixed(2)}</TableCell>
                   <TableCell align="right">€{row.newvalue.toFixed(2)}</TableCell>

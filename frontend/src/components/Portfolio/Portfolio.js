@@ -154,7 +154,7 @@ class Portfolio extends Component {
       },
     });
 
-    const { portfolio, isLoaded } = this.state;
+    const { portfolio, isLoaded, currentTotalValue, oldTotalValue, selectedPositions} = this.state;
 
     const selectPosition = (id) => {
       const { selectedPositions } = this.state;
@@ -182,15 +182,15 @@ class Portfolio extends Component {
             owner={portfolio.owner}
             id={portfolio.id}
             description={portfolio.description}
-            currentTotalValue={this.state.currentTotalValue}
-            oldTotalValue={this.state.oldTotalValue}
-            competition={this.state.portfolio.competition}
+            currentTotalValue={currentTotalValue}
+            oldTotalValue={oldTotalValue}
+            competition={portfolio.competition}
+            cash={portfolio.cash}
           />
-
           <div className="portfoliocontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer
-                theme
+          
                 component={Paper}
                 classes={{ root: "table-container" }}
               >
@@ -214,7 +214,7 @@ class Portfolio extends Component {
                       <Row
                         key={key}
                         row={row}
-                        selectedPositions={this.state.selectedPositions}
+                        selectedPositions={selectedPositions}
                         selectPosition={selectPosition}
                       />
                     ))}
