@@ -1,35 +1,26 @@
-//import './App.css';
 
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import Select from "react-virtualized-select";
 import StockChart from "./StockChart";
 import {ConvertData} from "./ConvertData";
-import SelectBox from "../../features/select-box";
-import createFilterOptions from "react-select-fast-filter-options";
 import { StockData } from "./StocksData";
-import Dropdown from "react-bootstrap/Dropdown";
 import { StockField } from "./StockField";
 import {StockDetails} from "./StockDetails"
-
 import { fetchTickerData, postNewPosition } from "../../api";
+import { fetchPortfoliosByUser } from "../../api";
 
 function Stocks(props) {
   const [amount, setAmount] = useState(0);
-
   const [stock, setStock] = useState();
-
   //const [range, setRange] = useState();
-
   const [error, setError] = useState("");
-
   const ref = useRef(null);
-
   const [display, setDisplay] = useState(false);
   const [options, setOptions] = useState([]);
   const [search, setSearch] = useState("");
+  const [availableCash, setAvailableCash] = useState();
+  const [portfolioId, setPortfolioId] = useState();
 
-  const { portfolioId } = props;
 
   useEffect(() => {
     document.addEventListener("mousedown", clickOutsideOfMenu);
@@ -37,6 +28,14 @@ function Stocks(props) {
       document.removeEventListener("mousedown", clickOutsideOfMenu);
     };
   }, []);
+
+  useEffect(() => {
+    fetchPortfoliosByUser()
+    .then(({ data }) => {
+      setAvailableCash(data.cash);
+      setPortfolioId(data.id)
+    })
+  })
 
   useEffect(() => {
 
@@ -58,7 +57,6 @@ function Stocks(props) {
     const { current: refw } = ref;
 
     if (refw && !refw.contains(e.target)) {
-      console.log("if is true");
       setDisplay(false);
     }
   };
@@ -82,8 +80,6 @@ function Stocks(props) {
     const n = converted.data.length
     const price = converted.data[n-1]['close'].toFixed(2);
 
-    console.log("latest ", price)
- 
 
     const stock = {
       name: name,
@@ -98,7 +94,6 @@ function Stocks(props) {
   }
 
   function submitPosition(amount) {
-   
  
     const now = new Date();
     //if stock usestate is present in constructs an object for the api (json)
@@ -118,26 +113,16 @@ function Stocks(props) {
         return false;
       })
       return true
-      }
-      
-    
-  }
-
-
-  function onChangeHandler(e) {
-    //console.log(tickerData);
-    // setName(e.label);
-    // loadTickerData(e.value);
+        }    
   }
 
   return (
-    <div className="stockspage">
-      <div className="stockscontainer">
+    <div className="stockpage">
+      <div className="stockcontainer">
         <div className="stockoptions">
-          <StockField setAmount={setAmount} amount={amount} submitPosition={submitPosition} />
+          <StockField setAmount={setAmount} availableCash={availableCash} price={stock ? stock.price : 0} amount={amount} submitPosition={submitPosition} />
           <StockDetails amount={amount} price={stock ? stock.price : 0} name={stock ? stock.name : ""}/>
           <div className="errormessage"> {error}</div>
-        
         <div className="stocksearchfield">
           <input
             onChange={(e) => setSearch(e.target.value)}
@@ -145,14 +130,12 @@ function Stocks(props) {
             value={search}
             placeholder="Zoek aandeel"
           />
-
           {display && (
             <div ref={ref} className="optionlist">
               {options
                 .filter(
                   ({ label }) =>
-                    label.toLowerCase().indexOf(search.toLowerCase()) > -1
-                )
+                    label.toLowerCase().indexOf(search.toLowerCase()) > -1 )
                 .map((o, i) => {
                   return (
                     <div
@@ -169,13 +152,13 @@ function Stocks(props) {
           )}
         </div>
         </div>
-        <div className="stockchart">
+       
+          
           {stock ? (
             <StockChart stockdata={stock.data.data} />
           ) : (
             <div className="choosestock">Kies eerst een aandeel</div>
           )}
-        </div>
       </div>
       </div>
    

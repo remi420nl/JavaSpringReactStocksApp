@@ -2,7 +2,6 @@ export const getJwt = () => {
     return localStorage.getItem('jwt-token')
 }
 
-
 export const clearJwt = () => {
  localStorage.clear()
 }

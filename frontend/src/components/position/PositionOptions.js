@@ -12,7 +12,7 @@ const PositionOptions = (props) => {
   const options = [
     {
       id: 1,
-      name: "Verwijder positie",
+      name: "Verkoop positie",
     },
     {
       id: 2,
@@ -25,11 +25,9 @@ const PositionOptions = (props) => {
    
     if(action === 1 && selectedPositions.length > 0 ){
     
-
       const toBeDeleted = [...selectedPositions]
 
       toBeDeleted.forEach(position => {
-     
       deletePosition(position).then(() => updatePositions())
  
      console.log("deleted.. " + position)

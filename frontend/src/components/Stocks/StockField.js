@@ -13,7 +13,7 @@ export const StockField = (props) => {
 
     const [amount, setAmount] = useState();
     const[notification,setNotification]  = useState()
-    const { submitPosition } = props;
+    const { submitPosition, price, availableCash} = props;
 
     const useStyles = makeStyles((theme) => ({
         margin: {
@@ -33,9 +33,9 @@ export const StockField = (props) => {
     const classes = useStyles();
   
     const handleSubmit = () => {
-
+      if(availableCash - (price*amount) < 0)
+      { setNotification("Saldo niet toereikend!")}
       if(submitPosition(amount)){
-        
         setNotification("Toegevoegd aan portfolio!")
       }
     }
@@ -90,6 +90,7 @@ return(
     disabled={!amount>0} 
     onClick={() => handleSubmit()}>Toevoegen</Button>
     <div className="errormessage">{notification}</div>
+    <div style={{marginTop:"30px"}} >Beschikbaar Saldo: €{availableCash}</div>
   </div>
 )
 }

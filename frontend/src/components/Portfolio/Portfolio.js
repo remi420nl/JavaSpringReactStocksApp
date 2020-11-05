@@ -14,7 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { fetchPortfoliosByUser, fetchUserDetails } from "../../api";
+import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "../position/PositionOptions";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -96,6 +96,8 @@ class Portfolio extends Component {
   };
 
   updatePositions = () => {
+    this.setState({isLoaded : false})
+
     fetchPortfoliosByUser()
       .then(({ data }) => {
         this.setState({
@@ -168,7 +170,6 @@ class Portfolio extends Component {
       } else {
         const newarray = [...this.state.selectedPositions];
         newarray.splice(index, 1);
-
         this.setState({
           selectedPositions: newarray,
         });

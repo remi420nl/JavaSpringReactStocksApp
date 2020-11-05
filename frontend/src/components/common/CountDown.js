@@ -1,6 +1,6 @@
 import React, {useEffect,useState} from "react";
 
-export default function PortfolioHeader(props) {
+export default function CountDown(props) {
 
     const [minutes, setMinutes] = useState();
     const [hours, setHours] = useState();
@@ -15,6 +15,7 @@ useEffect(() => {
 
 
 useEffect(() => {
+  console.log("countdown")
     const interval = setTimeout(() => countDown(), 60000)
    
     return () => clearInterval(interval)
