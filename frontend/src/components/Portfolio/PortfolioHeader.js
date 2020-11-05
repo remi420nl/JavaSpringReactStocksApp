@@ -1,8 +1,9 @@
-import React, {useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { setCompetitionValue } from "../../api/index";
-import {  ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
+import CountDown from "../common/CountDown";
 
 export function PortfolioHeader(props) {
   const {
@@ -11,36 +12,24 @@ export function PortfolioHeader(props) {
     currentTotalValue,
     oldTotalValue,
     competition,
-    id
+    cash,
+    id,
   } = props;
 
-const [joinCompetition,setJoinCompetition] = useState(competition)
+  const [joinCompetition, setJoinCompetition] = useState(competition);
 
+  const setCompetition = () => {
+    setCompetitionValue(id, !joinCompetition).then(() => {
+      setJoinCompetition(!joinCompetition);
+    });
+  };
 
-const setCompetition = () => {
- 
-  setCompetitionValue(id,!joinCompetition).then(() => {
-    setJoinCompetition(!joinCompetition);
-   
-  }) 
-}
-
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-});
-
-// const isInitialMount = useRef(true);
-
-// useEffect(() => {
-//   if (isInitialMount.current) {
-//      isInitialMount.current = false;
-//   } else {
-   
-//    setCompetitionValue(id, joinCompetition)
-//   }
-// }), [setJoinCompetition];
+  //Custom styling for the button
+  const theme = createMuiTheme({
+    palette: {
+      primary: green,
+    },
+  });
 
   const difference = () => {
     if (oldTotalValue == 0) return 0;
@@ -48,7 +37,6 @@ const theme = createMuiTheme({
       ((currentTotalValue - oldTotalValue) / oldTotalValue) * 100
     ).toFixed(2);
   };
-
 
   return (
     <div className="portfolioheader">
@@ -62,24 +50,41 @@ const theme = createMuiTheme({
           <span>{description}</span>
         </div>
       </div>
+      <div className="portfoliodetails">
+        <div>
+          Kas:
+          <span>€{cash}</span>
+        </div>
+        <CountDown />
+      </div>
       <div className="portfoliocompetition">
         Doet mee aan competitie:
         <span>{joinCompetition ? "Ja" : "Nee"}</span>
         <div>
-          {joinCompetition ? <Button color="secondary" variant="contained" onClick={setCompetition}>
-            Verlaten
-          </Button> :
-             <ThemeProvider theme={theme}>
-             <Button variant="contained" color="primary" onClick={setCompetition}>
-               Deelnemen
-             </Button>
-           </ThemeProvider>
-          }
+          {joinCompetition ? (
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={setCompetition}
+            >
+              Verlaten
+            </Button>
+          ) : (
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={setCompetition}
+              >
+                Deelnemen
+              </Button>
+            </ThemeProvider>
+          )}
         </div>
       </div>
       <div className="portfoliodetails">
         <div>
-          Vermogen
+          Waarde belegingen
           <span>€{currentTotalValue.toFixed(2)}</span>
         </div>
         <div>

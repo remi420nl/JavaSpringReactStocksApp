@@ -32,7 +32,6 @@ public class PortfolioServiceImpl implements PortfolioService {
 
 
 	public Collection<PortfolioDTO> getAll() {
-		
 
 		List<PortfolioDTO> dtos = new ArrayList<>();
 		
@@ -47,7 +46,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
 	private PortfolioDTO mapToDto(Portfolio p) {
 		return PortfolioDTO.builder().id(p.getId()).description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
-				.competition(p.isCompetition()).build();
+				.competition(p.isCompetition()).cash(p.getCash()).build();
 	}
 
 
@@ -79,8 +78,6 @@ public class PortfolioServiceImpl implements PortfolioService {
 		PortfolioDTO portFolioDTO = PortfolioDTO.builder().description(portfolio.getName())
 				.build();
 		return portFolioDTO;
-		
-		
 	}
 
 
@@ -93,7 +90,6 @@ public class PortfolioServiceImpl implements PortfolioService {
 			return portfolioDTO;
 		}
 		return null;
-	
 	}
 
 
@@ -104,6 +100,4 @@ public class PortfolioServiceImpl implements PortfolioService {
 		System.out.println("result" + result);
 		return result == 1  ? true : false;
 	}  
-	
-	
 }

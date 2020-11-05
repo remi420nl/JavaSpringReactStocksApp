@@ -19,7 +19,7 @@ public class PortfolioDTO {
 	private String owner;
 	private String description;
 	private boolean competition;
-	
+	private double cash;
 	private List<Position> positions;
 
 	

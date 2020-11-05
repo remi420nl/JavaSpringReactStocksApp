@@ -39,12 +39,13 @@ public class Portfolio {
 	
 	private String name;
 	
+	private double cash = 10000;
+	
 	private boolean competition = true;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
-	
 
 	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonBackReference
