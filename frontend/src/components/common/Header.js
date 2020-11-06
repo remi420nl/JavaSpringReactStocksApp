@@ -4,17 +4,17 @@ import * as IconsFa from "react-icons/fa";
 import * as IconsAi from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
 import {IconContext} from 'react-icons';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const Header = (props) => {
   const [sidebar, setSidebar] = useState(false);
-  const {loginStatus, setLoginStatus,name} = props;
+  const {loginStatus, setLoginStatus} = props;
   const [sidebarItems,setSiteBarItems] = useState();
  const {render} = props
 
-
 useEffect(() => {
-  console.log("useeffect from header..")
- 
+//Altering SideBarData depending on user login status
 if(!loginStatus){
   setSiteBarItems(SidebarData)
 }else{
@@ -30,9 +30,8 @@ if(!loginStatus){
 
   const logout = () => {
     setLoginStatus();
- 
+    //Force a reload otherwise the Navigation bar won't refresh
       window.location.reload(); 
-
   }
   
 if(sidebarItems){
@@ -46,9 +45,10 @@ if(sidebarItems){
         </NavLink>
         <div className="navbarstatus ml-auto">
         {render()}
-       
-       { loginStatus ? <NavLink  to="/" onClick={()=> logout()}> Uitloggen </NavLink> : <div></div>
+       <div>
+       { loginStatus ? <Tooltip title="Uitloggen"><ExitToAppIcon  onClick={() => logout()} /></Tooltip> : <div></div>
        }
+        </div>
         </div>
       </div>
 

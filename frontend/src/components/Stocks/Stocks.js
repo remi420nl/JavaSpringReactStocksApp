@@ -20,6 +20,7 @@ function Stocks(props) {
   const [search, setSearch] = useState("");
   const [availableCash, setAvailableCash] = useState();
   const [portfolioId, setPortfolioId] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
 
   useEffect(() => {
@@ -33,8 +34,9 @@ function Stocks(props) {
     fetchPortfoliosByUser()
     .then(({ data }) => {
       setAvailableCash(data.cash);
-      setPortfolioId(data.id)
-    })
+      setPortfolioId(data.id);
+      setIsLoggedIn(true)
+    }).catch(response => console.log(response))
   })
 
   useEffect(() => {
@@ -120,8 +122,8 @@ function Stocks(props) {
     <div className="stockpage">
       <div className="stockcontainer">
         <div className="stockoptions">
-          <StockField setAmount={setAmount} availableCash={availableCash} price={stock ? stock.price : 0} amount={amount} submitPosition={submitPosition} />
-          <StockDetails amount={amount} price={stock ? stock.price : 0} name={stock ? stock.name : ""}/>
+         {isLoggedIn && <StockField setAmount={setAmount} availableCash={availableCash} price={stock ? stock.price : 0} amount={amount} submitPosition={submitPosition} />} 
+          <StockDetails isLoggedIn={isLoggedIn} amount={amount} price={stock ? stock.price : 0} name={stock ? stock.name : ""}/>
           <div className="errormessage"> {error}</div>
         <div className="stocksearchfield">
           <input

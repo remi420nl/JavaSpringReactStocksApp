@@ -1,52 +1,93 @@
-import React, {useState}from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import {deletePosition} from '../../api/index'
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { deletePosition } from "../../api/index";
 
-const PositionOptions = (props) => {
-  
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const {selectedPositions, updatePositions} = props;
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}));
 
-  const toggle = () => setDropdownOpen(prevState => !prevState);
+export default function PositionOptions(props) {
+  const [open, setOpen] = React.useState(false);
 
-  const options = [
-    {
-      id: 1,
-      name: "Verkoop positie",
-    },
-    {
-      id: 2,
-      name: "update *not working yet",
-    },
-  ];
+  const { selectedPositions, updatePositions } = props;
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  const clickHandler = (action) => {
-   
-    if(action === 1 && selectedPositions.length > 0 ){
-    
-      const toBeDeleted = [...selectedPositions]
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-      toBeDeleted.forEach(position => {
-      deletePosition(position).then(() => updatePositions())
- 
-     console.log("deleted.. " + position)
-    });
-    console.log("deleting done.. " + selectedPositions)
-  }
-  }
+  const sell = () => {
+    if (selectedPositions.length > 0) {
+      const toBeDeleted = [...selectedPositions];
 
-  return(
-  <div className="optionsbutton" >    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-  <DropdownToggle caret>
-    Actie
-    </DropdownToggle>
-  <DropdownMenu>
-    {options.map(p => <DropdownItem key={p.id} onClick={() => clickHandler(p.id)}>{p.name}</DropdownItem>)}
-  </DropdownMenu>
-</Dropdown>
-</div>
-  )
+      toBeDeleted.forEach((position) => {
+        deletePosition(position.id).then(() => updatePositions());
+
+        console.log("deleted.. " + position);
+      });
+      console.log("deleting done.. " + selectedPositions);
+    }
+  };
+
+  return (
+    <div>
+      <Button
+        disabled={selectedPositions < 1}
+        variant="contained"
+        color="secondary"
+        onClick={handleClickOpen}
+      >
+        Verkopen
+      </Button>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>Positie(s) verkoop</DialogTitle>
+        <DialogContent>
+          <form className="selldialog">
+           <div>
+            {selectedPositions.map((p) => (
+              <div key={p.id}>{p.name}</div>
+            ))}
+           
+             </div>
+             <div style={{fontWeight:"bold", marginTop:"10px"}} >
+              Weet u het zeker?
+           </div>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Annuleer
+          </Button>
+          <Button onClick={sell} color="primary">
+            Verkoop
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
-
-export default PositionOptions

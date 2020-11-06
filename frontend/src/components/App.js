@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomePage from "./home/HomePage";
+import HomePage from "./Home/HomePage";
 import Statistics from "./Statistics/Statistics";
 import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
 import Portfolio from "./Portfolio/Portfolio";
 import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
-import Authenticate from "./authenticate/Authenticate";
+import Authenticate from "./Authenticate/Authenticate";
 import { fetchUserDetails} from '../api'
 import { LoginForm } from "./Login/LoginForm";
-import { getJwt, clearJwt, } from "../features/JwtHelper";
+import { getJwt, clearJwt, } from "../Features/JwtHelper";
 import {Profile} from "./User/Profile"
 import "./App.css";
 

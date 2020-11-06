@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NewsCard(props) {
   const [expanded, setExpanded] = useState(false);
-  const {title, content, description, url, image, date,author } = props;
+  const {title, description, url, image, date,author } = props;
 
   const classes = useStyles();
 
