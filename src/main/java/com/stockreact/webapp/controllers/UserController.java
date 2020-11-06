@@ -47,15 +47,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserController {
 
-	@Autowired
 	private  AuthenticationManager authManager;
-	@Autowired
 	private  UserDetailsService userDetailsService;
-	@Autowired
 	private  JwtUtil jwtUtil;
-	@Autowired
 	private  UserService userService;
 	
 	
@@ -79,8 +76,6 @@ public class UserController {
 	
 	@PostMapping("/authenticate")
 	public ResponseEntity<?>  Authenticate(@RequestBody AuthenticationRequest request) throws StockAppException {
-		
-	
 	
 		UsernamePasswordAuthenticationToken token = null;
 	
@@ -96,9 +91,6 @@ public class UserController {
 		
 		
 		UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-
-		System.out.println("configure" );
-
 		
 		User user = (User) userDetails;
 		
@@ -115,7 +107,6 @@ public class UserController {
 
 		User user = userService.registerUser(userDTO);
 		
-		
 		return ResponseEntity.ok(user);
 	} 
 	
@@ -125,15 +116,12 @@ public class UserController {
 	 public UserDTO getUser(@PathVariable Long id) {
 	        UserDTO userDto = userService.getById(id);
 	        
-	        return userDto;
-	    
+	        return userDto; 
 		} 
 	 
 	 	@PostMapping("/user/{id}")
 		public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDto) {
 		
 		return userService.updateUser(id, userDto);
-		
-		 
 		}
 }

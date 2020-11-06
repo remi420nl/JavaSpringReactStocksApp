@@ -102,6 +102,7 @@ class Portfolio extends Component {
 
     fetchPortfoliosByUser()
       .then(({ data }) => {
+        console.log(data)
         this.setState({
           portfolio: data,
           selectedPositions: [],

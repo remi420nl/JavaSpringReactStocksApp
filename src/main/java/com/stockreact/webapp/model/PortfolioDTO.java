@@ -12,9 +12,17 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class PortfolioDTO {
 	
+	public PortfolioDTO(Long id,String description, boolean competition, double cash, Portfolio portfolio) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.competition = competition;
+		this.cash = cash;
+		this.positions = portfolio.getPositions();
+	
+	}
 	private Long id;
 	private String owner;
 	private String description;
