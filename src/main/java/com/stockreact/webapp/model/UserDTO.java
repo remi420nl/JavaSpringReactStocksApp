@@ -29,7 +29,7 @@ public class UserDTO {
 	  @NotBlank(message = "Email is verplicht")
 	private String email;
 	private String portfolio;
-	
+	private Long activePortfolio;
 	private String info;
 
 	

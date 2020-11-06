@@ -59,8 +59,9 @@ public class User implements UserDetails {
     private Instant created;
     private String firstname;
     private String lastname;
+    //active porfolio
+    private Long activePortfolio;
     
-
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "user_id")
     @JsonBackReference

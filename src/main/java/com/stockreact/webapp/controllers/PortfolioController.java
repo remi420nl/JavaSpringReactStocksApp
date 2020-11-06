@@ -31,6 +31,7 @@ import com.stockreact.webapp.model.PortfolioDTO;
 import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
 import com.stockreact.webapp.model.User;
+import com.stockreact.webapp.model.UserDTO;
 import com.stockreact.webapp.service.PortfolioService;
 import com.stockreact.webapp.service.UserService;
 import com.stockreact.webapp.util.JwtUtil;
@@ -47,6 +48,7 @@ public class PortfolioController {
 	
 
 	private final PortfolioService portfolioService;
+	private final UserService userService;
 
 	@GetMapping("/portfolio")
 	public Collection<PortfolioDTO> getAllPortfolios(){
@@ -88,6 +90,7 @@ public class PortfolioController {
 	@GetMapping("/portfolio/{id}/{competition}")
 	public boolean getStocksForPortfolioById(@PathVariable Long id, @PathVariable boolean competition) {
 	
+		System.out.println("ID" + id);
 		return portfolioService.setCompetition(competition, id);
 		
 	}
@@ -97,11 +100,21 @@ public class PortfolioController {
 		
 		User user =  (User) authentication.getPrincipal();
 		
-		PortfolioDTO portFolioDTO = portfolioService.getByUserIncludingPositions(user); 
+//		UserDTO user = userService.getById(authenticatedUser.getId());
+//		
+//		PortfolioDTO portFolioDTO = portfolioService.getByUserIncludingPositions(user); 
+//
+//		if(portFolioDTO != null) {
+//			return ResponseEntity.ok(portFolioDTO);
+//		}
+//		
+		System.out.println(user.getFirstname() + user.getActivePortfolio());
+		PortfolioDTO ptest = portfolioService.getAllStocksByPortfolioId(user);
 
-		if(portFolioDTO != null) {
-			return ResponseEntity.ok(portFolioDTO);
+		if(ptest != null) {
+			return ResponseEntity.ok(ptest);
 		}
+		
 		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 	}

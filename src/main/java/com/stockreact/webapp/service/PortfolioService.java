@@ -21,7 +21,7 @@ public interface PortfolioService {
 	
 	public void delete(Long id);
 	
-	public PortfolioDTO getAllStocksByPortfolioId(Long id) ;
+	public PortfolioDTO getAllStocksByPortfolioId(User user) ;
 	
 	public PortfolioDTO getByUserIncludingPositions(User user) ;
 	

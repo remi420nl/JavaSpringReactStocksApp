@@ -23,7 +23,6 @@ public class StockServiceImpl implements StockService {
 	
 	@Override
 	public Collection<Stock> getAll() {
-		
 		return stockRepo.findAll();
 	}
 
@@ -41,12 +40,10 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public void delete(Long id) {
 		stockRepo.deleteById(id);
-		
 	}
 
 	@Override
 	public int updatePrice(Long id, double price, String date) {
-		
 		return stockRepo.updatePriceAndDate(id,price,date);
 	}
 	
