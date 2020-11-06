@@ -1,7 +1,7 @@
 import React from "react";
 
 export  const StockDetails = (props) => {
-    const {amount,price,name } = props;
+    const {amount,price,name,isLoggedIn } = props;
 
     if(price){
     return (

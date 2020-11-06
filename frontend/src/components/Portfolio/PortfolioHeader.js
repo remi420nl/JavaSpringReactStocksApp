@@ -53,7 +53,7 @@ export function PortfolioHeader(props) {
       <div className="portfoliodetails">
         <div>
           Kas:
-          <span>€{cash}</span>
+          <span>€{cash.toFixed(2)}</span>
         </div>
         <CountDown />
       </div>

@@ -34,7 +34,8 @@ export const StockField = (props) => {
   
     const handleSubmit = () => {
       if(availableCash - (price*amount) < 0)
-      { setNotification("Saldo niet toereikend!")}
+      { setNotification("Saldo niet toereikend!")
+    return}
       if(submitPosition(amount)){
         setNotification("Toegevoegd aan portfolio!")
       }
@@ -90,7 +91,7 @@ return(
     disabled={!amount>0} 
     onClick={() => handleSubmit()}>Toevoegen</Button>
     <div className="errormessage">{notification}</div>
-    <div style={{marginTop:"30px"}} >Beschikbaar Saldo: €{availableCash}</div>
+    <div style={{marginTop:"30px"}} >Beschikbaar Saldo: €{availableCash.toFixed(2)}</div>
   </div>
 )
 }

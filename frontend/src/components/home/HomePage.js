@@ -36,19 +36,6 @@ setNewsCount(data.length)
 }
 
 
-
-    const status = () =>{
-        if(!props.loginStatus){
-            return <p>Status: Uitgelogd</p>
-        }    
-           return  <p>Hallo {render()}</p>
-    }
-
-    const handleClick = (selectedIndex, e) => {
-        setFrom(selectedIndex);
-      };
-
-
 if(articles){
 return (
     <div className="home">

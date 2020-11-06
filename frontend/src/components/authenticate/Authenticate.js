@@ -1,6 +1,6 @@
 
 import React,{ Component } from 'react';
-import { getJwt} from '../../features/JwtHelper'
+import { getJwt} from '../../Features/JwtHelper'
 
 class Authenticate extends Component {
 constructor(props){

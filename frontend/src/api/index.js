@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getJwt, getUserId } from "../features/JwtHelper";
+import { getJwt, getUserId } from "../Features/JwtHelper";
 import { pubKey, newsKey } from "./apikeys";
 
 // const url = 'https://cloud.iexapis.com/beta/ref-data/symbols?token='

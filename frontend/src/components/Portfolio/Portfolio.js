@@ -13,11 +13,12 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import { createMuiTheme } from "@material-ui/core/styles";
 import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
-import PositionOptions from "../position/PositionOptions";
-import { MuiThemeProvider } from "@material-ui/core/styles";
+import PositionOptions from "../Position/PositionOptions";
+import { makeStyles, MuiThemeProvider, createMuiTheme, withStyles }  from "@material-ui/core/styles";
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
+
 
 class Portfolio extends Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class Portfolio extends Component {
     oldTotalValue: 0,
     competition: null,
     sorting : {},
-    columnName: null
+    columnName: null,
+    sort: true
   };
 
   componentDidMount() {
@@ -146,8 +148,8 @@ class Portfolio extends Component {
       });
     });
   };
-
   render() {
+
     const theme = createMuiTheme({
       typography: {
         fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
@@ -156,16 +158,18 @@ class Portfolio extends Component {
       },
     });
 
-    const { portfolio, isLoaded, currentTotalValue, oldTotalValue, selectedPositions} = this.state;
+  
 
-    const selectPosition = (id) => {
+    const { portfolio, isLoaded, currentTotalValue, oldTotalValue, selectedPositions, columnName} = this.state;
+
+    const selectPosition = (id,name) => {
       const { selectedPositions } = this.state;
 
-      const index = selectedPositions.indexOf(id);
+      let index = selectedPositions.map((p) => p.id).indexOf(id)
 
       if (index == -1) {
         this.setState((prevState) => ({
-          selectedPositions: [...prevState.selectedPositions, id],
+          selectedPositions: [...prevState.selectedPositions, {id: id, name: name}],
         }));
       } else {
         const newarray = [...this.state.selectedPositions];
@@ -191,7 +195,6 @@ class Portfolio extends Component {
           <div className="portfoliocontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer
-          
                 component={Paper}
                 classes={{ root: "table-container" }}
               >
@@ -200,14 +203,13 @@ class Portfolio extends Component {
                     <TableRow>
                       <TableCell />
                       <TableCell>Soort</TableCell>
-                      <TableCell onClick={()=> this.sortTable("stock.name")} align="left">Naam</TableCell>
-                      <TableCell onClick={()=> this.sortTable("stock.symbol")}  align="right">Symbool</TableCell>
-                      <TableCell onClick={()=> this.sortTable("amount")}  align="right">Aantal</TableCell>
-                      <TableCell onClick={()=> this.sortTable("value")}  align="right">Aanschaf Waarde</TableCell>
-                      <TableCell onClick={()=> this.sortTable("currentvalue")}  align="right">Huidige Waarde</TableCell>
-                      <TableCell onClick={()=> this.sortTable("difference")}  align="right" >
-                        Rendement
-                      </TableCell>
+                      <TableCell classes={{ root: columnName == "stock.name" ? "sortedcolumn" : ""}}  onClick={()=> this.sortTable("stock.name")} align="left">Naam</TableCell>
+                      <TableCell className={columnName == "stock.symbol" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("stock.symbol")}  align="right">Symbool</TableCell>
+                      <TableCell className={columnName == "amount" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("amount")}  align="right">Aantal</TableCell>
+                      <TableCell className={columnName == "value" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("value")}  align="right">Aanschaf Waarde</TableCell>
+                      <TableCell className={columnName == "currentvalue" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("currentvalue")}  align="right">Huidige Waarde</TableCell>
+                      <TableCell className={columnName == "difference" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("difference")}  align="right" >Rendement</TableCell>
+                      <TableCell align="right" >Actie</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -238,6 +240,10 @@ class Portfolio extends Component {
   }
 }
 
+
+export default Portfolio
+
+
 function Row(props) {
   const { row, selectedPositions, selectPosition } = props;
   const [open, setOpen] = useState(false);
@@ -248,19 +254,16 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow
-        onClick={() => selectPosition(row.id)}
         className={
-          selectedPositions.indexOf(row.id) !== -1
+          selectedPositions.map(p => p.id).indexOf(row.id) !== -1
             ? "selectedPosition"
             : "unselectedPosition"
-        }
-      >
+        }>
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-          >
+            onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -276,10 +279,10 @@ function Row(props) {
         <TableCell align="right">€{row.currentvalue.toFixed(2)}</TableCell>
         <TableCell
           align="right"
-          style={{ color: row.difference >= 0 ? "green" : "crimson" }}
-        >
+          style={{ color: row.difference >= 0 ? "green" : "crimson" }}>
           {row.difference} %
         </TableCell>
+        <TableCell align="right"><ArrowBackRoundedIcon onClick={() => selectPosition(row.id, row.stock.name)}/></TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -322,4 +325,3 @@ function Row(props) {
   );
 }
 
-export default Portfolio;
