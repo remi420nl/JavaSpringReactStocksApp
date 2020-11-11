@@ -10,12 +10,11 @@
 
 body {
   line-height: 1.4;
-
+  font-family: "Lato", sans-serif;
   background: url(d.jpg) 0 0;
- background-repeat: no-repeat;
- background-size: cover;
- background-attachment: fixed;
-
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .home {
@@ -66,6 +65,7 @@ a {
 .errormessage {
   color: rgb(107, 17, 17);
   font-weight: bold;
+  margin-top: 10px;
 }
 
 .dropdown-list {
@@ -81,9 +81,9 @@ a {
   background-color: rgba(233, 64, 64, 0.6);
 }
 
-.sortedcolumn{
- color:rgba(42, 14, 95, 0.726) !important;
- font-size: 1.4em !important;
+.sortedcolumn {
+  color: rgba(42, 14, 95, 0.726) !important;
+  font-size: 1.4em !important;
 }
 
 .position-item {
@@ -103,8 +103,10 @@ a {
 .signupbuttons Button {
   width: 80px;
   font-size: 12px;
+  margin: auto;
 }
 .signupbuttons {
+  margin: auto;
   width: 200px;
   padding-top: 10px;
   display: flex;
@@ -137,10 +139,9 @@ a {
   display: flex;
   flex-direction: row;
 }
-.navbarstatus div{
- margin: 0px 10px;
+.navbarstatus div {
+  margin: 0px 10px;
 }
-
 
 .menu-bars {
   margin-left: 2rem;
@@ -209,7 +210,7 @@ a {
 }
 
 @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
 
 .container {
   text-align: center;
@@ -228,10 +229,10 @@ a {
   align-items: center;
   width: fit-content;
   margin: auto;
-
 }
 
-.portfolioheader, .statisticsheader {
+.portfolioheader,
+.statisticsheader {
   text-shadow: white 0px 0px 10px;
   font-weight: bold;
   display: flex;
@@ -239,39 +240,45 @@ a {
   flex-direction: row;
   padding: 10px 5px;
   justify-content: space-between;
-width: 100%;
-  
+  width: 100%;
 }
 
-.statisticsheader{
-width:60%
+.statisticsheader {
+  width: 60%;
 }
 
+.pagetitle {
+  color: #ffffff;
+  text-shadow: white 0px 0px 20px;
+  font-family: "Raleway", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 22px;
+  margin: 0 0 24px;
+  text-align: center;
+  text-transform: uppercase;
+}
 .portfoliodetails span {
-
   display: block;
   font-weight: bold;
   font-size: 20px;
   letter-spacing: 1px;
   margin: 5px 0;
- 
 }
 
 .countdown {
-display: flex;
+  display: flex;
 
-flex-direction: column;
-align-items:center
-
+  flex-direction: column;
+  align-items: center;
 }
 
 .countdown div {
   display: flex;
   flex-direction: row;
   justify-items: center;
- margin-left: 5px;
-
-  }
+  margin-left: 5px;
+}
 .portfoliosummary span {
   display: block;
   padding-left: 10px;
@@ -280,17 +287,15 @@ align-items:center
   margin: 5px 0;
 }
 
-.portfoliocompetition{
-display:  flex;
-flex-direction: column;
-justify-content: start;
+.portfoliocompetition {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
 }
 
-.portfoliocompetition div{
- margin-top: 20px;
-  }
-  
-
+.portfoliocompetition div {
+  margin-top: 20px;
+}
 
 .signupform {
   margin: auto;
@@ -303,26 +308,14 @@ justify-content: start;
   border: 1px solid rgb(92, 87, 87);
   box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.12),
     0 1px 2px 4px rgba(0, 0, 0, 0.24);
-
   padding: 10px;
 }
-
-.signupform button {
-  margin: auto;
-}
-
-body {
-  font-family: "Lato", sans-serif;
-}
-
-
 
 .portfoliocontent,
 .statisticscontent {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
- 
 }
 
 .table-container {
@@ -346,7 +339,6 @@ body {
   display: flex;
   padding: 32px;
   right: 20px;
-
   width: 100%;
   flex-direction: column;
 }
@@ -358,7 +350,6 @@ body {
   margin: auto;
   width: 100%;
   overflow: hidden;
-  /* justify-content: flex-end; */
 }
 
 .stockoptions {
@@ -368,7 +359,6 @@ body {
   height: 250px;
 }
 
-/* flex item 1 */
 .stocksdropdown {
   margin: 0 50px;
   display: flex;
@@ -382,27 +372,23 @@ body {
   display: flex;
   padding-top: 10px;
   width: 50%;
-
   flex-direction: column;
 }
-
-/* flex item 2 */
 
 .stockfield {
- 
   display: flex;
   flex-direction: column;
-  max-width: 10%
+  max-width: 10%;
 }
 
-.stockcontainer, .selldialog{
-  display:flex;
+.stockcontainer,
+.selldialog {
+  display: flex;
   flex-direction: column;
-} 
+  padding-top: 10px;
+}
 
-
-
-.stockchart{
+.stockchart {
   margin-top: 25px;
 }
 .stockdetails {

@@ -13,8 +13,10 @@ export const Profile = (props) => {
   const [data, setData] = useState({});
   const [password, setPassword] = useState();
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [result, setResult] = useState("")
   const [error, setError] = useState("")
   const {loginStatus} = props;
+
 
   useEffect(() => {
     if(loginStatus){
@@ -24,8 +26,8 @@ export const Profile = (props) => {
     }
   }, []);
 
-  const checkPassword = ({ target }) => {
-    if (password === target.value) {
+  const checkPassword = (enteredpassword) => {
+    if (password === enteredpassword) {
       setPasswordsMatch(true);
     } else {
       setPasswordsMatch(false);
@@ -33,20 +35,32 @@ export const Profile = (props) => {
   };
 
   const handleSubmit = () => {
-    if (passwordsMatch && password.length > 3) {
+    if (password == null){
+      updateUser(data).then(response => {
+        if(response.status === 200){
+          setResult("Profiel bijgewerkt")
+        }
+      }).catch(() => setResult("Er is iets fout gegaan"));
+    }
+    else if (passwordsMatch && password.length > 3) {
       data.password = password;
-      updateUser(data);
+      updateUser(data).then(response => {
+        if(response.status === 200){
+          setResult("profiel bijgewerkt")
+        }
+      }).catch(e => setResult("Er is iets fout gegaan"));
+    } else if (password.length < 3) {
+      setError("Minimaal 4 karakters")
     }
   };
 
-  const setPasswordField =(value) =>{
-    setPassword(value)
+  const setPasswordField =(enteredpassword) =>{
+    setPassword(enteredpassword)
     if(password && password.length < 3){
       setError("Minimaal 4 karakters")
     }else{
       setError("")
     }
-    console.log(value)
   }
 
   if (data) {
@@ -129,7 +143,7 @@ export const Profile = (props) => {
                 key={"confirmpassword"}
                 label="Bevestig wachtwoord"
                 type="password"
-                onChange={(e) => checkPassword(e)}
+                onChange={({target}) => checkPassword(target.value)}
                 defaultValue={data.username}
                 helperText={
                   passwordsMatch ? "" : "Wachtwoorden komen niet overeen"
@@ -148,6 +162,7 @@ export const Profile = (props) => {
                   Bevestigen
                 </Button>
               </div>
+              <div className="errormessage">{result}</div>
             </form>
           </DialogContent>
         </Dialog>

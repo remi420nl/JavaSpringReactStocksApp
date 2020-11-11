@@ -18,7 +18,7 @@ import com.stockreact.webapp.model.Stock;
 import com.stockreact.webapp.model.User;
 import com.stockreact.webapp.service.PortfolioService;
 
-public class PortfolioServiceStub implements PortfolioService {
+public class PortfolioServiceStub  {
 
 	
 	private Portfolio getTestPortfolio() {
@@ -37,52 +37,5 @@ public class PortfolioServiceStub implements PortfolioService {
 	}
 	
 
-	private PortfolioDTO mapToDto(Portfolio p) {
-		return PortfolioDTO.builder().owner(p.getUser().getFirstname()).positions(p.getPositions()).build();
-		
-	}
-	@Override
-	public Collection<PortfolioDTO> getAll() {
-		
-		return Stream.of(mapToDto(getTestPortfolio())).collect(Collectors.toList());
-		
-	}
-
-	@Override
-	public Optional<Portfolio> getById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Portfolio save(@Valid Portfolio p) {
-		
-		return p;
-	}
-
-	@Override
-	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public PortfolioDTO getAllStocksByPortfolioId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PortfolioDTO getByUserIncludingPositions(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public boolean setCompetition(boolean competition, Long id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

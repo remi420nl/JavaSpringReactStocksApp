@@ -100,16 +100,15 @@ export default function Statistics() {
     let summarytotals = [];
     let summary = {}
 
-    portfolios.forEach(p => {
-     
+    portfolios.map(p => (
       summary = {},
       summary['name'] = p.owner,
       summary['oldvalue'] = p.oldvalue,
       summary['newvalue'] = p.currentvalue,
-      summary['difference'] = getDifference(summary['newvalue'],  summary['oldvalue'])
-      summarytotals.push(summary);
+      summary['difference'] = getDifference(summary['newvalue'],  summary['oldvalue']),
+      summarytotals.push(summary)
 
-    }
+    )
       )
 
   //sorting so the portfolio with highest interest (positive difference) is on top
@@ -142,6 +141,7 @@ export default function Statistics() {
     if(isLoaded){
     return (
       <div className="statistics">
+        <h2 className="pagetitle">Klassement</h2>
         <StatisticsHeader amount={portfolios.length}/>
         <div className="statisticscontent">
         

@@ -31,7 +31,7 @@ public class PortfolioControllerMockTest {
 	
 	@BeforeEach
 	void setup() {
-		controller = new PortfolioController(portfolioServiceMock);
+//		controller = new PortfolioController(portfolioServiceMock);
 	
 	}
 	
@@ -57,7 +57,7 @@ public class PortfolioControllerMockTest {
 	User user = new User(); 
 	user.setUsername("TestUser");
 		
-	when(portfolioServiceMock.getByUserIncludingPositions(user)).thenReturn(new PortfolioDTO());
+//	when(portfolioServiceMock.getByUserIncludingPositions(user)).thenReturn(new PortfolioDTO());
 	
 	}
 	
