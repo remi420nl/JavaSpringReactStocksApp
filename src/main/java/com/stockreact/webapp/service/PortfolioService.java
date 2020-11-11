@@ -15,7 +15,7 @@ public interface PortfolioService {
 
 	public Collection<PortfolioDTO> getAll() ;
 	
-	public Optional<Portfolio> getById(Long id);
+	public Portfolio getById(Long id);
 	
 	public Portfolio save(@Valid Portfolio p);
 	

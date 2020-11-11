@@ -1,19 +1,16 @@
-import React, { Component, useState, useEffect } from "react";
-import { AppBar, MuiThemeProvider } from "@material-ui/core";
-
+import React, { useEffect } from "react";
+import { Button } from "@material-ui/core";
 
 const Success = (props) => {
 const {name, success} = props;
-
 
 useEffect(() => {
     console.log('success', name)
 })
   return (
     <div className="signupform">
-      <AppBar title="Success" />
-    <h1> {name}, bedankt voor het registreren</h1>
-    <button onClick={() => success('/login')}>Klik hier om in te loggen</button>
+    <h3> {name}, bedankt voor het registreren</h3>
+    <Button variant="contained" color="primary"  onClick={() => success('/login')}>Klik hier om in te loggen</Button>
     </div>
   );
 };

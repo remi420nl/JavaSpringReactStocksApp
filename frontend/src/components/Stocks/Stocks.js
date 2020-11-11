@@ -82,7 +82,6 @@ function Stocks(props) {
     const n = converted.data.length
     const price = converted.data[n-1]['close'].toFixed(2);
 
-
     const stock = {
       name: name,
       symbol: symbol,
@@ -121,6 +120,7 @@ function Stocks(props) {
   return (
     <div className="stockpage">
       <div className="stockcontainer">
+      <h2 className="pagetitle">AEX Index</h2>
         <div className="stockoptions">
          {isLoggedIn && <StockField setAmount={setAmount} availableCash={availableCash} price={stock ? stock.price : 0} amount={amount} submitPosition={submitPosition} />} 
           <StockDetails isLoggedIn={isLoggedIn} amount={amount} price={stock ? stock.price : 0} name={stock ? stock.name : ""}/>
@@ -168,33 +168,3 @@ function Stocks(props) {
 }
 
 export default Stocks;
-
-// <div className="row">
-// <div className="col-md-4"></div>
-// <div className="col-md-4">
-//   {dropdownMenu.length}
-//   <Select
-//     autosize={false}
-//     options={dropdownMenu}
-//     //  filterOptions = {filterOptions}
-//     onChange={onChangeHandler}
-//     className="stockselector"
-//   />
-
-//   <Dropdown>
-//     <Dropdown.Toggle variant="success" id="dropdown-basic">
-//      Kies aandeel
-//     </Dropdown.Toggle>
-//     <Dropdown.Menu>
-// <Dropdown.Item onchange={o}>Action</Dropdown.Item>
-// <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-// <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-// </Dropdown.Menu>
-//   </Dropdown>
-// </div>
-// <div className="col-md-4">
-//   {/* <SelectBox rangeSelector={handleRange} /> */}
-// </div>
-// </div>
-
-// <StockInfo data={tickerData} name={name} />

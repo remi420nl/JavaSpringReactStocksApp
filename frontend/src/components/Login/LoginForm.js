@@ -61,7 +61,6 @@ export class LoginForm extends Component {
        this.props.history.push("/")
         }
       }).catch(({response}) =>  {if(response){
-      
         
         this.setState({ error: response.data.message }) }else
       this.setState({ error : "Er is iets fout gegaan" })
@@ -81,7 +80,7 @@ export class LoginForm extends Component {
   };
 
   errormessage = () => {
-    return <p style={{ color: "red" }}>{this.state.error}</p>;
+    return <p className="errormessage">{this.state.error}</p>;
   };
 
   render() {

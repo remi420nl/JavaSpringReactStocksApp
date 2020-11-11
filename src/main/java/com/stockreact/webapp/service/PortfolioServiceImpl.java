@@ -50,8 +50,8 @@ public class PortfolioServiceImpl implements PortfolioService {
 	}
 
 
-	public Optional<Portfolio> getById(Long id) {
-		return  portfolioRepo.findById(id);
+	public Portfolio getById(Long id) {
+		return  portfolioRepo.findById(id).map(p -> p).orElseThrow(() -> new StockAppException("No portfolio found"));
 	}
 
 	public Portfolio save(@Valid Portfolio portfolio) {

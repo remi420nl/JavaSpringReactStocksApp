@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 public class UserService {
 
 	private UserRepository userRepo;
+	private PortfolioService portfolioService;
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -36,9 +37,10 @@ public class UserService {
 
 		Portfolio portfolio = new Portfolio();
 		portfolio.setName(userDto.getPortfolio());
-
+		portfolioService.save(portfolio);
+		
 		user.addPortfolio(portfolio);
-
+		
 		user.setActivePortfolio(portfolio.getId());
 		userRepo.save(user);
 
