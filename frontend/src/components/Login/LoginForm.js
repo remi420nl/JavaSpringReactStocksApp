@@ -8,16 +8,11 @@ import Input from "@material-ui/core/Input";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import InputLabel from "@material-ui/core/InputLabel";
-import { useHistory } from "react-router-dom";
-
 
 export class LoginForm extends Component {
   constructor(props) {
     super();
- 
-
   }
-
 
   state = {
     username: "",
@@ -26,6 +21,7 @@ export class LoginForm extends Component {
     error: "",
   };
 
+  //setting state for entered username ans password
   handleChange(e, field) {
     e.preventDefault();
     this.setState({
@@ -33,40 +29,41 @@ export class LoginForm extends Component {
     });
   }
 
-
-  
-
+  //clickhandler for submit button
   submit = (e) => {
-
-    const {render} = this.props;
+    const { render } = this.props;
 
     e.preventDefault();
     const { username, password } = this.state;
-    
+
+    //fields must both have values
     if (username === "" || password === "") {
       this.setState({ error: "Beide velden invullen svp" });
       return;
     }
+    //login using the Spring API and setting the received token and userid in local storage
     const login = async () => {
-      await Login(username, password).then(response => {
-        
-        localStorage.setItem("jwt-token", response.data.jwt);
-        localStorage.setItem("UserId", response.data.userId)
-
-        if (response.status == 200){
-       render({
-        name: response.data.username,
-        login: true
-       })
-       this.props.history.push("/")
-        }
-      }).catch(({response}) =>  {if(response){
-        
-        this.setState({ error: response.data.message }) }else
-      this.setState({ error : "Er is iets fout gegaan" })
-    })
+      await Login(username, password)
+        .then((response) => {
+          localStorage.setItem("jwt-token", response.data.jwt);
+          localStorage.setItem("UserId", response.data.userId);
+          if (response.status == 200) {
+            //calling render prop to set login state and passing the username of the succesful logged in user
+            render({
+              name: response.data.username,
+              login: true,
+            });
+            //returning to homepage after login
+            this.props.history.push("/");
+          }
+        })
+        .catch(({ response }) => {
+          if (response) {
+            this.setState({ error: response.data.message });
+          } else this.setState({ error: "Er is iets fout gegaan" });
+        });
     };
-    login()
+    login();
   };
 
   handleClickShowPassword = () => {
@@ -77,10 +74,6 @@ export class LoginForm extends Component {
 
   handleMouseDownPassword = (event) => {
     event.preventDefault();
-  };
-
-  errormessage = () => {
-    return <p className="errormessage">{this.state.error}</p>;
   };
 
   render() {
@@ -95,7 +88,7 @@ export class LoginForm extends Component {
             onChange={(e) => this.handleChange(e, "username")}
             defaultValue={username}
             inputProps={{
-              autoCapitalize: 'none',
+              autoCapitalize: "none",
             }}
           />
           {/* piece of code copied from material ui for a modern password field with visibility option */}
@@ -107,7 +100,7 @@ export class LoginForm extends Component {
               id="standard-adornment-password"
               type={showPassword ? "text" : "password"}
               value={password}
-              autoCapitalize='none'
+              autoCapitalize="none"
               onChange={(e) => this.handleChange(e, "password")}
               endAdornment={
                 <IconButton
@@ -120,7 +113,7 @@ export class LoginForm extends Component {
               }
             />
           </FormControl>
-          {this.errormessage()}
+          <p className="errormessage">{error}</p>
           <Button
             color="primary"
             variant="contained"
@@ -129,7 +122,7 @@ export class LoginForm extends Component {
             Inloggen
           </Button>
         </div>
-      );
+      )
     } else {
       return <div className="signupForm">Je bent al ingelogd</div>;
     }

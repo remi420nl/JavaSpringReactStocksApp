@@ -18,22 +18,25 @@ useEffect(() => {
 if(!loginStatus){
   setSiteBarItems(SidebarData)
 }else{
-  // const loggedInSideBar = SidebarData.filter(d => d.title === 'Inloggen').map(d => ({...d, title : d.title === 'Inloggen' ? d.title : "Profiel"   ,path : "/profile"}));
+  //replacing inglog button for profile button
   const loggedInSideBar = SidebarData.map((d) => {if(d.title === "Inloggen"){d.title = "Profiel"; d.path = "/profile"} return d} );
   setSiteBarItems(loggedInSideBar);
-}
+} //only gets triggered when status changes
 },[loginStatus])
 
+
+  //switc between enabeld or disabled sidebar
   const clickHandler = () => {
     setSidebar(sidebar ? false : true);
   };
 
   const logout = () => {
     setLoginStatus();
-    //Force a reload otherwise the Navigation bar won't refresh
+    //Force a page reload otherwise the Navigation bar won't refresh resulting in a "Profile" button when user is logged out
       window.location.reload(); 
   }
   
+//if sidebar items are not null
 if(sidebarItems){
   return (
     <div className="headermenu">
@@ -41,7 +44,6 @@ if(sidebarItems){
       <div className="navbar">
         <NavLink to="#" className="menu-bars">
           <IconsFa.FaBars onClick={clickHandler} />
-          
         </NavLink>
         <div className="navbarstatus ml-auto">
         {render()}
@@ -60,10 +62,8 @@ if(sidebarItems){
             </NavLink>
           </li>
           {
-          
-          
+            //looping over items and rendering a NavLink for each of them
           sidebarItems.map((item, index) => (
-          
             <li key={index}>
               <NavLink
                 className={item.class}

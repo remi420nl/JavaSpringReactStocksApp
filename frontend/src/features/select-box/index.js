@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import './styles.css'
 
+
+//this is not being used, its for the range selection for later implementation
 function SelectBox (props) {
  
 const [showMenu, setShowMenu] = useState (false);

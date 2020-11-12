@@ -5,6 +5,8 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import CountDown from "../common/CountDown";
 
+
+//function to render portfolop header like a summary and countdown and option to join or leave the competition
 export function PortfolioHeader(props) {
   const {
     owner,
@@ -16,8 +18,10 @@ export function PortfolioHeader(props) {
     id,
   } = props;
 
+  //inition competition value gets set from the props
   const [joinCompetition, setJoinCompetition] = useState(competition);
 
+  // join or leave the competition and send its value to the api
   const setCompetition = () => {
     setCompetitionValue(id, !joinCompetition).then(() => {
       setJoinCompetition(!joinCompetition);
@@ -31,6 +35,7 @@ export function PortfolioHeader(props) {
     },
   });
 
+  //return the calculated difference in % between the new and old value
   const difference = () => {
     if (oldTotalValue == 0) return 0;
     return parseFloat(

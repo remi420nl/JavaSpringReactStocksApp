@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { getUser, updateUser } from "../../api/index";
 
+//to let the user edit its existing user info frm the entity
 export const Profile = (props) => {
   const [data, setData] = useState({});
   const [password, setPassword] = useState();

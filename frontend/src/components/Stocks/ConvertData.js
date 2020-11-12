@@ -1,14 +1,16 @@
+import { timeParse } from "d3-time-format";
 
-import { timeParse, utcDay } from "d3-time-format";
-
+//this is the function which is being used to convert data from the AlphaVantage stocks API to a readble format for the stock chart library/plugin
 export const ConvertData = (data) => {
   const returnarray = objectToArray(data);
 
   return returnarray;
-}
+};
 
 const parseDate = timeParse("%Y-%m-%d");
 
+//since the json data consists of objects we need to loop over the proprties and assign the values to 
+//a new object and push them into an array
 function objectToArray(data) {
   const timeSeries = data;
   let rows = [];
@@ -35,13 +37,12 @@ function objectToArray(data) {
     }
   }
 
-  rows.sort(function(a,b){
-	return new Date(a.date) - new Date(b.date);
-  })
-console.log("rows ", rows)
+  //sort based on the date ascending 
+  rows.sort(function (a, b) {
+    return new Date(a.date) - new Date(b.date);
+  });
   const stockdata = {
     data: rows,
-  //  latestclose: rows[0].close,
   };
   return stockdata;
 }

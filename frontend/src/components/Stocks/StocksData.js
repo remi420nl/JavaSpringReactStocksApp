@@ -1,3 +1,5 @@
+//All data hardcoded for the AEX index
+
 export  const StockData = [
     {
         label: 'Just Eat Takeaway.com N.V.',

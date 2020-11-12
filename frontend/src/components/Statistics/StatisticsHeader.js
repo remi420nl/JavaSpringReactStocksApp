@@ -2,14 +2,13 @@
 import React, { useEffect, useState } from "react";
 import CountDown from "../common/CountDown";
 
+//Header with custom clock function and the tota competitors
 export default function StatisticsHeader (props){
 const {amount} = props;
 const [time,setTime] = useState()
 
 
 useEffect(() => {
-
-
     const clock = () => {
       console.log("staticsheader")
         let time = new Date()

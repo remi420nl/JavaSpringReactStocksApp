@@ -7,89 +7,89 @@ import PageNotFound from "./PageNotFound";
 import Portfolio from "./Portfolio/Portfolio";
 import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
-import Authenticate from "./Authenticate/Authenticate";
-import { fetchUserDetails} from '../api'
+import { fetchUserDetails } from "../api";
 import { LoginForm } from "./Login/LoginForm";
-import { getJwt, clearJwt, } from "../Features/JwtHelper";
-import {Profile} from "./User/Profile"
-import "./App.css";
+import { clearJwt } from "../Features/JwtHelper";
+import { Profile } from "./User/Profile";
 
+//main app component using React Router for routing
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
   const [name, setName] = useState();
 
+  //loading user details, when a valid token is present it sets the name and login status
   useEffect(() => {
-    fetchUserDetails().then(response =>{
-     if(response.status == 200){
-      setLoginStatus(true);
-      setName(response.data.firstname);
-      }}).catch(error =>
-        {console.log("error occured", error)})
-  },[loginStatus]);
+    fetchUserDetails()
+      .then((response) => {
+        if (response.status == 200) {
+          setLoginStatus(true);
+          setName(response.data.firstname);
+        }
+      })
+      .catch((error) => {
+        console.log("error occured", error);
+      });
+  }, [loginStatus]);
 
+  //using render props several times to return props to the Route components
   return (
     <>
       <Router>
-      <Header    
-                loginStatus={loginStatus}
-                setLoginStatus={() => (setLoginStatus(false), clearJwt(), setName(""))}
-                name={name}
-                render={(props) => (
-                  {...props},
-                  loginStatus ? `Hallo  ${name}` : 'Niet Ingelogd' 
-                 )}
-              />
-        <div className="container">
-        <Switch>
-        
-          <Route
-            exact
-            path="/"
-            render={(props) => (
-           <HomePage
-                {...props}
-        
-                loginStatus={loginStatus}
-                render={() => (<>
-                  {name}
-                  </>)}
-              />
-            )}
-          />
-          <Route path="/statistics" component={Statistics} />
-          <Route
-            path="/portfolio"
-            render={(props) => (
-              <Portfolio {...props} loginStatus={loginStatus} />
-            )}
-          />
-            <Route
-            path="/stocks"
-            render={(props) => (
-              <Stocks {...props} />
-            )}
-          />
-          <Route path="/signup" component={SignupForm} />
-          <Route
-            path="/login"
-            render={(props) => (
-              <LoginForm {...props} loginStatus={loginStatus}  setUser={setName} setLogin={setLoginStatus}
-              render={({name,login}) => (setLoginStatus(login),
-              setName(name))}/>
-            )}
-          />
-          <Route path="/auth" component={Authenticate} />
-          <Route
-          path="/profile"
-          render={(props) => (
-            <Profile
-            {...props}
-              loginStatus={loginStatus}
-            />
+        <Header
+          loginStatus={loginStatus}
+          setLoginStatus={() => (
+            setLoginStatus(false), clearJwt(), setName("")
           )}
-           />
-          <Route component={PageNotFound} />
-        </Switch>
+          name={name}
+          render={(props) => (
+            { ...props }, loginStatus ? `Hallo  ${name}` : "Niet Ingelogd"
+          )}
+        />
+        <div className="container">
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={(props) => (
+                <HomePage
+                  {...props}
+                  loginStatus={loginStatus}
+                  render={() => <>{name}</>}
+                />
+              )}
+            />
+            <Route path="/statistics" component={Statistics} />
+            <Route
+              path="/portfolio"
+              render={(props) => (
+                <Portfolio {...props} loginStatus={loginStatus} />
+              )}
+            />
+            <Route path="/stocks" render={(props) => <Stocks {...props} />} />
+            <Route path="/signup" component={SignupForm} />
+            <Route
+              path="/login"
+              render={(props) => (
+                <LoginForm
+                  {...props}
+                  loginStatus={loginStatus}
+                  setUser={setName}
+                  setLogin={setLoginStatus}
+                  render={({ name, login }) => (
+                    setLoginStatus(login), setName(name)
+                  )}
+                />
+              )}
+            />
+
+            <Route
+              path="/profile"
+              render={(props) => (
+                <Profile {...props} loginStatus={loginStatus} />
+              )}
+            />
+            <Route component={PageNotFound} />
+          </Switch>
         </div>
       </Router>
     </>

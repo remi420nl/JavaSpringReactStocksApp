@@ -1,3 +1,5 @@
+//saving neccesary api responses to local storage
+
 export const getJwt = () => {
     return localStorage.getItem('jwt-token')
 }

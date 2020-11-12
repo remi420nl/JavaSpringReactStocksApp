@@ -5,10 +5,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from './components/App';
 import  "./index.css";
 import axios from 'axios';
-import { getJwt } from "./Features/JwtHelper";
 
-axios.defaults.baseURL='http://localhost:8080/api';
+axios.defaults.baseURL='http://localhost:8080/';
 
+//the starting path of the app that renders to the index.html body
 render(
     <Router>
         <App />

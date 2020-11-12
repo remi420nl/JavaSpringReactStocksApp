@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { DetailsForm, PersonalDataForm, Confirmation, Success } from ".";
 
+//This is the parent component / class for the signup form
+//it holds all the objects with values needed for a registration
 export class SignupForm extends Component {
   state = {
     page: 1,
@@ -8,7 +10,6 @@ export class SignupForm extends Component {
       name: "firstname",
       label: "Voornaam",
       value: "",
-      placeholder: "testplaceholder",
     },
     lastname: { name: "lastname", label: "Achternaam", value: "" },
     username: { name: "username", label: "Gebruikersnaam", value: "" },
@@ -18,6 +19,7 @@ export class SignupForm extends Component {
     portfolio: { name: "portfolio", label: "Portfolio Naam", value: "" },
   };
 
+  //changes the value for each state object, this function is being passed to the neccesay child components
   handleChange = (event, input) => {
     const key = input;
     const value = event.target.value;
@@ -27,6 +29,7 @@ export class SignupForm extends Component {
     }));
   };
 
+  //increments the state page variable which renders the next component
   nextPage = () => {
     const { page } = this.state;
     this.setState({
@@ -34,6 +37,7 @@ export class SignupForm extends Component {
     });
   };
 
+  //decrements the state page variable which renders the next component
   prevPage = () => {
     const { page } = this.state;
     this.setState({
@@ -41,6 +45,7 @@ export class SignupForm extends Component {
     });
   };
 
+  //after a succesful authorization it redirects to the given page
   handleSuccesfulAuth = (page) => {
     this.props.history.push(page);
   };
@@ -60,6 +65,7 @@ export class SignupForm extends Component {
     const secondvalues = { firstname, lastname, city, portfolio };
     const totalvalues = { ...firstvalues, ...secondvalues };
 
+    //switch statement which uses the page state as argument
     switch (page) {
       case 1:
         return (
@@ -96,7 +102,6 @@ export class SignupForm extends Component {
           />
         );
     }
-
     return <div></div>;
   }
 }

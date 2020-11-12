@@ -16,9 +16,13 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "../Position/PositionOptions";
-import { makeStyles, MuiThemeProvider, createMuiTheme, withStyles }  from "@material-ui/core/styles";
-import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
-
+import {
+  makeStyles,
+  MuiThemeProvider,
+  createMuiTheme,
+  withStyles,
+} from "@material-ui/core/styles";
+import ArrowBackRoundedIcon from "@material-ui/icons/ArrowBackRounded";
 
 class Portfolio extends Component {
   constructor(props) {
@@ -33,11 +37,12 @@ class Portfolio extends Component {
     currentTotalValue: 0,
     oldTotalValue: 0,
     competition: null,
-    sorting : {},
+    sorting: {},
     columnName: null,
-    sort: true
+    sort: true,
   };
 
+  //if user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
   componentDidMount() {
     if (!this.props.loginStatus) {
       this.props.history.push("/login");
@@ -46,63 +51,65 @@ class Portfolio extends Component {
     }
   }
 
-  ////Functions for sorting the colums
-  //getPropValue is to get the property from the Stock object in the Position object, which is seperated by a "."
-  getPropValue = (obj, col) => col.split('.').reduce((a, prop) => 
-    a[prop], obj
-  );
+  ////functions for sorting the colums
+  //getPropValue is to get the value of the property and from the Stock object nested in the Position object, which is seperated by a "." eg. "stock.name"
+  getPropValue = (obj, col) => col.split(".").reduce((a, prop) => a[prop], obj);
 
-  //Functon for ascending 
+  //Functon for ascending
   sortAscending = (a, b) => {
-    const {columnName} = this.state
+    const { columnName } = this.state;
     const fieldA = this.getPropValue(a, columnName);
-  
+
     //if its a string it needs different sorting
-    return typeof fieldA === 'string'
-    ? fieldA.localeCompare(this.getPropValue(b, columnName))
-    : fieldA - this.getPropValue(b, columnName);
+    return typeof fieldA === "string"
+      ? fieldA.localeCompare(this.getPropValue(b, columnName))
+      : fieldA - this.getPropValue(b, columnName);
   };
-  
+
   //Function for descending sorting
   sortDescending = (a, b) => {
-    const {columnName} = this.state
+    const { columnName } = this.state;
     const fieldA = this.getPropValue(a, columnName);
 
-    return typeof fieldA === 'string'
-    ? this.getPropValue(b, columnName).localeCompare(fieldA)
-    : this.getPropValue(b, columnName) - fieldA ;
+    return typeof fieldA === "string"
+      ? this.getPropValue(b, columnName).localeCompare(fieldA)
+      : this.getPropValue(b, columnName) - fieldA;
   };
 
-//Sort function gets called initialy on loading component and when column is clicked. Direction gets saved into state as well as the column (object property name)
+  //Sort function gets called initialy on loading component and when column is clicked.
+  //Direction gets saved into state as well as the column (object property name)
   sortTable = (column) => {
+    const { portfolio, sorting } = this.state;
+    let positions = [...portfolio.positions];
 
-    const { portfolio,sorting } = this.state;
-    let positions = [...portfolio.positions]
+    let direction = sorting[`${column}`] === "dsc" ? "asc" : "dsc";
 
-    let direction = sorting[`${column}`] === "dsc" ? "asc" : "dsc"
+    this.setState(
+      {
+        sorting: { ...sorting, [`${column}`]: direction },
+        columnName: column,
+      },
+      () => {
+        //callback after setstate, based on the previous state the right sorting direction gets called and the appropriate fucked gets passed into the Array.sort function
+        direction === "asc"
+          ? positions.sort(this.sortAscending)
+          : positions.sort(this.sortDescending);
 
-    this.setState({
-      sorting: {...sorting, [`${column}`] : direction},
-      columnName : column
-    }, ()=> {
-      //callback after setstate, based on the previous state the right sorting direction gets called and the appropriate fucked gets passed into the Array.sort function
-      direction === "asc" ?
-      positions.sort(this.sortAscending) :
-      positions.sort(this.sortDescending)
-     
-      //setting state by spreading the portfolio and overwriting the positions property
-      this.setState({
-        portfolio : {...portfolio, positions : positions}
-      })
-    })
+        //setting state by spreading the portfolio and overwriting the positions property
+        this.setState({
+          portfolio: { ...portfolio, positions: positions },
+        });
+      }
+    );
   };
 
+  //first setting state to false to make sure after an update like a stock sell only the updated positions are shown
   updatePositions = () => {
-    this.setState({isLoaded : false})
+    this.setState({ isLoaded: false });
 
     fetchPortfoliosByUser()
       .then(({ data }) => {
-        console.log(data)
+        console.log(data);
         this.setState({
           portfolio: data,
           selectedPositions: [],
@@ -122,10 +129,12 @@ class Portfolio extends Component {
             currentTotalValue: current,
           });
         });
+        //initialy it sort everything by name
         this.sortTable("stock.name");
       });
   };
 
+  //Setting the current (most recent) price for each stock using an external function (since we need it also in the statistics page)
   setCurrentPrice = async (callback) => {
     const {
       portfolio: { positions },
@@ -138,6 +147,7 @@ class Portfolio extends Component {
     let count = 0;
     positions.map((p) => {
       GetCurrentValue(p.stock, p.amount, (response) => {
+        //setting properties for each positions object
         p["currentvalue"] = parseFloat(response);
         p["difference"] = parseFloat(
           ((response - p.value) / p.value) * 100
@@ -150,7 +160,6 @@ class Portfolio extends Component {
     });
   };
   render() {
-
     const theme = createMuiTheme({
       typography: {
         fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
@@ -159,20 +168,31 @@ class Portfolio extends Component {
       },
     });
 
-  
+    const {
+      portfolio,
+      isLoaded,
+      currentTotalValue,
+      oldTotalValue,
+      selectedPositions,
+      columnName,
+    } = this.state;
 
-    const { portfolio, isLoaded, currentTotalValue, oldTotalValue, selectedPositions, columnName} = this.state;
-
-    const selectPosition = (id,name) => {
+    //selection a position (to sell or update), *update functionality not implemented
+    const selectPosition = (id, name) => {
       const { selectedPositions } = this.state;
 
-      let index = selectedPositions.map((p) => p.id).indexOf(id)
+      let index = selectedPositions.map((p) => p.id).indexOf(id);
 
+      // if the index of the item is not in the selected state array it gets added to the array
       if (index == -1) {
         this.setState((prevState) => ({
-          selectedPositions: [...prevState.selectedPositions, {id: id, name: name}],
+          selectedPositions: [
+            ...prevState.selectedPositions,
+            { id: id, name: name },
+          ],
         }));
       } else {
+        //else it gets removed from the array
         const newarray = [...this.state.selectedPositions];
         newarray.splice(index, 1);
         this.setState({
@@ -204,13 +224,58 @@ class Portfolio extends Component {
                     <TableRow>
                       <TableCell />
                       <TableCell>Soort</TableCell>
-                      <TableCell classes={{ root: columnName == "stock.name" ? "sortedcolumn" : ""}}  onClick={()=> this.sortTable("stock.name")} align="left">Naam</TableCell>
-                      <TableCell className={columnName == "stock.symbol" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("stock.symbol")}  align="right">Symbool</TableCell>
-                      <TableCell className={columnName == "amount" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("amount")}  align="right">Aantal</TableCell>
-                      <TableCell className={columnName == "value" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("value")}  align="right">Aanschaf Waarde</TableCell>
-                      <TableCell className={columnName == "currentvalue" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("currentvalue")}  align="right">Huidige Waarde</TableCell>
-                      <TableCell className={columnName == "difference" ? "sortedcolumn" : ""}  onClick={()=> this.sortTable("difference")}  align="right" >Rendement</TableCell>
-                      <TableCell align="right" >Actie</TableCell>
+                      <TableCell
+                        classes={{
+                          root:
+                            columnName == "stock.name" ? "sortedcolumn" : "",
+                        }}
+                        onClick={() => this.sortTable("stock.name")}
+                        align="left"
+                      >
+                        Naam
+                      </TableCell>
+                      <TableCell
+                        className={
+                          columnName == "stock.symbol" ? "sortedcolumn" : ""
+                        }
+                        onClick={() => this.sortTable("stock.symbol")}
+                        align="right"
+                      >
+                        Symbool
+                      </TableCell>
+                      <TableCell
+                        className={columnName == "amount" ? "sortedcolumn" : ""}
+                        onClick={() => this.sortTable("amount")}
+                        align="right"
+                      >
+                        Aantal
+                      </TableCell>
+                      <TableCell
+                        className={columnName == "value" ? "sortedcolumn" : ""}
+                        onClick={() => this.sortTable("value")}
+                        align="right"
+                      >
+                        Aanschaf Waarde
+                      </TableCell>
+                      <TableCell
+                        className={
+                          columnName == "currentvalue" ? "sortedcolumn" : ""
+                        }
+                        onClick={() => this.sortTable("currentvalue")}
+                        align="right"
+                      >
+                        Huidige Waarde
+                      </TableCell>
+                      <TableCell
+                        className={
+                          columnName == "difference" ? "sortedcolumn" : ""
+                        }
+                        onClick={() => this.sortTable("difference")}
+                        align="right"
+                      >
+                        Rendement
+                      </TableCell>
+                      <TableCell align="right">Actie</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -241,9 +306,8 @@ class Portfolio extends Component {
   }
 }
 
-
-export default Portfolio
-
+//function to render each row
+export default Portfolio;
 
 function Row(props) {
   const { row, selectedPositions, selectPosition } = props;
@@ -256,15 +320,17 @@ function Row(props) {
     <React.Fragment>
       <TableRow
         className={
-          selectedPositions.map(p => p.id).indexOf(row.id) !== -1
+          selectedPositions.map((p) => p.id).indexOf(row.id) !== -1
             ? "selectedPosition"
             : "unselectedPosition"
-        }>
+        }
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}>
+            onClick={() => setOpen(!open)}
+          >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -280,10 +346,15 @@ function Row(props) {
         <TableCell align="right">€{row.currentvalue.toFixed(2)}</TableCell>
         <TableCell
           align="right"
-          style={{ color: row.difference >= 0 ? "green" : "crimson" }}>
+          style={{ color: row.difference >= 0 ? "green" : "crimson" }}
+        >
           {row.difference} %
         </TableCell>
-        <TableCell align="right"><ArrowBackRoundedIcon onClick={() => selectPosition(row.id, row.stock.name)}/></TableCell>
+        <TableCell align="right">
+          <ArrowBackRoundedIcon
+            onClick={() => selectPosition(row.id, row.stock.name)}
+          />
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -325,4 +396,3 @@ function Row(props) {
     </React.Fragment>
   );
 }
-
