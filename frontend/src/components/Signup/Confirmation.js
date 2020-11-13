@@ -7,17 +7,7 @@ import { Signup } from "../../api";
 const Confirmation = (props) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState([]);
-  const {
-    values: {
-      firstname,
-      lastname,
-      email,
-      username,
-      city,
-      portfolio,
-      password,
-    },
-  } = props;
+  const { values: {  firstname,lastname,  email,   username,  city,  portfolio,  password } } = props;
 
   const { values, prev, next } = props;
   const rows = [];

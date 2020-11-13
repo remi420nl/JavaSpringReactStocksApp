@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class AuthenticationRequest implements Serializable {
 
+	//DTO for when a user logs in
 
     private String username;
     private String password;

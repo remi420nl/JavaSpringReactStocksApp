@@ -1,22 +1,10 @@
 package com.stockreact.webapp.controllers;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Optional;
-
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,13 +17,8 @@ import com.stockreact.webapp.model.Position;
 import com.stockreact.webapp.model.PositionDTO;
 
 import com.stockreact.webapp.model.User;
-import com.stockreact.webapp.service.PortfolioService;
 import com.stockreact.webapp.service.PositionService;
-import com.stockreact.webapp.service.UserService;
-import com.stockreact.webapp.util.JwtUtil;
-
 import lombok.RequiredArgsConstructor;
-
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -45,7 +28,7 @@ public class PositionController {
 
 	private final PositionService positionService;
 
-	
+	// posting a new position,for which the user has to be logged in
 	@PostMapping("/position")
 	public ResponseEntity<Position> createPosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
 			throws URISyntaxException {
@@ -53,14 +36,14 @@ public class PositionController {
 		User user = (User) authentication.getPrincipal();
 
 		Position result = positionService.addPosition(user, dto);
-	
-		return ResponseEntity.created(new URI("/api/position" + result.getId())).body(result);
+
+		return ResponseEntity.ok(result);
 	}
 
-	
+	// deleting (selling) a position, method doesn't return anything because the JPA
+	// repository is void
 	@DeleteMapping("/position/{id}")
 	public void deletePosition(@PathVariable Long id) {
 		positionService.deleteById(id);
 	}
-
 }

@@ -18,10 +18,7 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
 List<Position> findByPortfolioId(Long id);
 
-//
-//@Query("select p.name,p.id FROM Position p WHERE p. = :id")
-//getPositionWithStockSymbol(Long userid, String Stocksymbol);
-
+//Find the first matching position that matches the stock and portfolio entity to determine if an position already exists
 Optional<Position> findTopByStockAndPortfolio(Stock stock, Portfolio portfolio);
 
 void deleteById(Long id);

@@ -5,6 +5,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class AuthenticationResponse implements Serializable {
 
+	//DTO to form a response for the user with its token and userid
+	
     private final String jwt;
 
     public AuthenticationResponse(String jwt, Long id) {

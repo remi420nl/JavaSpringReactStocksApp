@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./Home/HomePage";
 import Statistics from "./Statistics/Statistics";
-import Header from "./common/Header";
+import Header from "./Common/Header";
 import PageNotFound from "./PageNotFound";
 import Portfolio from "./Portfolio/Portfolio";
 import Stocks from "./Stocks/Stocks";

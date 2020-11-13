@@ -11,12 +11,17 @@ import lombok.NoArgsConstructor;
 @Data
 public class StockDTO {
 	
+
+	//To create a json output for every stock api call and request (post)
+	
 	private String name;
 		
 	private String symbol;
 	
+	//the last time this entity has been updated by the client to determine if its due to an update
 	private String lastUpdate;
 	
+	//ths gets set along with the previous variable to save its current price
 	private Double latestPrice;
 
 	

@@ -5,7 +5,6 @@ import { getNews } from "../../api/index";
 import Button from "@material-ui/core/Button";
 
 function HomePage(props) {
-  const { render } = props;
   const [articles, setArticles] = useState([]);
   const [to, setTo] = useState(6);
   const [from, setFrom] = useState(0);

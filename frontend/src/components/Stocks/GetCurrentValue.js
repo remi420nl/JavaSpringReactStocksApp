@@ -26,7 +26,9 @@ export const GetCurrentValue = async (stock, amount, callback) => {
         //using callback function that is being passed as the 3rd argument of this function to retun this async value
         callback(price * amount);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e),
+      callback(false)
+      );
   } else {
     console.log("stock price already up to date");
     callback(stock.latestPrice * amount);

@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
+	//custom exception handler for the controllers (endpoints)
 	
 	//When a non valid arguments gets passed 
 	@Override
@@ -54,16 +55,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(body,HttpStatus.BAD_REQUEST);
 	}
 	
-
-//	@ExceptionHandler(StockAppException.class)
-//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//	@ResponseBody
-//	public StockAppException handleCustomException (StockAppException ex) {
-//	return ex;
-//
-//
-//	}
-	
+	//wrong password enetred
 	@ExceptionHandler(BadCredentialsException.class)
 	@ResponseBody
 	  public ResponseEntity<Object> handleBadCredentials (BadCredentialsException ex) {

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.stockreact.webapp.model.PositionDTO;
 import com.stockreact.webapp.model.Stock;
 
 
@@ -19,6 +20,8 @@ public Collection<Stock> getAll() ;
 	public void delete(Long id);
 	
 	public int updatePrice(Long id, double price, String date);
-
 	
+	Stock updateStock(Stock stock, PositionDTO dto);
+	
+	Stock createNewStock(PositionDTO dto);
 }

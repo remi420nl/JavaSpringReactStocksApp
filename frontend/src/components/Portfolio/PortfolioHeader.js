@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import { setCompetitionValue } from "../../api/index";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
-import CountDown from "../common/CountDown";
+import CountDown from "../Common/CountDown";
 
 
 //function to render portfolop header like a summary and countdown and option to join or leave the competition

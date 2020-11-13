@@ -1,7 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
-import { AppBar, MuiThemeProvider } from "@material-ui/core";
-import { TextField } from "@material-ui/core";
-
+import React, { useState, useEffect } from "react";
+import { AppBar ,TextField} from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
 const DetailsForm = (props) => {

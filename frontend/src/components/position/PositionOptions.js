@@ -1,5 +1,4 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, {useState,useEffect}from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -9,9 +8,15 @@ import { deletePosition } from "../../api/index";
 
 //dialog for position sell
 export default function PositionOptions(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const { selectedPositions, updatePositions } = props;
+  const [totalOrderAmount, setTotalorderAmount ] = useState(0);
+
+useEffect(() => {
+  let total = selectedPositions.reduce((sum, p) => sum + p.currentvalue,0);
+  setTotalorderAmount(total)
+},[selectedPositions])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,12 +37,13 @@ export default function PositionOptions(props) {
     }
   };
 
+
   return (
     <div>
       <Button
+      //if there is at least 1 position selected  the button gets activated
         disabled={selectedPositions < 1}
-        variant="contained"
-        color="secondary"
+        variant="contained" color="secondary"
         onClick={handleClickOpen}
       >
         Verkopen
@@ -56,6 +62,7 @@ export default function PositionOptions(props) {
                 <div key={p.id}>{p.name}</div>
               ))}
             </div>
+            <div style={{ borderTop: "1px solid grey", marginTop: "5px"}}>Totaal Verkooporder: €{totalOrderAmount.toFixed(2)}</div>
             <div style={{ fontWeight: "bold", marginTop: "10px" }}>
               Weet u het zeker?
             </div>
@@ -66,7 +73,7 @@ export default function PositionOptions(props) {
             Annuleer
           </Button>
           <Button onClick={sell} color="primary">
-            Verkoop
+            Uitvoeren
           </Button>
         </DialogActions>
       </Dialog>

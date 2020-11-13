@@ -6,7 +6,6 @@ public class UserNotFoundException extends RuntimeException {
 		super(String.format(("Gebruiker met naam `%s` niet gevonden"), username));
 
 	}
-
 	
 	public UserNotFoundException(String username, Exception e) {
 		super(String.format(("Gebruiker met naam %s niet gevonden"), username), e);

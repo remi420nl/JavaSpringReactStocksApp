@@ -7,20 +7,18 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
-import com.stockreact.webapp.exception.StockAppException;
+import com.stockreact.webapp.model.PositionDTO;
 import com.stockreact.webapp.model.Stock;
 import com.stockreact.webapp.repository.StockRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class StockServiceImpl implements StockService {
 
 	private StockRepository stockRepo;
-	
+
 	@Override
 	public Collection<Stock> getAll() {
 		return stockRepo.findAll();
@@ -28,7 +26,7 @@ public class StockServiceImpl implements StockService {
 
 	@Override
 	public Optional<Stock> getById(Long id) {
-		
+
 		return stockRepo.findById(id);
 	}
 
@@ -42,11 +40,33 @@ public class StockServiceImpl implements StockService {
 		stockRepo.deleteById(id);
 	}
 
+	//Update stock price and date directly from the client when there is a new price available
 	@Override
 	public int updatePrice(Long id, double price, String date) {
-		return stockRepo.updatePriceAndDate(id,price,date);
+		return stockRepo.updatePriceAndDate(id, price, date);
 	}
+
 	
-	
+	//Update stock from the position service when a new position gets added
+	@Override
+	public Stock updateStock(Stock stock, PositionDTO dto) {
+
+		stock.setLastUpdate(dto.getDate());
+		stock.setLatestPrice(dto.getPrice());
+
+		return stock;
+
+	}
+
+	@Override
+	public Stock createNewStock(PositionDTO dto) {
+		Stock stock = new Stock();
+		stock.setName(dto.getStock());
+		stock.setSymbol(dto.getSymbol());
+		stock.setLatestPrice(dto.getPrice());
+		stock.setLastUpdate(dto.getDate());
+
+		return save(stock);
+	}
 
 }

@@ -22,9 +22,6 @@ public interface PositionService {
 	
 public Position addPosition(User user, @Valid PositionDTO dto);
 
-
-  	History buildHistory(PositionDTO dto);
-
 	
 	public void deleteById(Long id);
 }

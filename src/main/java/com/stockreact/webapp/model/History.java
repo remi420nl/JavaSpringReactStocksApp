@@ -26,7 +26,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class History {
 	
-	
+	//for saving the history of each purchase, this is the many side of the position-history relaionshop
+	//it has a joined column set by java persistence : position_id
 
 	@Id
     @GeneratedValue(strategy = IDENTITY)
@@ -38,9 +39,4 @@ public class History {
 	
 	private int amount;
 	
-//
-//	@ManyToOne
-//	@JoinColumn(name = "position_id")
-//	@JsonManagedReference
-//	private Position position;
 }

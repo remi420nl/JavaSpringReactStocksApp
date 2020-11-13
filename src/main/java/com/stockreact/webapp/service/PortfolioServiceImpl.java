@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -31,25 +33,21 @@ public class PortfolioServiceImpl implements PortfolioService {
 		//TODO
 	}
 
-
+	//Getting all portfolios and mapping them to DTO's for JSON serializing 
 	public Collection<PortfolioDTO> getAll() {
 
-		List<PortfolioDTO> dtos = new ArrayList<>();
-		List<Portfolio> portfolios  = portfolioRepo.findAll();
-		
-		for(Portfolio p : portfolios) {
-			dtos.add(mapToDto(p));
-		}
-		return dtos; 
+		return portfolioRepo.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
 	}
 
 
+	//Helper method
 	private PortfolioDTO mapToDto(Portfolio p) {
 		return PortfolioDTO.builder().id(p.getId()).description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
 				.competition(p.isCompetition()).cash(p.getCash()).build();
 	}
 
 
+	//Return requesting Portfolio if exists
 	public Portfolio getById(Long id) {
 		return  portfolioRepo.findById(id).map(p -> p).orElseThrow(() -> new StockAppException("No portfolio found"));
 	}
@@ -62,40 +60,17 @@ public class PortfolioServiceImpl implements PortfolioService {
 		portfolioRepo.deleteById(id);		
 	}
 
+	//Getting Portfolio with all its positions from the database and setting the owner 
+	public PortfolioDTO getAllPositionsByPortfolioId(User user) {
+		
+		PortfolioDTO portfolioDTO = portfolioRepo.getPortfolioWithPositions1(user.getActivePortfolio());
+		portfolioDTO.setOwner(user.getFirstname() + ' ' + user.getLastname());
 
-	public PortfolioDTO getAllStocksByPortfolioId(User user) {
-		
-		Optional<Portfolio> optional = portfolioRepo.findById(user.getActivePortfolio());
-		Portfolio portfolio = optional.map(p -> p).orElseThrow(() -> new StockAppException("No portfolio found"));
-		
-		PortfolioDTO portfolioDTO = mapToDto(portfolio);
-		
-		PortfolioDTO portfolioDTO2 = portfolioRepo.getPortfolioWithPositions1(user.getActivePortfolio());
-		portfolioDTO2.setOwner(user.getFirstname() + ' ' + user.getLastname());
-		
-//		List<PositionDTO> positions = portfolioRepo.getPortfolioWithPositions(id);
-//		
-//		portfolioDto.setPositions(positions);
-//		
-
-		
-		return portfolioDTO2;
+		return portfolioDTO;
 	}
 
 
-	public PortfolioDTO getByUserIncludingPositions(User user) {
-		
-		Optional<Portfolio> portfolio = portfolioRepo.findByUserId(user.getId());
-		if(portfolio.isPresent()) {
-			PortfolioDTO portfolioDTO = mapToDto(portfolio.get());
-			portfolioDTO.setOwner(user.getFirstname() + ' ' + user.getLastname());
-			return portfolioDTO;
-		}
-		return null;
-	}
-
-
-
+	//Setting value for taking part of the competition and return the result 
 	public boolean setCompetition(boolean competition, Long id) {
 		
 		int result = portfolioRepo.updateCompetion(competition, id);

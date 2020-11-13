@@ -21,9 +21,8 @@ public interface PortfolioService {
 	
 	public void delete(Long id);
 	
-	public PortfolioDTO getAllStocksByPortfolioId(User user) ;
+	public PortfolioDTO getAllPositionsByPortfolioId(User user) ;
 	
-	public PortfolioDTO getByUserIncludingPositions(User user) ;
 	
 	public boolean setCompetition(boolean competition,Long id);
 	

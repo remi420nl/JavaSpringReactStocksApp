@@ -17,10 +17,8 @@ import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "../Position/PositionOptions";
 import {
-  makeStyles,
   MuiThemeProvider,
   createMuiTheme,
-  withStyles,
 } from "@material-ui/core/styles";
 import ArrowBackRoundedIcon from "@material-ui/icons/ArrowBackRounded";
 
@@ -109,7 +107,6 @@ class Portfolio extends Component {
 
     fetchPortfoliosByUser()
       .then(({ data }) => {
-        console.log(data);
         this.setState({
           portfolio: data,
           selectedPositions: [],
@@ -178,17 +175,17 @@ class Portfolio extends Component {
     } = this.state;
 
     //selection a position (to sell or update), *update functionality not implemented
-    const selectPosition = (id, name) => {
+    const selectPosition = (id, name, currentvalue) => {
       const { selectedPositions } = this.state;
 
       let index = selectedPositions.map((p) => p.id).indexOf(id);
 
-      // if the index of the item is not in the selected state array it gets added to the array
+      //if the index of the item is not in the selected state array it gets added to the array
       if (index == -1) {
         this.setState((prevState) => ({
           selectedPositions: [
             ...prevState.selectedPositions,
-            { id: id, name: name },
+            { id: id, name: name, currentvalue: currentvalue},
           ],
         }));
       } else {
@@ -352,7 +349,7 @@ function Row(props) {
         </TableCell>
         <TableCell align="right">
           <ArrowBackRoundedIcon
-            onClick={() => selectPosition(row.id, row.stock.name)}
+            onClick={() => selectPosition(row.id, row.stock.name,row.currentvalue)}
           />
         </TableCell>
       </TableRow>

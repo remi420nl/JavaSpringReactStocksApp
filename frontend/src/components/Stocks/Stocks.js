@@ -1,12 +1,11 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
+import React,  { useState, useEffect, useRef } from "react";
 import StockChart from "./StockChart";
 import { ConvertData } from "./ConvertData";
 import { StockData } from "./StocksData";
 import { StockField } from "./StockField";
 import { StockDetails } from "./StockDetails";
-import { fetchTickerData, postNewPosition } from "../../api";
-import { fetchPortfoliosByUser } from "../../api";
+import { fetchTickerData, postNewPosition, fetchPortfoliosByUser } from "../../api";
+
 
 //for displaying the AEX stocks page
 function Stocks(props) {

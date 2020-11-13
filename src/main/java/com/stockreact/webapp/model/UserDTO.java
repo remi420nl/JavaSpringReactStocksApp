@@ -12,25 +12,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-	
+
 	private Long id;
-	
-    @NotBlank(message = "gebruikernaam is verplicht")
+
+	// DTO object for the endpoint to create or request a user, also includes
+	// validation
+
+	@NotBlank(message = "Gebruikernaam is verplicht")
 	private String username;
-	
-    @NotBlank(message = "Voornaam is verplicht")
+
+	@NotBlank(message = "Voornaam is verplicht")
 	private String firstname;
-    @NotBlank(message = "Achternaam is verplicht")
+	@NotBlank(message = "Achternaam is verplicht")
 	private String lastname;
-    
+
 	private String password;
-	
+
 	private String city;
-	  @NotBlank(message = "Email is verplicht")
+	@NotBlank(message = "Email is verplicht")
 	private String email;
 	private String portfolio;
 	private Long activePortfolio;
 	private String info;
 
-	
 }

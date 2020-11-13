@@ -1,25 +1,16 @@
 package com.stockreact.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -30,27 +21,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name="portfolio")
+@Table(name = "portfolio")
 public class Portfolio {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String name;
-	
+
+	// initial starting cash value
 	private double cash = 10000;
-	
+
 	private boolean competition = true;
-	
+
+	// this field is not part of the output when this object is written to json
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
+	// this field gets serialized when the endpoint creates a json, the many side
+	// not otherwise it creates a loop
+	// and it will only be initialized by the service so fetchtype is set to Lazy
 	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true)
-	@JsonBackReference
+	@JsonManagedReference
 	private List<Position> positions;
-	
-	
-	
 }

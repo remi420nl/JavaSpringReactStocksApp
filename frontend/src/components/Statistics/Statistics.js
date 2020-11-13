@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,14 +8,14 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { getAllPortfolios } from "../../api/index";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 import StatisticsHeader from "./StatisticsHeader";
 
 export default function Statistics() {
   const [portfolios, setPortfolios] = useState([]);
   const [totals, setTotals] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [pricesUpToDate, setPricesUpToDate] = useState(false);
 
   //first it gets the portfolios, second useeffect is doest get triggered
   useEffect(() => {
@@ -52,6 +51,7 @@ export default function Statistics() {
           portfolio["currentvalue"] = 0;
 
           calculateCurrentValue(portfolio, (value) => {
+        
             portfolio["currentvalue"] = value;
           });
         }
@@ -65,18 +65,30 @@ export default function Statistics() {
     const length = portfolio.positions.length;
     let count = 0;
     let sum = 0;
+    let errors = 0;
 
     //passing a callback function to be able to get the proper value from the async function which otherwise would return undefined
     portfolio.positions.map((position) => {
       GetCurrentValue(position.stock, position.amount, (response) => {
-        sum += response;
-
-        count++;
+        if(response){
+          count++;
+          sum += response;
+        }else{
+          errors++
+        }
         //then passing the total sum to the callback in the calculateValues function
         if (length === count) {
           callback(sum);
+          setPricesUpToDate(true)
         }
-      });
+        if(errors > 0){
+          callback(sum)
+          setPricesUpToDate(false)
+        }
+        
+      }
+      );
+      
     });
   }
 
@@ -91,9 +103,7 @@ export default function Statistics() {
         (summary["name"] = p.owner),
         (summary["oldvalue"] = p.oldvalue),
         (summary["newvalue"] = p.currentvalue),
-        (summary["difference"] = getDifference(
-          summary["newvalue"],
-          summary["oldvalue"]
+        (summary["difference"] = getDifference(summary["newvalue"],summary["oldvalue"]
         )),
         summarytotals.push(summary)
       )
@@ -130,6 +140,7 @@ export default function Statistics() {
         <div className="statistics">
           <h2 className="pagetitle">Klassement</h2>
           <StatisticsHeader amount={portfolios.length} />
+          <p>{!pricesUpToDate ? "Nog niet alle koersen bijgewerkt.." : ""}</p>
           <div className="statisticscontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer
