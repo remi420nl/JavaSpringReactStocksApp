@@ -38,6 +38,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserController {
 
+	//http endpoints for the User / UserDetails entity, all private fields use constructor injection rather than Autowiring
+	
 	private AuthenticationManager authManager;
 	private UserDetailsService userDetailsService;
 	private JwtUtil jwtUtil;

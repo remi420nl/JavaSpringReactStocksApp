@@ -25,7 +25,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class PositionController {
-
+	
+	//http endpoints for the Position entity, all private fields use constructor injection rather than Autowiring
+	
 	private final PositionService positionService;
 
 	// posting a new position,for which the user has to be logged in

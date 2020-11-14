@@ -6,10 +6,7 @@ import { DetailsForm, PersonalDataForm, Confirmation, Success } from ".";
 export class SignupForm extends Component {
   state = {
     page: 1,
-    firstname: {
-      name: "firstname",
-      label: "Voornaam",
-      value: "",
+    firstname: { name: "firstname",  label: "Voornaam",  value: "",
     },
     lastname: { name: "lastname", label: "Achternaam", value: "" },
     username: { name: "username", label: "Gebruikersnaam", value: "" },

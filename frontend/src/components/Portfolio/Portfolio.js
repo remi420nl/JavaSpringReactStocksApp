@@ -117,9 +117,11 @@ class Portfolio extends Component {
         this.setCurrentPrice(() => {
           let old = 0;
           let current = 0;
-          this.state.portfolio.positions.map((p) => {
-            (old += p.value), (current += p.currentvalue);
-          });
+          this.state.portfolio.positions.map(p =>  (
+            (old += p.value), (current += p.currentvalue)
+            
+            )
+          );
           this.setState({
             isLoaded: true,
             oldTotalValue: old,

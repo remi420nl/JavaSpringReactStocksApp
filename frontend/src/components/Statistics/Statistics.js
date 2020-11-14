@@ -25,7 +25,7 @@ export default function Statistics() {
   //after the portfolios state has been altered it triggers the calculate values function
   useEffect(() => {
     calculateValues();
-  }, [portfolios]);
+  },[portfolios]);
 
   //getting al the portfolios from the API, which are public accessible, and filters the one that have the competition value as true
   function getPortfolios() {
@@ -35,8 +35,8 @@ export default function Statistics() {
   }
 
   //for each portfolio it calculates the summary for all positions plus also checking the latest value from the Stock API
-  function calculateValues() {
-    if (portfolios) {
+  function calculateValues() { 
+    if (portfolios.length > 0) {
       portfolios.forEach((portfolio) => {
         //setting values for porfolios with no positions
         if (portfolio.positions.length < 1) {
@@ -56,8 +56,8 @@ export default function Statistics() {
           });
         }
       });
+      convertToTotal();
     }
-    convertToTotal();
   }
 
   //getting and calculting the current position values
@@ -85,10 +85,8 @@ export default function Statistics() {
           callback(sum)
           setPricesUpToDate(false)
         }
-        
       }
       );
-      
     });
   }
 
@@ -134,8 +132,9 @@ export default function Statistics() {
     } else return 0;
   };
 
-  if (portfolios && portfolios.length > 0) {
-    if (isLoaded) {
+ 
+  if (isLoaded) {
+    if (portfolios && portfolios.length > 0) {
       return (
         <div className="statistics">
           <h2 className="pagetitle">Klassement</h2>
@@ -188,9 +187,9 @@ export default function Statistics() {
         </div>
       );
     } else {
-      return <div>Portfolios laden..</div>;
+      return <div>Er zijn geen portfolios in ons systeem</div>
     }
   } else {
-    return <div>Er zijn geen portfolios in ons systeem</div>;
+    return <div>Portfolios laden..</div>
   }
 }

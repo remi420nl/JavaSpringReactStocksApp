@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class PortfolioController {
 	
-	//http endpoints for the portfolio entity
+	//http endpoints for the Portfolio entity, all private fields use constructor injection rather than Autowiring
 
 	private final PortfolioService portfolioService;
 	private final UserService userService;

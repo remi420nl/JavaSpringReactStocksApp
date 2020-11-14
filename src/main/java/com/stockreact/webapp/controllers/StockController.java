@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class StockController {
 
+	//http endpoints for the Stock entity, all private fields use constructor injection rather than Autowiring
+	
 	private final StockService stockService;
 
 	// this conntroller is only being used to update the stock entities price
