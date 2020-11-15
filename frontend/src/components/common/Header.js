@@ -14,25 +14,25 @@ const Header = (props) => {
  const {render} = props
 
 useEffect(() => {
-//Altering SideBarData depending on user login status
+//altering SideBarData depending on user login status
 if(!loginStatus){
   setSiteBarItems(SidebarData)
 }else{
   //replacing inglog button for profile button
   const loggedInSideBar = SidebarData.map((d) => {if(d.title === "Inloggen"){d.title = "Profiel"; d.path = "/profile"} return d} );
   setSiteBarItems(loggedInSideBar);
-} //only gets triggered when status changes
+} //only gets triggered initialy and when te status changes
 },[loginStatus])
 
 
-  //switc between enabeld or disabled sidebar
+  //alternate  between enabeld or disabled sidebar
   const clickHandler = () => {
     setSidebar(sidebar ? false : true);
   };
 
   const logout = () => {
     setLoginStatus();
-    //Force a page reload otherwise the Navigation bar won't refresh resulting in a "Profile" button when user is logged out
+    //force a page reload otherwise the Navigation bar won't refresh resulting in a "Profile" button when user is logged out
       window.location.reload(); 
   }
   

@@ -9,7 +9,7 @@ import Stocks from "./Stocks/Stocks";
 import SignupForm from "./Signup/SignupForm";
 import { fetchUserDetails } from "../api";
 import { LoginForm } from "./Login/LoginForm";
-import { clearJwt } from "../Features/JwtHelper";
+import { clearJwt } from "../features/JwtHelper";
 import { Profile } from "./User/Profile";
 
 //main app component using React Router for routing
@@ -34,7 +34,6 @@ function App() {
   //using render props several times to return props to the Route components
   return (
     <>
-      <Router>
         <Header
           loginStatus={loginStatus}
           setLoginStatus={() => (
@@ -91,7 +90,6 @@ function App() {
             <Route component={PageNotFound} />
           </Switch>
         </div>
-      </Router>
     </>
   );
 }

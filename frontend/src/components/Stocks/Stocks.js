@@ -51,7 +51,7 @@ function Stocks(props) {
       return dropDownItems.push(item);
     });
 
-    //sorting by label (stock) name
+    //sorting by label (stock) name ascending
     dropDownItems.sort((a, b) => (a.label > b.label ? 1 : -1));
     setOptions(dropDownItems);
   }, []);

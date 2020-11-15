@@ -45,7 +45,7 @@ export const Profile = (props) => {
         if(response.status === 200){
           setResult("profiel bijgewerkt")
         }
-      }).catch(e => setResult("Er is iets fout gegaan"));
+      }).catch(() => setResult("Er is iets fout gegaan"));
     } else if (password.length < 3) {
       setError("Minimaal 4 karakters")
     }

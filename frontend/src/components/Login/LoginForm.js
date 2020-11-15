@@ -21,7 +21,7 @@ export class LoginForm extends Component {
     error: "",
   };
 
-  //setting state for entered username ans password
+  //setting state for entered username and password
   handleChange(e, field) {
     e.preventDefault();
     this.setState({
@@ -84,14 +84,12 @@ export class LoginForm extends Component {
         <div className="signupform">
           <TextField
             label="Gebruikersnaam"
-            //  placeholder={value.firstname.placeholder}
             onChange={(e) => this.handleChange(e, "username")}
             defaultValue={username}
             inputProps={{
               autoCapitalize: "none",
             }}
           />
-          {/* piece of code copied from material ui for a modern password field with visibility option */}
           <FormControl>
             <InputLabel htmlFor="standard-adornment-password">
               Wachtwoord

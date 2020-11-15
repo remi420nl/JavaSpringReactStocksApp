@@ -10,7 +10,7 @@ function HomePage(props) {
   const [from, setFrom] = useState(0);
   const [newsCount, setNewsCount] = useState();
 
-  //On inition load it only gets the news
+  //On inition load it only fetches the news
   useEffect(() => {
     getNews().then((response) => {
       setArticles(response);

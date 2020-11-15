@@ -1,26 +1,21 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component} from "react";
 import { PortfolioHeader } from "./PortfolioHeader";
-import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
+import Row from "./Row";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
-import PositionOptions from "../Position/PositionOptions";
+import PositionOptions from "./PositionOptions";
 import {
   MuiThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import ArrowBackRoundedIcon from "@material-ui/icons/ArrowBackRounded";
+
 
 class Portfolio extends Component {
   constructor(props) {
@@ -40,7 +35,7 @@ class Portfolio extends Component {
     sort: true,
   };
 
-  //if user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
+  //If user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
   componentDidMount() {
     if (!this.props.loginStatus) {
       this.props.history.push("/login");
@@ -51,14 +46,14 @@ class Portfolio extends Component {
 
   ////functions for sorting the colums
   //getPropValue is to get the value of the property and from the Stock object nested in the Position object, which is seperated by a "." eg. "stock.name"
-  getPropValue = (obj, col) => col.split(".").reduce((a, prop) => a[prop], obj);
+  getPropValue = (obj, column) => column.split(".").reduce((a, prop) => a[prop], obj);
 
   //Functon for ascending
   sortAscending = (a, b) => {
     const { columnName } = this.state;
     const fieldA = this.getPropValue(a, columnName);
 
-    //if its a string it needs different sorting
+    //If its a string it needs different sorting
     return typeof fieldA === "string"
       ? fieldA.localeCompare(this.getPropValue(b, columnName))
       : fieldA - this.getPropValue(b, columnName);
@@ -113,13 +108,13 @@ class Portfolio extends Component {
           competition: data.competition,
         });
       })
+      //updating current price to show the most recent value
       .then(() => {
         this.setCurrentPrice(() => {
           let old = 0;
           let current = 0;
           this.state.portfolio.positions.map(p =>  (
             (old += p.value), (current += p.currentvalue)
-            
             )
           );
           this.setState({
@@ -307,91 +302,3 @@ class Portfolio extends Component {
 
 //function to render each row
 export default Portfolio;
-
-function Row(props) {
-  const { row, selectedPositions, selectPosition } = props;
-  const [open, setOpen] = useState(false);
-  const [isLoaded, setIsloaded] = useState(false);
-
-  useEffect(() => {}, [!isLoaded]);
-
-  return (
-    <React.Fragment>
-      <TableRow
-        className={
-          selectedPositions.map((p) => p.id).indexOf(row.id) !== -1
-            ? "selectedPosition"
-            : "unselectedPosition"
-        }
-      >
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          Aandeel
-        </TableCell>
-        <TableCell align="left" style={{ fontWeight: "bolder" }}>
-          {row.stock.name}
-        </TableCell>
-        <TableCell align="right">{row.stock.symbol}</TableCell>
-        <TableCell align="right">{row.amount}</TableCell>
-        <TableCell align="right">€{row.value.toFixed(2)}</TableCell>
-        <TableCell align="right">€{row.currentvalue.toFixed(2)}</TableCell>
-        <TableCell
-          align="right"
-          style={{ color: row.difference >= 0 ? "green" : "crimson" }}
-        >
-          {row.difference} %
-        </TableCell>
-        <TableCell align="right">
-          <ArrowBackRoundedIcon
-            onClick={() => selectPosition(row.id, row.stock.name,row.currentvalue)}
-          />
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Transactie Geschiedenis
-              </Typography>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Datum</TableCell>
-                    <TableCell>Aantal</TableCell>
-                    <TableCell align="right">Aanschafprijs</TableCell>
-                    <TableCell align="right">Totaal In Euro</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((row, key) => (
-                    <TableRow key={key}>
-                      <TableCell component="th" scope="row">
-                        {row.date}
-                      </TableCell>
-                      <TableCell>{row.amount}</TableCell>
-                      <TableCell align="right">
-                        €{row.price.toFixed(2)}
-                      </TableCell>
-                      <TableCell align="right">
-                        €{(row.amount * row.price).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}

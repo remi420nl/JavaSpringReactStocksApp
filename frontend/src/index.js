@@ -8,7 +8,7 @@ import axios from 'axios';
 
 axios.defaults.baseURL='http://localhost:8080/';
 
-//the starting path of the app that renders to the index.html body
+//The starting path of the app that renders to the index.html body
 render(
     <Router>
         <App />

@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import { DetailsForm, PersonalDataForm, Confirmation, Success } from ".";
 
 //This is the parent component / class for the signup form
-//it holds all the objects with values needed for a registration
+//it holds the state of all objects with values needed for a registration
 export class SignupForm extends Component {
   state = {
     page: 1,
-    firstname: { name: "firstname",  label: "Voornaam",  value: "",
-    },
+    firstname: { name: "firstname",  label: "Voornaam",  value: "" },
     lastname: { name: "lastname", label: "Achternaam", value: "" },
     username: { name: "username", label: "Gebruikersnaam", value: "" },
     password: { name: "password", label: "Wachtwoord", value: "" },
@@ -21,6 +20,7 @@ export class SignupForm extends Component {
     const key = input;
     const value = event.target.value;
 
+    //spreading the old state and adding the new value
     this.setState((previousState) => ({
       [key]: { ...previousState[key], value: value },
     }));

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getJwt, getUserId } from "../Features/JwtHelper";
+import { getJwt, getUserId } from "../features/JwtHelper";
 import { pubKey, newsKey } from "./apikeys";
 
 //Main api call page, base url for Spring as being set in index.js
@@ -16,7 +16,6 @@ export const fetchTickerData = async (ticker) => {
     return error;
   }
 };
-
 
 //fetching portfolio from Spring API, with the current token added to the request
 export const fetchPortfoliosByUser = async () => {

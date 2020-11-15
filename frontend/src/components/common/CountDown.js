@@ -31,7 +31,7 @@ export default function CountDown(props) {
     marketCloseTime.setMinutes(30);
 
     //if actual time is later than market closing time or the day is sunday the next open time is one day ahead
-    if (now > marketCloseTime || now.getDay() == 7) {
+    if (now > marketCloseTime || now.getDay() == 0) {
       marketOpenTime.setDate(now.getDate() + 1);
     }
 

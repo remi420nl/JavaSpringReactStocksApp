@@ -37,7 +37,7 @@ const Confirmation = (props) => {
             console.log("registration not ok " ,response);
           }
         })
-        //If someting went wrong users gets an error message
+        //if someting went wrong users gets an error message
         .catch((e) => setError(e.response.data.message));
     } else {
       // if user clicks "Terug" the previous component will be rendered
