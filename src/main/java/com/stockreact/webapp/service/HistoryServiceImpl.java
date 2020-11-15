@@ -16,11 +16,11 @@ public class HistoryServiceImpl implements HistoryService{
 
 	   public History buildHistory(PositionDTO dto) {
 
-		// setting the time format
+		//setting the time format
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
 				.withLocale(Locale.GERMANY).withZone(ZoneId.systemDefault());
 
-		// actual date and time
+		//actual date and time
 		String time = formatter.format(Instant.now());
 
 		//user the statis builder class to build an entity

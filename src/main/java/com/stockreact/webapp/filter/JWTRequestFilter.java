@@ -58,7 +58,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
 				final String expired = (String) request.getAttribute("expired");
 				if (expired != null) {
-					System.out.println("expired token in dofilterInternal found ");
+		
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, expired);
 				}
 			}

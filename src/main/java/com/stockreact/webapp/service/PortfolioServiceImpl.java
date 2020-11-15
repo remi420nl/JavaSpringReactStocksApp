@@ -28,10 +28,6 @@ import lombok.AllArgsConstructor;
 public class PortfolioServiceImpl implements PortfolioService {
 
 	private PortfolioRepository portfolioRepo;
-	
-	public void createPortfolio (String name) {
-		//TODO
-	}
 
 	//Getting all portfolios and mapping them to DTO's for JSON serializing 
 	public Collection<PortfolioDTO> getAll() {
@@ -39,13 +35,11 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return portfolioRepo.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
 	}
 
-
-	//Helper method
+	//Helper method, converting Portfolio entity to PortfolioDTO using static builder class from DTO model
 	private PortfolioDTO mapToDto(Portfolio p) {
 		return PortfolioDTO.builder().id(p.getId()).description(p.getName()).positions(p.getPositions()).owner(p.getUser().getUsername())
 				.competition(p.isCompetition()).cash(p.getCash()).build();
 	}
-
 
 	//Return requesting Portfolio if exists
 	public Portfolio getById(Long id) {
@@ -56,6 +50,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return portfolioRepo.save(portfolio);
 	}
 
+	//Not in use yet
 	public void delete(Long id) {
 		portfolioRepo.deleteById(id);		
 	}
@@ -69,11 +64,16 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return portfolioDTO;
 	}
 
-
 	//Setting value for taking part of the competition and return the result 
 	public boolean setCompetition(boolean competition, Long id) {
 		
 		int result = portfolioRepo.updateCompetion(competition, id);
 		return result == 1  ? true : false;
 	}  
+	
+	
+	public void createPortfolio (String name) {
+		//TODO
+	}
+
 }

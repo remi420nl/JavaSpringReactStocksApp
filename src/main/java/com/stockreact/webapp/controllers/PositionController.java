@@ -30,20 +30,20 @@ public class PositionController {
 	
 	private final PositionService positionService;
 
-	// posting a new position,for which the user has to be logged in
+	//posting a new position,for which the user has to be logged in
 	@PostMapping("/position")
-	public ResponseEntity<Position> createPosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
+	public ResponseEntity<Position> createOrUpdatePosition(Authentication authentication, @Valid @RequestBody PositionDTO dto)
 			throws URISyntaxException {
 
 		User user = (User) authentication.getPrincipal();
 
-		Position result = positionService.addPosition(user, dto);
+		Position result = positionService.addOrUpdatePosition(user, dto);
 
 		return ResponseEntity.ok(result);
 	}
 
-	// deleting (selling) a position, method doesn't return anything because the JPA
-	// repository is void
+	//deleting (selling) a position, method doesn't return anything because the JPA
+	//repository returns void
 	@DeleteMapping("/position/{id}")
 	public void deletePosition(@PathVariable Long id) {
 		positionService.deleteById(id);

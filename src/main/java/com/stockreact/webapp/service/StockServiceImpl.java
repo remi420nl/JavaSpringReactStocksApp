@@ -55,7 +55,6 @@ public class StockServiceImpl implements StockService {
 		stock.setLatestPrice(dto.getPrice());
 
 		return stock;
-
 	}
 
 	@Override

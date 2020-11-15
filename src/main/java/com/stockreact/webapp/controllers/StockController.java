@@ -26,11 +26,10 @@ public class StockController {
 	// this conntroller is only being used to update the stock entities price
 	// attribute directly from the client
 	@PostMapping("/stock/{id}")
-	public ResponseEntity<?> updateStockPrice(@PathVariable Long id, @RequestBody StockDTO stockDTO) {
+	public ResponseEntity<?> updateStockPriceAndDate(@PathVariable Long id, @RequestBody StockDTO stockDTO) {
 
 		int stockid = stockService.updatePrice(id, stockDTO.getLatestPrice(), stockDTO.getLastUpdate());
 
 		return ResponseEntity.ok(stockid);
 	}
-
 }

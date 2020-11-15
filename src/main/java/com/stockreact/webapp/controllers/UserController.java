@@ -45,7 +45,7 @@ public class UserController {
 	private JwtUtil jwtUtil;
 	private UserService userService;
 
-	// returning the username of the logged in user
+	//returning the username of the logged in user
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/user")
 	@ResponseBody
@@ -54,7 +54,7 @@ public class UserController {
 		return authentication.getName();
 	}
 
-	// returns the user entity
+	//returns the user entity
 	@GetMapping("/userdetails")
 	@ResponseBody
 	public ResponseEntity<?> getUserDetails(Authentication authentication) {
@@ -64,7 +64,7 @@ public class UserController {
 		return ResponseEntity.ok(details);
 	}
 
-	// login method which accepts a authentication request object
+	//login method which accepts a authentication request object
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> Authenticate(@RequestBody AuthenticationRequest request) throws StockAppException {
 

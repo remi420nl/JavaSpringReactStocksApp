@@ -1,18 +1,19 @@
 package com.stockreact.webapp.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.stockreact.webapp.model.Portfolio;
 import com.stockreact.webapp.model.PortfolioDTO;
 import com.stockreact.webapp.model.PositionDTO;
 
+@Repository
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 	
 	//Created a new PositionDTO from  every portfolio including its positions that matched the id

@@ -47,10 +47,9 @@ public class PortfolioController {
 
 		Portfolio result = portfolioService.save(p);
 		return ResponseEntity.ok().body(result);
-
 	}
 
-	//to deleta a portfolio
+	//to delete a portfolio
 	@DeleteMapping("/portfolio/{id}")
 	public ResponseEntity<?> deletePortfolio(@PathVariable Long id) {
 
@@ -70,10 +69,9 @@ public class PortfolioController {
 
 	//allowing users to participate in the competition by setting the value of the Competition column
 	@GetMapping("/portfolio/{id}/{competition}")
-	public boolean getStocksForPortfolioById(@PathVariable Long id, @PathVariable boolean competition) {
+	public boolean setParticipationCompetition(@PathVariable Long id, @PathVariable boolean competition) {
 		
 		return portfolioService.setCompetition(competition, id);
-
 	}
 
 	//getting the portfolio based on the logged in user, this configuration is only used in the current setting where a user can only have one portfolio
@@ -81,11 +79,10 @@ public class PortfolioController {
 	public ResponseEntity<?> getPortfolioByUser(Authentication authentication) {
 
 		User user = (User) authentication.getPrincipal();
+		PortfolioDTO portfolioDto = portfolioService.getAllPositionsByPortfolioId(user);
 
-		PortfolioDTO ptest = portfolioService.getAllPositionsByPortfolioId(user);
-
-		if (ptest != null) {
-			return ResponseEntity.ok(ptest);
+		if (portfolioDto != null) {
+			return ResponseEntity.ok(portfolioDto);
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);

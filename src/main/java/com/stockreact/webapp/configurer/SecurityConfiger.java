@@ -41,7 +41,7 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	}
 
 	
-	//overriding for the cusom authentication provider
+	//overriding for the custom authentication provider
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
@@ -62,7 +62,7 @@ public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/authenticate").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/stock/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/api/portfolio/").permitAll().antMatchers("/h2-console/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/portfolio/", "/v3/**").permitAll().antMatchers("/h2-console/**").permitAll()
 				.antMatchers("/console/**").permitAll().antMatchers(HttpMethod.POST, "/api/register").permitAll()
 				.anyRequest().authenticated().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
