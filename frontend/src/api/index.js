@@ -149,7 +149,7 @@ export const updateStockPrice = async (id, newprice, date) => {
 export const getUser = async () => {
   const token = "Bearer " + getJwt();
   const userId = getUserId();
-
+  console.log(userId)
   const config = {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
@@ -158,7 +158,7 @@ export const getUser = async () => {
 
   try {
     const response = await axios.get(url, config);
-
+  
     return response;
   } catch (error) {
     console.log("error occured ", error);

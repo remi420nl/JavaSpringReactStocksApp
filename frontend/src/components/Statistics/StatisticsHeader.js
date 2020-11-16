@@ -21,7 +21,7 @@ useEffect(() => {
 
 //add a zero is clock digit is less than 10
 const timeFormat = (time) => {
-  return time > 10 ? time : "0" + time
+  return time > 9 ? time : "0" + time
 }
 
     return (

@@ -105,7 +105,7 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public UserDTO getUser(@PathVariable Long id) {
 		UserDTO userDto = userService.getById(id);
-
+		System.out.println("DTO " + userDto);
 		return userDto;
 	}
 

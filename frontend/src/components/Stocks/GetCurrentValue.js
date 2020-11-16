@@ -9,7 +9,7 @@ export const GetCurrentValue = async (stock, amount, callback) => {
     "" + now.getFullYear() + now.getMonth() + now.getDate()
   );
   const stockdate = parseInt(stock.lastUpdate);
-
+    console.log(stock)
   if (currentdate > stockdate || stockdate == undefined) {
     fetchTickerData(stock.symbol)
       .then((x) => {

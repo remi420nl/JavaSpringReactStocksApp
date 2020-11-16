@@ -33,6 +33,7 @@ class Portfolio extends Component {
     sorting: {},
     columnName: null,
     sort: true,
+    stillGettingUpdates: true,
   };
 
   //If user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
@@ -111,6 +112,7 @@ class Portfolio extends Component {
       //updating current price to show the most recent value
       .then(() => {
         this.setCurrentPrice(() => {
+         
           let old = 0;
           let current = 0;
           this.state.portfolio.positions.map(p =>  (
@@ -141,15 +143,30 @@ class Portfolio extends Component {
     let count = 0;
     positions.map((p) => {
       GetCurrentValue(p.stock, p.amount, (response) => {
+
+        //check if API returned a value (limit not reached) other wise skip
+        let newvalue = 0
+        let errors = 0;
+        if(response){
+          newvalue = response
+        }else{
+          errors++
+        }
+
         //setting properties for each positions object
-        p["currentvalue"] = parseFloat(response);
+        p["currentvalue"] = parseFloat(newvalue);
         p["difference"] = parseFloat(
-          ((response - p.value) / p.value) * 100
+          ((newvalue - p.value) / p.value) * 100
         ).toFixed(2);
         count++;
-        if (length === count) {
+    
+        if (length  === count) {
+          count = 0;
           callback();
-        }
+          this.setState({
+            stillGettingUpdates : errors > 0 ? true : false
+          });
+        }     
       });
     });
   };
@@ -169,6 +186,7 @@ class Portfolio extends Component {
       oldTotalValue,
       selectedPositions,
       columnName,
+      stillGettingUpdates
     } = this.state;
 
     //selection a position (to sell or update), *update functionality not implemented
@@ -207,6 +225,7 @@ class Portfolio extends Component {
             competition={portfolio.competition}
             cash={portfolio.cash}
           />
+           <p>{stillGettingUpdates ? "Nog niet alle koersen bijgewerkt.." : ""}</p>
           <div className="portfoliocontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer

@@ -71,7 +71,6 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return result == 1  ? true : false;
 	}  
 	
-	
 	public void createPortfolio (String name) {
 		//TODO
 	}
