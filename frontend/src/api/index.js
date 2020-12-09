@@ -20,7 +20,7 @@ export const fetchTickerData = async (ticker) => {
 
 
 export const fetchAllTickers = async () => {
-  const url = `https://cloud.iexapis.com/beta/ref-data/symbols?token=pk_48d2125cb14a4056b3368b8190d75028`;
+  const url = `https://cloud.iexapis.com/beta/ref-data/symbols?token=${pubKey}`;
  
     try {
       const data = await axios.get(`${url}`);
