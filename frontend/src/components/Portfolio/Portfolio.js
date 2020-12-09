@@ -11,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "./PositionOptions";
+
 import {
   MuiThemeProvider,
   createMuiTheme,
@@ -34,10 +35,13 @@ class Portfolio extends Component {
     columnName: null,
     sort: true,
     stillGettingUpdates: true,
+  
   };
 
   //If user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
   componentDidMount() {
+
+    
     if (!this.props.loginStatus) {
       this.props.history.push("/login");
     } else {
@@ -142,7 +146,7 @@ class Portfolio extends Component {
     const length = positions.length;
     let count = 0;
     positions.map((p) => {
-      GetCurrentValue(p.stock, p.amount, (response) => {
+      GetCurrentValue(p.stock, p.amount, this.props.dollarEuro, (response) => {
 
         //check if API returned a value (limit not reached) other wise skip
         let newvalue = 0

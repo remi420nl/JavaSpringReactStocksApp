@@ -11,14 +11,20 @@ import { fetchUserDetails } from "../api";
 import { LoginForm } from "./Login/LoginForm";
 import { clearJwt } from "../features/JwtHelper";
 import { Profile } from "./User/Profile";
+import {DollarEuro} from '../features/CurrencyConverter';
 
 //main app component using React Router for routing
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
   const [name, setName] = useState();
+  const [dollarEuro,setDollarEuro] = useState();
 
   //loading user details, when a valid token is present it sets the name and login status
   useEffect(() => {
+
+    DollarEuro().then((dollar) =>{
+    setDollarEuro(dollar)})
+
     fetchUserDetails()
       .then((response) => {
         if (response.status == 200) {
@@ -57,11 +63,15 @@ function App() {
                 />
               )}
             />
-            <Route path="/statistics" component={Statistics} />
+            <Route path="/statistics" 
+            render={(props) => (
+              <Statistics  {...props}  dollarEuro={dollarEuro} />
+            )} />
             <Route
               path="/portfolio"
               render={(props) => (
-                <Portfolio {...props} loginStatus={loginStatus} />
+                <Portfolio {...props} loginStatus={loginStatus}
+                dollarEuro={dollarEuro} />
               )}
             />
             <Route path="/stocks" render={(props) => <Stocks {...props} />} />

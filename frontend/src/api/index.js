@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getJwt, getUserId } from "../features/JwtHelper";
-import { pubKey, newsKey } from "./apikeys";
+import { pubKey, newsKey, iexKey} from "./apikeys";
 
-//Main api call page, base url for Spring as being set in index.js
+//Main api call page, base url for Spring is being set in index.js
 
 //Getting data from free API, using the public key and the choosen ticker (stock symbol)
 export const fetchTickerData = async (ticker) => {
-  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=${pubKey}`;
+  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=gregergre`;
 
   try {
     const data = await axios.get(url);
@@ -16,6 +16,69 @@ export const fetchTickerData = async (ticker) => {
     return error;
   }
 };
+
+
+
+export const fetchAllTickers = async () => {
+  const url = `https://cloud.iexapis.com/beta/ref-data/symbols?token=pk_48d2125cb14a4056b3368b8190d75028`;
+ 
+    try {
+      const data = await axios.get(`${url}`);
+       console.log('TICKER', data);
+      return data;
+    } catch (error) {
+      return error;
+    }
+  };
+
+
+  export const sendStockToBackend = async (stocks) => {
+    
+    const url = `/api/stock/`;
+    console.log(stocks)
+    let data = {
+      dtos: stocks
+    }
+  
+    try {
+      const stock = await axios.post(url, data);
+      console.log("stock send to backend")
+      return stock;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  export const getAllStocks = async (type) => {
+  
+    const url = `/api/stock/${type}`;
+
+  
+    try {
+      const stocks = await axios.get(url);
+      return stocks;
+    } catch (error) {
+      return error;
+    }
+  };
+  
+  
+
+
+
+export const fetchTickerDatasUS = async (ticker) => {
+  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=&interval=5min&outputsize=compact&apikey=llslsls`;
+
+  try {
+    const data = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
 
 //fetching portfolio from Spring API, with the current token added to the request
 export const fetchPortfoliosByUser = async () => {
@@ -38,13 +101,9 @@ export const fetchPortfoliosByUser = async () => {
 //getting all portfolios for the statistics page, public accessible
 export const getAllPortfolios = async () => {
   const url = `/api/portfolio/`;
-  try {
-    const portfolios = await axios.get(url);
+  
+   return  axios.get(url);
 
-    return portfolios;
-  } catch (error) {
-    return error;
-  }
 };
 
 //fetching user details

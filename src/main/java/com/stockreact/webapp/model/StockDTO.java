@@ -18,6 +18,8 @@ public class StockDTO {
 		
 	private String symbol;
 	
+	private String description;
+	
 	//the last time this entity has been updated by the client to determine if its due to an update
 	private String lastUpdate;
 	

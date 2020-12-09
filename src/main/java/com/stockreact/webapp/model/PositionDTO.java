@@ -38,6 +38,9 @@ public class PositionDTO {
 	//total amount stocks 
 	private int amount;
 
+	//what kind of stock (nationality)
+	private String description;
+	
 	//value of all the stocks in this position or request
 	private double value;
 

@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+
 import com.stockreact.webapp.model.PositionDTO;
 import com.stockreact.webapp.model.Stock;
+import com.stockreact.webapp.model.StockDTO;
 
 
 public interface StockService  {
@@ -24,4 +26,8 @@ public Collection<Stock> getAll() ;
 	Stock updateStock(Stock stock, PositionDTO dto);
 	
 	Stock createNewStock(PositionDTO dto);
+	
+	Stock save2(StockDTO dto);
+
+	public Collection<Stock> getAllStocksByType(String type);
 }

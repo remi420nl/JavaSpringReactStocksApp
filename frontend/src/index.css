@@ -451,6 +451,25 @@ a {
   }
    */
 
+   .animatedLoading {
+    opacity: 0;
+    animation: fadeInOut 1s infinite;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .fadeRefresh {
+    animation: fade-in-keyframes 1s;
+  }
+  @keyframes fade-in-keyframes {
+    from {opacity: 0}
+    to {opacity: 1}
+  }
+
 input {
   padding: 10px;
   height: 20px;

@@ -10,33 +10,73 @@ import { getAllPortfolios } from "../../api/index";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import { MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 import StatisticsHeader from "./StatisticsHeader";
+import SyncIcon from '@material-ui/icons/Sync';
 
-export default function Statistics() {
-  const [portfolios, setPortfolios] = useState([]);
+
+export default function Statistics({dollarEuro}) {
   const [totals, setTotals] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [pricesUpToDate, setPricesUpToDate] = useState(false);
+  const [completed, setCompleted] = useState(false)
+  const [updatedPortfolios, setUpdatedPortfolios] = useState (0)
+  const [fade,setFade] = useState(false);
+  const [competitors, setCompetitors] = useState();
+
 
   //first it gets the portfolios, second useeffect is doest get triggered
   useEffect(() => {
-    getPortfolios();
-  }, []);
+  
+  
+   
 
-  //after the portfolios state has been altered it triggers the calculate values function
-  useEffect(() => {
-    calculateValues();
-  },[portfolios]);
+        getPortfolios()
+
+  
+    
+       
+  
+  
+  },[]);
+
+  //after the portfolios state has been altered it triggers the calculate values function, then it repeats as long as the prices aren't up to date
+  //using an interval of 1 minute since the AlphaVantage free API's request is limited to 5 requests per minute
+  // useEffect(() => {
+  //   console.log("second useffect")
+  //   let id = setInterval(() =>    getPortfolios(), 5000);
+  //   setTimeoutId(id);
+  //   return id;
+
+  // },[]);
+
+  // useEffect(() => {
+  //   console.log("price are NOT updated..")
+  //  if(completed){
+  //    console.log("prices are updated..")
+
+  
+  //   return clearInterval(timeoutId)
+  //  }
+  // });
+
+
+  
+
 
   //getting al the portfolios from the API, which are public accessible, and filters the one that have the competition value as true
   function getPortfolios() {
+   
     getAllPortfolios().then(({ data }) => {
-      setPortfolios(data.filter((x) => x.competition));
-    });
+      calculateValues(data.filter((x) => x.competition))
+    })
   }
 
   //for each portfolio it calculates the summary for all positions plus also checking the latest value from the Stock API
-  function calculateValues() { 
+  function calculateValues(portfolios) { 
+
+
     if (portfolios.length > 0) {
+
+      setCompetitors(portfolios.length);
+
       portfolios.forEach((portfolio) => {
         //setting values for porfolios with no positions
         if (portfolio.positions.length < 1) {
@@ -50,48 +90,64 @@ export default function Statistics() {
           portfolio["oldvalue"] = sum;
           portfolio["currentvalue"] = 0;
 
-          calculateCurrentValue(portfolio, (value) => {
+          calculateCurrentValue(portfolio, (value,completed) => {
         
             portfolio["currentvalue"] = value;
+
+            if(completed){
+              setUpdatedPortfolios(updatedPortfolios +1);
+            }
+
           });
         }
       });
-      convertToTotal();
+      convertToTotal(portfolios);
     }
   }
 
   //getting and calculting the current position values
   function calculateCurrentValue(portfolio, callback) {
     const length = portfolio.positions.length;
-    let count = 0;
+    let positionCount = 0;
     let sum = 0;
     let errors = 0;
 
+
     //passing a callback function to be able to get the proper value from the async function which otherwise would return undefined
+
+    
+
     portfolio.positions.map((position) => {
-      GetCurrentValue(position.stock, position.amount, (response) => {
+      GetCurrentValue(position.stock, position.amount,dollarEuro, (response) => {
         if(response){
-          count++;
+          positionCount++;
           sum += response;
         }else{
           errors++
         }
-        //then passing the total sum to the callback in the calculateValues function
-        if (length === count) {
-          callback(sum);
-          setPricesUpToDate(true)
+    
+
+         //then passing the total sum to the callback in the calculateValues function
+        if (length === positionCount && errors == 0) {
+
+          callback(sum, true);
+          setCompleted(true)
         }
+        
         if(errors > 0){
-          callback(sum)
-          setPricesUpToDate(false)
+      
+          callback(sum,false)
+          setCompleted(false)
         }
+
       }
       );
     });
+  
   }
 
   //converts everything so there is a array with all totals which will be used in the render function
-  function convertToTotal() {
+  function convertToTotal(portfolios) {
     let summarytotals = [];
     let summary = {};
 
@@ -109,8 +165,11 @@ export default function Statistics() {
 
     //sorting so the portfolio with highest interest (positive difference) is on top
     summarytotals.sort((a, b) => b.difference - a.difference);
-
+   
+    //setting the modifed data as state
     setTotals(summarytotals);
+
+    //portfolios have been loaded so the statistics screen is allowed to render
     setIsLoaded(true);
   }
 
@@ -134,12 +193,17 @@ export default function Statistics() {
 
  
   if (isLoaded) {
-    if (portfolios && portfolios.length > 0) {
+    if (competitors > 0) {
       return (
         <div className="statistics">
           <h2 className="pagetitle">Klassement</h2>
-          <StatisticsHeader amount={portfolios.length} />
-          <p>{!pricesUpToDate ? "Nog niet alle koersen bijgewerkt.." : ""}</p>
+          <StatisticsHeader amount={competitors} />
+          <p>{!completed ? <><span className="animatedLoading">Nog niet alle koersen bijgewerkt.. </span><SyncIcon 
+
+          className={fade ?  "fadeRefresh" : "fadeRefresh"}
+          onClick={() => {
+            getPortfolios(); setFade(!fade)
+          }}/></> : ""}</p>
           <div className="statisticscontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer

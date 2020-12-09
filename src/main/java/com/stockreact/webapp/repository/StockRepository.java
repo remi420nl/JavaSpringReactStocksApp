@@ -1,5 +1,6 @@
 package com.stockreact.webapp.repository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 	@Modifying
 	@Query("UPDATE Stock s SET s.latestPrice = :price, s.lastUpdate = :date WHERE s.id = :stockId")
 	int updatePriceAndDate(@Param("stockId") Long id, @Param("price") Double price, @Param("date") String date);
+
+	Collection<Stock> findAllByDescription(String type);
 
 }
