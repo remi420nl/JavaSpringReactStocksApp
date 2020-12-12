@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import { PortfolioHeader } from "./PortfolioHeader";
 import Row from "./Row";
 import Table from "@material-ui/core/Table";
@@ -11,12 +11,9 @@ import Paper from "@material-ui/core/Paper";
 import { fetchPortfoliosByUser } from "../../api";
 import { GetCurrentValue } from "../Stocks/GetCurrentValue";
 import PositionOptions from "./PositionOptions";
+import SyncIcon from "@material-ui/icons/Sync";
 
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core/styles";
-
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 class Portfolio extends Component {
   constructor(props) {
@@ -35,13 +32,11 @@ class Portfolio extends Component {
     columnName: null,
     sort: true,
     stillGettingUpdates: true,
-  
+    fade: false,
   };
 
   //If user is not logged in user will be redirected to the login page, else the potions will be loaded from the api using the updatePosition function
   componentDidMount() {
-
-    
     if (!this.props.loginStatus) {
       this.props.history.push("/login");
     } else {
@@ -51,7 +46,8 @@ class Portfolio extends Component {
 
   ////functions for sorting the colums
   //getPropValue is to get the value of the property and from the Stock object nested in the Position object, which is seperated by a "." eg. "stock.name"
-  getPropValue = (obj, column) => column.split(".").reduce((a, prop) => a[prop], obj);
+  getPropValue = (obj, column) =>
+    column.split(".").reduce((a, prop) => a[prop], obj);
 
   //Functon for ascending
   sortAscending = (a, b) => {
@@ -116,12 +112,10 @@ class Portfolio extends Component {
       //updating current price to show the most recent value
       .then(() => {
         this.setCurrentPrice(() => {
-         
           let old = 0;
           let current = 0;
-          this.state.portfolio.positions.map(p =>  (
-            (old += p.value), (current += p.currentvalue)
-            )
+          this.state.portfolio.positions.map(
+            (p) => ((old += p.value), (current += p.currentvalue))
           );
           this.setState({
             isLoaded: true,
@@ -147,14 +141,13 @@ class Portfolio extends Component {
     let count = 0;
     positions.map((p) => {
       GetCurrentValue(p.stock, p.amount, this.props.dollarEuro, (response) => {
-
         //check if API returned a value (limit not reached) other wise skip
-        let newvalue = 0
+        let newvalue = 0;
         let errors = 0;
-        if(response){
-          newvalue = response
-        }else{
-          errors++
+        if (response) {
+          newvalue = response;
+        } else {
+          errors++;
         }
 
         //setting properties for each positions object
@@ -163,14 +156,14 @@ class Portfolio extends Component {
           ((newvalue - p.value) / p.value) * 100
         ).toFixed(2);
         count++;
-    
-        if (length  === count) {
+
+        if (length === count) {
           count = 0;
           callback();
           this.setState({
-            stillGettingUpdates : errors > 0 ? true : false
+            stillGettingUpdates: errors > 0 ? true : false,
           });
-        }     
+        }
       });
     });
   };
@@ -190,7 +183,8 @@ class Portfolio extends Component {
       oldTotalValue,
       selectedPositions,
       columnName,
-      stillGettingUpdates
+      stillGettingUpdates,
+      fade,
     } = this.state;
 
     //selection a position (to sell or update), *update functionality not implemented
@@ -204,7 +198,7 @@ class Portfolio extends Component {
         this.setState((prevState) => ({
           selectedPositions: [
             ...prevState.selectedPositions,
-            { id: id, name: name, currentvalue: currentvalue},
+            { id: id, name: name, currentvalue: currentvalue },
           ],
         }));
       } else {
@@ -229,7 +223,26 @@ class Portfolio extends Component {
             competition={portfolio.competition}
             cash={portfolio.cash}
           />
-           <p>{stillGettingUpdates ? "Nog niet alle koersen bijgewerkt.." : ""}</p>
+          <p>
+            {stillGettingUpdates ? (
+              <>
+                <span className="animatedLoading">
+                  Nog niet alle koersen bijgewerkt..{" "}
+                </span>
+                <SyncIcon
+                  className={fade ? "fadeRefresh" : "fadeRefresh"}
+                  onClick={() => {
+                    this.updatePositions();
+                    this.setState({
+                      fade: !fade,
+                    });
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+          </p>
           <div className="portfoliocontent">
             <MuiThemeProvider theme={theme}>
               <TableContainer

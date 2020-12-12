@@ -83,12 +83,14 @@ export class LoginForm extends Component {
       return (
         <div className="signupform">
           <TextField
+           inputProps={{
+            autoCapitalize: 'none',
+            textTransform: 'lowercase'
+          }}
             label="Gebruikersnaam"
             onChange={(e) => this.handleChange(e, "username")}
             defaultValue={username}
-            inputProps={{
-              autoCapitalize: "none",
-            }}
+            
           />
           <FormControl>
             <InputLabel htmlFor="standard-adornment-password">
