@@ -11,3 +11,15 @@ This is a link to the Heroku deployment. The application is deployed into two se
 https://reactportfolionovi.herokuapp.com
 
 test1/test1 username/password
+
+Things i learned developing this application:
+
+Spring Boot, JPA
+Expanding Java knowledge
+API's and using API's with the frontend
+MySQL
+React.js 
+Class bases components, functional components
+Basic hooks
+Expanding Javascript knowledge
+CSS
