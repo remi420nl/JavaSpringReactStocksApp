@@ -20,6 +20,6 @@ API's and using API's with the frontend
 MySQL  
 React.js   
 Class bases components, functional components  
-Basic hooks  
+Basic hooks, states, lifting state    
 Expanding Javascript knowledge  
 CSS  
