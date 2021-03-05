@@ -23,3 +23,5 @@ Class bases components, functional components
 Basic hooks, states, lifting state    
 Expanding Javascript knowledge  
 CSS  
+
+<img src="https://reactportfolionovi.herokuapp.com/homepage.jpg">
